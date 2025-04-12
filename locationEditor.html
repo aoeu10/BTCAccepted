@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Editor - BTCAccepted</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .header {
+            background-color: #f7931a;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        .bitcoin-icon {
+            height: 48px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        .header h1 {
+            display: inline-block;
+            margin: 0;
+            vertical-align: middle;
+        }
+        .content-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .validation-error {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 5px;
+            display: none;
+        }
+        #loadingIndicator {
+            display: none;
+        }
+        .location-preview {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+            border: 1px solid #dee2e6;
+        }
+        pre {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .download-btn {
+            margin-top: 15px;
+        }
+        .table-container {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .sortable {
+            cursor: pointer;
+        }
+        .sortable:hover {
+            background-color: #f8f9fa;
+        }
+        .sort-icon {
+            margin-left: 5px;
+        }
+        .editable {
+            cursor: pointer;
+        }
+        .editable:hover {
+            background-color: #f8f9fa;
+        }
+        .map-preview {
+            height: 300px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .import-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="d-flex align-items-center">
+                <a href="index.html" class="text-white text-decoration-none">
+                    <img src="images/icons/btcLogo.svg" alt="Bitcoin Logo" class="bitcoin-icon">
+                    <h1>Accepted</h1>
+                </a>
+            </div>
+            <p class="mb-0">Location Data Management</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="content-section">
+            <!-- Import Section -->
+            <div class="import-section">
+                <h4>Import Location Data</h4>
+                <div class="row">
+                    <div class="col-12">
+                        <label for="importFile" class="form-label">Select JSON File</label>
+                        <input type="file" class="form-control" id="importFile" accept=".json">
+                        <div id="currentFile" class="form-text mt-2"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location Editor Form -->
+            <div class="mb-4">
+                <h4 id="formHeader">Add New Location</h4>
+                <form id="locationForm">
+                    <div class="row">
+                        <div class="col-md-8">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="locationKey" class="form-label">Location Key *</label>
+                            <input type="text" class="form-control" id="locationKey" required>
+                            <div class="form-text">Format: city,state,country or country (lowercase, comma-separated)</div>
+                            <div class="validation-error" id="locationKeyError">Please enter a valid location key</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="searchLocation" class="form-label">Search Location</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="searchLocation" placeholder="Enter location to search">
+                                <button class="btn btn-outline-primary" type="button" id="geocodeButton">
+                                    <i class="bi bi-geo-alt"></i> Find
+                                </button>
+                            </div>
+                                    <div id="searchResults" class="mt-2" style="display: none;">
+                                        <div class="list-group">
+                                            <!-- Search results will be populated here -->
+                                        </div>
+                                    </div>
+                                    <div id="searchStatus" class="form-text mt-2"></div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="latitude" class="form-label">Latitude *</label>
+                            <input type="number" class="form-control" id="latitude" step="any" min="-90" max="90" required>
+                            <div class="validation-error" id="latitudeError">Please enter a valid latitude (-90 to 90)</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="longitude" class="form-label">Longitude *</label>
+                            <input type="number" class="form-control" id="longitude" step="any" min="-180" max="180" required>
+                            <div class="validation-error" id="longitudeError">Please enter a valid longitude (-180 to 180)</div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                                <button type="submit" class="btn btn-primary" id="submitButton" style="background-color: #f7931a; border-color: #f7931a;">
+                            Add Location
+                        </button>
+                                <button type="button" class="btn btn-outline-danger ms-2" id="deleteButton" style="display: none;">
+                            Delete Location
+                        </button>
+                        <button type="button" class="btn btn-outline-primary ms-2" id="downloadJsonBtn">
+                            <i class="bi bi-download me-2"></i>Download locationData.json
+                        </button>
+                                <button type="button" class="btn btn-outline-info ms-2" id="checkUnmatchedBtn">
+                                    <i class="bi bi-search me-2"></i>Check for Unmatched Locations
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary ms-2" id="cancelButton" style="display: none;">
+                                    <i class="bi bi-x-circle me-2"></i>Cancel
+                        </button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="map" class="map-preview" style="height: 250px;"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div id="loadingIndicator" class="alert alert-info mb-3">
+                <div class="d-flex align-items-center">
+                    <div class="spinner-border spinner-border-sm me-2" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <span>Processing...</span>
+                </div>
+            </div>
+
+            <!-- Unmatched Locations -->
+            <div id="unmatchedLocationsContainer" class="mb-4" style="display: none;">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">Unmatched Locations</h5>
+                        <p class="mb-0 small">These locations exist in businessData.json but not in your current locationData</p>
+                    </div>
+                    <div class="card-body">
+                        <div id="unmatchedStatus" class="alert alert-info mb-3" style="display: none;">
+                            <div class="d-flex align-items-center">
+                                <div class="spinner-border spinner-border-sm me-2" role="status" id="unmatchedSpinner">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <div id="unmatchedStatusText"></div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Business Name</th>
+                                        <th>City</th>
+                                        <th>Region</th>
+                                        <th>Country</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="unmatchedLocationsBody">
+                                    <!-- Unmatched locations will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location Table -->
+            <div class="table-responsive">
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="tableSearch" placeholder="Search locations, latitude, or longitude...">
+                    <div id="entryCount" class="form-text text-muted mt-1" style="font-size: 0.875rem; margin-left: 0.5rem;"></div>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-sort="key">Location Key <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                            <th class="sortable" data-sort="lat">Latitude <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                            <th class="sortable" data-sort="lng">Longitude <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="locationTableBody">
+                        <!-- Location rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Location Preview -->
+            <div class="location-preview mt-4">
+                <h4>Location Data Preview</h4>
+                <pre id="locationDataJson"></pre>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-5 py-3 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <p>© 2025 BTCAccepted.org</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="about.html" class="me-3 text-decoration-none">About</a>
+                    <a href="contact_us.html" class="me-3 text-decoration-none">Contact Us</a>
+                    <a href="links.html" class="me-3 text-decoration-none">Links</a>
+                    <a href="changelog.html" class="me-3 text-decoration-none">Changelog</a>
+                    <a href="https://btcmap.org" target="_blank" class="text-decoration-none">BTCMap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize variables
+            let locationData = {};
+            let map = null;
+            let marker = null;
+            let currentSort = { column: 'key', direction: 'asc' };
+            
+            // Initialize form elements
+            const form = document.getElementById('locationForm');
+            const locationTableBody = document.getElementById('locationTableBody');
+            const locationDataJson = document.getElementById('locationDataJson');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const downloadJsonBtn = document.getElementById('downloadJsonBtn');
+            const deleteButton = document.getElementById('deleteButton');
+            const geocodeButton = document.getElementById('geocodeButton');
+            const importFile = document.getElementById('importFile');
+            const tableSearch = document.getElementById('tableSearch');
+            const locationKeyInput = document.getElementById('locationKey');
+
+            // Auto-convert location key to lowercase
+            locationKeyInput.addEventListener('input', function() {
+                this.value = this.value.toLowerCase();
+            });
+
+            // Initialize map
+            function initMap() {
+                if (!map) {
+                    map = L.map('map').setView([0, 0], 2);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '© OpenStreetMap contributors'
+                    }).addTo(map);
+                }
+            }
+
+            // Load existing location data
+            async function loadLocationData() {
+                try {
+                    // Add cache-busting parameter to prevent browser caching
+                    const cacheBuster = `?v=${new Date().getTime()}`;
+                    const response = await fetch(`https://btcaccepted.org/locationData.json${cacheBuster}`);
+                    const data = await response.json();
+                    // Update the current file display
+                    document.getElementById('currentFile').textContent = 'Current file: https://btcaccepted.org/locationData.json (refreshed)';
+                    return data;
+                } catch (error) {
+                    console.error('Error loading location data:', error);
+                    // Update the current file display to show error
+                    document.getElementById('currentFile').textContent = 'Error loading location data from https://btcaccepted.org/locationData.json';
+                    return { locations: [] };
+                }
+            }
+
+            // State and country abbreviation mapping
+            const stateAbbreviations = {
+                'alabama': 'al', 'alaska': 'ak', 'arizona': 'az', 'arkansas': 'ar', 'california': 'ca',
+                'colorado': 'co', 'connecticut': 'ct', 'delaware': 'de', 'florida': 'fl', 'georgia': 'ga',
+                'hawaii': 'hi', 'idaho': 'id', 'illinois': 'il', 'indiana': 'in', 'iowa': 'ia',
+                'kansas': 'ks', 'kentucky': 'ky', 'louisiana': 'la', 'maine': 'me', 'maryland': 'md',
+                'massachusetts': 'ma', 'michigan': 'mi', 'minnesota': 'mn', 'mississippi': 'ms', 'missouri': 'mo',
+                'montana': 'mt', 'nebraska': 'ne', 'nevada': 'nv', 'new hampshire': 'nh', 'new jersey': 'nj',
+                'new mexico': 'nm', 'new york': 'ny', 'north carolina': 'nc', 'north dakota': 'nd', 'ohio': 'oh',
+                'oklahoma': 'ok', 'oregon': 'or', 'pennsylvania': 'pa', 'rhode island': 'ri', 'south carolina': 'sc',
+                'south dakota': 'sd', 'tennessee': 'tn', 'texas': 'tx', 'utah': 'ut', 'vermont': 'vt',
+                'virginia': 'va', 'washington': 'wa', 'west virginia': 'wv', 'wisconsin': 'wi', 'wyoming': 'wy'
+            };
+
+            const countryAbbreviations = {
+                'united states': 'us', 'united states of america': 'us',
+                'united kingdom': 'gb', 'great britain': 'gb',
+                'canada': 'ca',
+                'australia': 'au',
+                'new zealand': 'nz',
+                'japan': 'jp',
+                'china': 'cn',
+                'germany': 'de',
+                'france': 'fr',
+                'italy': 'it',
+                'spain': 'es',
+                'brazil': 'br',
+                'india': 'in',
+                'russia': 'ru',
+                'south korea': 'kr',
+                'mexico': 'mx'
+            };
+
+            // Function to get abbreviated form of state or country
+            function getAbbreviatedForm(name, mapping) {
+                const normalizedName = name.toLowerCase().trim();
+                return mapping[normalizedName] || name;
+            }
+
+            // Function to normalize location string for comparison
+            function normalizeLocationString(str) {
+                return str.toLowerCase().trim();
+            }
+
+            // Update location table
+            function updateLocationTable() {
+                locationTableBody.innerHTML = '';
+                const searchTerm = tableSearch.value.toLowerCase().trim();
+                const searchParts = searchTerm.split(/[\s,]+/).filter(part => part.length > 0);
+                
+                const sortedLocations = locationData.locations.sort((a, b) => {
+                    const aKey = `${a.city || ''},${a.region || ''},${a.country || ''}`;
+                    const bKey = `${b.city || ''},${b.region || ''},${b.country || ''}`;
+                    return currentSort.direction === 'asc' 
+                        ? aKey.localeCompare(bKey)
+                        : bKey.localeCompare(aKey);
+                });
+                
+                let visibleCount = 0;
+                sortedLocations.forEach(location => {
+                    const key = `${location.city || ''},${location.region || ''},${location.country || ''}`;
+                    const keyParts = key.split(',').map(part => part.trim().toLowerCase());
+                    
+                    // Check if the row matches the search term
+                    let matchesSearch = searchTerm === '';
+                    
+                    if (!matchesSearch) {
+                        // Try exact match first
+                        if (key.toLowerCase() === searchTerm) {
+                            matchesSearch = true;
+                        } else {
+                            // Try matching against location components
+                            const matchesAllParts = searchParts.every(part => {
+                                // Check if the part matches any component of the location key
+                                return keyParts.some(keyPart => {
+                                    // Check for exact match
+                                    if (keyPart === part) return true;
+                                    
+                                    // Check for state abbreviation match
+                                    if (stateAbbreviations[part] === keyPart || stateAbbreviations[keyPart] === part) return true;
+                                    
+                                    // Check for country abbreviation match
+                                    if (countryAbbreviations[part] === keyPart || countryAbbreviations[keyPart] === part) return true;
+                                    
+                                    // Check for partial match
+                                    return keyPart.includes(part);
+                                });
+                            });
+                            
+                            // Check if the search term matches the coordinates
+                            const matchesCoords = location.lat.toString().startsWith(searchTerm) ||
+                                               location.lng.toString().startsWith(searchTerm);
+                            
+                            matchesSearch = matchesAllParts || matchesCoords;
+                        }
+                    }
+
+                    if (matchesSearch) {
+                        visibleCount++;
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td class="editable" onclick="editLocation('${key}')">${key}</td>
+                            <td class="editable" onclick="makeEditable(this, '${key}', 'lat')">${location.lat.toFixed(4)}</td>
+                            <td class="editable" onclick="makeEditable(this, '${key}', 'lng')">${location.lng.toFixed(4)}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary" onclick="editLocation('${key}')">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteLocation('${key}')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        `;
+                        locationTableBody.appendChild(row);
+                    }
+                });
+
+                // Update the entry count display
+                const totalCount = locationData.locations.length;
+                const countDisplay = document.getElementById('entryCount');
+                if (searchTerm === '') {
+                    countDisplay.textContent = `${totalCount} entries`;
+                } else {
+                    countDisplay.textContent = `${visibleCount} of ${totalCount} entries`;
+                }
+            }
+
+            // Sort table
+            function sortTable(column) {
+                if (currentSort.column === column) {
+                    currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+                } else {
+                    currentSort.column = column;
+                    currentSort.direction = 'asc';
+                }
+                updateLocationTable();
+            }
+
+            // Edit location
+            window.editLocation = function(key) {
+                const location = locationData.locations.find(loc => 
+                    `${loc.city || ''},${loc.region || ''},${loc.country || ''}` === key
+                );
+                if (location) {
+                    document.getElementById('locationKey').value = key;
+                    document.getElementById('latitude').value = location.lat;
+                    document.getElementById('longitude').value = location.lng;
+                    updateMap(location.lat, location.lng);
+                    
+                    // Update form header and button text
+                    document.getElementById('formHeader').textContent = 'Edit Location';
+                    document.getElementById('formHeader').style.color = '#f7931a';
+                    document.getElementById('submitButton').textContent = 'Save Changes';
+                    
+                    // Show delete and cancel buttons
+                    document.getElementById('deleteButton').style.display = 'inline-block';
+                    document.getElementById('cancelButton').style.display = 'inline-block';
+                    
+                    // Scroll to the form
+                    document.getElementById('locationForm').scrollIntoView({ behavior: 'smooth' });
+                }
+            };
+
+            // Delete location
+            window.deleteLocation = function(key) {
+                if (confirm(`Are you sure you want to delete the location "${key}"?`)) {
+                    locationData.locations = locationData.locations.filter(loc => 
+                        `${loc.city || ''},${loc.region || ''},${loc.country || ''}` !== key
+                    );
+                    updateLocationTable();
+                    updateLocationPreview();
+                    if (document.getElementById('locationKey').value === key) {
+                        form.reset();
+                    }
+                }
+            };
+
+            // Update map marker
+            function updateMap(lat, lng) {
+                if (!map) {
+                    initMap();
+                }
+                
+                if (marker) {
+                    marker.setLatLng([lat, lng]);
+                } else {
+                    marker = L.marker([lat, lng]).addTo(map);
+                }
+                
+                map.setView([lat, lng], 10);
+            }
+
+            // Update location preview
+            function updateLocationPreview() {
+                locationDataJson.textContent = JSON.stringify(locationData, null, 2);
+            }
+
+            // Initialize map on page load
+            initMap();
+
+            // Load existing location data
+            loadLocationData().then(data => {
+                locationData = data;
+                updateLocationTable();
+                updateLocationPreview();
+            });
+
+            // Form submission handler
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                
+                const key = document.getElementById('locationKey').value;
+                const latInput = document.getElementById('latitude');
+                const lngInput = document.getElementById('longitude');
+                const lat = parseFloat(latInput.value);
+                const lng = parseFloat(lngInput.value);
+
+                // Reset validation errors
+                document.getElementById('latitudeError').style.display = 'none';
+                document.getElementById('longitudeError').style.display = 'none';
+
+                // Validate coordinates
+                if (isNaN(lat) || lat < -90 || lat > 90) {
+                    document.getElementById('latitudeError').style.display = 'block';
+                    latInput.focus();
+                    return;
+                }
+                if (isNaN(lng) || lng < -180 || lng > 180) {
+                    document.getElementById('longitudeError').style.display = 'block';
+                    lngInput.focus();
+                    return;
+                }
+
+                // Parse the key into components
+                const [city, region, country] = key.split(',').map(part => part.trim());
+
+                // Update or add location
+                const existingIndex = locationData.locations.findIndex(loc => 
+                    `${loc.city || ''},${loc.region || ''},${loc.country || ''}` === key
+                );
+
+                if (existingIndex >= 0) {
+                    // Update existing location
+                    locationData.locations[existingIndex] = { city, region, country, lat, lng };
+                } else {
+                    // Add new location
+                    locationData.locations.push({ city, region, country, lat, lng });
+                }
+                
+                // Update UI
+                updateLocationTable();
+                updateLocationPreview();
+                
+                // Show success message
+                document.getElementById('searchStatus').textContent = 'Location saved successfully!';
+                document.getElementById('searchStatus').style.color = '#198754';
+                
+                // Reset form, header, and button text
+                form.reset();
+                document.getElementById('formHeader').textContent = 'Add New Location';
+                document.getElementById('formHeader').style.color = '';
+                document.getElementById('submitButton').textContent = 'Add Location';
+                document.getElementById('deleteButton').style.display = 'none';
+                document.getElementById('cancelButton').style.display = 'none';
+                
+                // If the unmatched locations container is visible, refresh the list
+                const unmatchedContainer = document.getElementById('unmatchedLocationsContainer');
+                if (unmatchedContainer.style.display !== 'none') {
+                    // Refresh the unmatched locations list
+                    loadBusinessData().then(locations => {
+                        // Scroll back to the unmatched locations section
+                        unmatchedContainer.scrollIntoView({ behavior: 'smooth' });
+                    });
+                }
+            });
+
+            // Add cancel button handler
+            document.getElementById('cancelButton').addEventListener('click', function() {
+                form.reset();
+                document.getElementById('formHeader').textContent = 'Add New Location';
+                document.getElementById('formHeader').style.color = '';
+                document.getElementById('submitButton').textContent = 'Add Location';
+                document.getElementById('deleteButton').style.display = 'none';
+                document.getElementById('cancelButton').style.display = 'none';
+            });
+
+            // Import JSON file
+            importFile.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const importedData = JSON.parse(e.target.result);
+                            if (Array.isArray(importedData.locations)) {
+                                locationData = importedData;
+                                updateLocationTable();
+                                updateLocationPreview();
+                                // Update the current file display
+                                document.getElementById('currentFile').textContent = `Current file: ${file.name}`;
+                                alert('Location data imported successfully!');
+                            } else {
+                                throw new Error('Invalid data structure');
+                            }
+                        } catch (error) {
+                            alert('Error importing file: Invalid JSON format');
+                            document.getElementById('currentFile').textContent = '';
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            });
+
+            // Download JSON
+            downloadJsonBtn.addEventListener('click', function() {
+                const blob = new Blob([JSON.stringify(locationData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'locationData.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+
+            // Geocoding functionality
+            geocodeButton.addEventListener('click', async function() {
+                const searchLocation = document.getElementById('searchLocation').value.trim();
+                if (!searchLocation) {
+                    document.getElementById('searchStatus').textContent = 'Please enter a location to search';
+                    document.getElementById('searchStatus').style.color = '#dc3545';
+                    return;
+                }
+
+                loadingIndicator.style.display = 'block';
+                document.getElementById('searchResults').style.display = 'none';
+                document.getElementById('searchStatus').textContent = 'Searching...';
+                document.getElementById('searchStatus').style.color = '';
+                
+                try {
+                    // Search for locations with broader parameters to get more results
+                    const params = new URLSearchParams({
+                        format: 'json',
+                        q: searchLocation,
+                        limit: '10',
+                        addressdetails: '1',
+                        'accept-language': 'en'
+                    });
+
+                    const response = await fetch(`https://nominatim.openstreetmap.org/search?${params.toString()}`);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data && data.length > 0) {
+                        // Filter results to prioritize city/town/region/country results
+                        const filteredResults = data.filter(result => 
+                            result.address && 
+                            (
+                                result.address.city || 
+                                result.address.town || 
+                                result.address.village || 
+                                result.address.state || 
+                                result.address.country
+                            )
+                        );
+                        
+                        if (filteredResults.length > 0) {
+                            // Display all results in a dropdown
+                            const resultsContainer = document.getElementById('searchResults');
+                            resultsContainer.style.display = 'block';
+                            resultsContainer.querySelector('.list-group').innerHTML = '';
+                            
+                            filteredResults.forEach((result, index) => {
+                                // Create a descriptive location name
+                                const cityName = result.address.city || result.address.town || result.address.village || '';
+                                const stateName = result.address.state || '';
+                                const countryName = result.address.country || '';
+                                
+                                // Format the display text based on what data is available
+                                let locationText = '';
+                                if (cityName) {
+                                    locationText += cityName;
+                                    if (stateName) locationText += `, ${stateName}`;
+                                    if (countryName) locationText += `, ${countryName}`;
+                                } else if (stateName) {
+                                    locationText += stateName;
+                                    if (countryName) locationText += `, ${countryName}`;
+                                } else {
+                                    locationText = countryName;
+                                }
+                                
+                                // Add type info and coordinates for clarity
+                                const typeInfo = result.type || '';
+                                const coords = `(${parseFloat(result.lat).toFixed(4)}, ${parseFloat(result.lon).toFixed(4)})`;
+                                
+                                const resultItem = document.createElement('button');
+                                resultItem.className = 'list-group-item list-group-item-action';
+                                resultItem.innerHTML = `
+                                    <strong>${locationText}</strong>
+                                    <div class="small text-muted">${typeInfo} ${coords}</div>
+                                `;
+                                resultItem.type = 'button'; // Prevent form submission
+                                resultItem.addEventListener('click', function(e) {
+                                    e.preventDefault(); // Prevent any form submission
+                                    e.stopPropagation(); // Stop event bubbling
+                                    
+                                    // Extract location data
+                                    const address = result.address;
+                                    const newLocation = {
+                                        city: address.city || address.town || address.village || '',
+                                        region: getAbbreviatedForm(address.state || '', stateAbbreviations),
+                                        country: getAbbreviatedForm(address.country || '', countryAbbreviations),
+                                        lat: parseFloat(result.lat),
+                                        lng: parseFloat(result.lon)
+                                    };
+                                    
+                                    // Update form fields
+                                    document.getElementById('locationKey').value = `${newLocation.city},${newLocation.region},${newLocation.country}`.toLowerCase();
+                                    document.getElementById('latitude').value = newLocation.lat.toFixed(4);
+                                    document.getElementById('longitude').value = newLocation.lng.toFixed(4);
+                                    
+                                    // Update map
+                                    updateMap(newLocation.lat, newLocation.lng);
+                                    
+                                    // Clear search results and update status
+                                    document.getElementById('searchResults').style.display = 'none';
+                                    document.getElementById('searchStatus').textContent = 'Location selected. Review the details and click "Add Location" to save it.';
+                                    document.getElementById('searchStatus').style.color = '#198754';
+                                });
+                                
+                                resultsContainer.querySelector('.list-group').appendChild(resultItem);
+                            });
+                            
+                            document.getElementById('searchStatus').textContent = `${filteredResults.length} locations found. Click one to select it.`;
+                            document.getElementById('searchStatus').style.color = '#198754';
+                        } else {
+                            document.getElementById('searchStatus').textContent = 'No matching locations found';
+                            document.getElementById('searchStatus').style.color = '#dc3545';
+                        }
+                    } else {
+                        document.getElementById('searchStatus').textContent = 'No matching locations found';
+                        document.getElementById('searchStatus').style.color = '#dc3545';
+                    }
+                } catch (error) {
+                    console.error('Error geocoding location:', error);
+                    document.getElementById('searchStatus').textContent = 'Error finding location. Please try again.';
+                    document.getElementById('searchStatus').style.color = '#dc3545';
+                } finally {
+                    loadingIndicator.style.display = 'none';
+                }
+            });
+
+            // Map click handler
+            map.on('click', function(e) {
+                const { lat, lng } = e.latlng;
+                document.getElementById('latitude').value = lat.toFixed(4);
+                document.getElementById('longitude').value = lng.toFixed(4);
+                updateMap(lat, lng);
+            });
+
+            // Add sort event listeners to table headers
+            document.querySelectorAll('.sortable').forEach(header => {
+                header.addEventListener('click', function() {
+                    const column = this.dataset.sort;
+                    sortTable(column);
+                });
+            });
+
+            // Add search input event listener
+            tableSearch.addEventListener('input', function() {
+                updateLocationTable();
+            });
+
+            // Update the current file display when the page loads
+            if (importFile.files[0]) {
+                document.getElementById('currentFile').textContent = `Current file: ${importFile.files[0].name}`;
+            }
+
+            // Make table cells editable
+            function makeEditable(cell, key, field) {
+                const currentValue = cell.textContent;
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.className = 'form-control form-control-sm';
+                input.value = currentValue;
+                input.step = 'any';
+                input.min = field === 'lat' ? '-90' : '-180';
+                input.max = field === 'lat' ? '90' : '180';
+                
+                // Save on blur or enter key
+                input.addEventListener('blur', () => saveEdit(cell, input, key, field));
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        input.blur();
+                    }
+                });
+                
+                cell.textContent = '';
+                cell.appendChild(input);
+                input.focus();
+            }
+
+            // Save edited value
+            function saveEdit(cell, input, key, field) {
+                const newValue = parseFloat(input.value);
+                if (!isNaN(newValue)) {
+                    if (field === 'lat' && newValue >= -90 && newValue <= 90) {
+                        locationData.locations = locationData.locations.map(location => 
+                            key === `${location.city},${location.region},${location.country}` ? { ...location, lat: Number(newValue.toFixed(4)) } : location
+                        );
+                        cell.textContent = newValue.toFixed(4);
+                        updateLocationPreview();
+                    } else if (field === 'lng' && newValue >= -180 && newValue <= 180) {
+                        locationData.locations = locationData.locations.map(location => 
+                            key === `${location.city},${location.region},${location.country}` ? { ...location, lng: Number(newValue.toFixed(4)) } : location
+                        );
+                        cell.textContent = newValue.toFixed(4);
+                        updateLocationPreview();
+                    } else {
+                        // Invalid value, revert to original
+                        cell.textContent = locationData.locations.find(loc => 
+                            `${loc.city},${loc.region},${loc.country}` === key
+                        )[field].toFixed(4);
+                    }
+                } else {
+                    // Invalid input, revert to original
+                    cell.textContent = locationData.locations.find(loc => 
+                        `${loc.city},${loc.region},${loc.country}` === key
+                    )[field].toFixed(4);
+                }
+            }
+
+            // Add functionality to check for unmatched locations
+            let businessData = [];
+            
+            // Function to find unmatched locations
+            function findUnmatchedLocations(businesses, locations) {
+                if (!Array.isArray(locations)) {
+                    console.warn('Location data is not in expected format');
+                    return [];
+                }
+
+                // Dictionary of normalized location components from locationData
+                const existingLocations = {
+                    cities: new Set(),
+                    regions: new Set(),
+                    countries: new Set()
+                };
+
+                // Populate with existing location data
+                locations.forEach(loc => {
+                    if (typeof loc === 'object' && loc !== null) {
+                        const city = (loc.city || '').trim().toLowerCase();
+                        const region = (loc.region || '').trim().toLowerCase();
+                        const country = (loc.country || '').trim().toLowerCase();
+                        
+                        if (city) existingLocations.cities.add(city);
+                        if (region) existingLocations.regions.add(region);
+                        if (country) existingLocations.countries.add(country);
+                    }
+                });
+
+                console.log('Existing cities count:', existingLocations.cities.size);
+                console.log('Existing regions count:', existingLocations.regions.size);
+                console.log('Existing countries count:', existingLocations.countries.size);
+
+                const unmatchedBusinesses = [];
+
+                // Check each business
+                businesses.forEach(business => {
+                    if (!business) return;
+                    
+                    // Get location components from either direct properties or location string
+                    const locationString = business.location || '';
+                    const locationParts = locationString.split(',').map(part => part.trim());
+                    
+                    // Prioritize direct properties if available
+                    const city = (business.city || locationParts[0] || '').trim().toLowerCase();
+                    const region = (business.region || locationParts[1] || '').trim().toLowerCase();
+                    const country = (business.country || locationParts[2] || '').trim().toLowerCase();
+                    
+                    // Skip empty locations
+                    if (!city && !region && !country) return;
+                    
+                    // Check which components are missing from location database
+                    const missingComponents = [];
+                    let isMatched = true;
+                    
+                    if (city && !existingLocations.cities.has(city)) {
+                        missingComponents.push('city');
+                        isMatched = false;
+                    }
+                    
+                    if (region && !existingLocations.regions.has(region)) {
+                        missingComponents.push('region');
+                        isMatched = false;
+                    }
+                    
+                    if (country && !existingLocations.countries.has(country)) {
+                        missingComponents.push('country');
+                        isMatched = false;
+                    }
+                    
+                    // If any component is missing, add business to unmatched list
+                    if (!isMatched) {
+                        // For display, use the non-lowercase versions
+                        const displayCity = (business.city || locationParts[0] || '').trim();
+                        const displayRegion = (business.region || locationParts[1] || '').trim();
+                        const displayCountry = (business.country || locationParts[2] || '').trim();
+                        
+                        unmatchedBusinesses.push({
+                            business,
+                            missingComponents,
+                            city: displayCity,
+                            region: displayRegion,
+                            country: displayCountry
+                        });
+                    }
+                });
+
+                console.log(`Found ${unmatchedBusinesses.length} unmatched businesses out of ${businesses.length} total`);
+                return unmatchedBusinesses;
+            }
+
+            // Update unmatched locations table
+            function updateUnmatchedLocationsTable(unmatchedLocations) {
+                const tableBody = document.getElementById('unmatchedLocationsBody');
+                tableBody.innerHTML = '';
+                
+                unmatchedLocations.forEach(item => {
+                    if (!item) return;
+                    
+                    const { business, missingComponents, city, region, country } = item;
+                    const row = document.createElement('tr');
+                    const safeBusinessName = (business.name || '').replace(/"/g, '&quot;');
+                    const safeCity = city.replace(/"/g, '&quot;');
+                    const safeRegion = region.replace(/"/g, '&quot;');
+                    const safeCountry = country.replace(/"/g, '&quot;');
+                    
+                    // Determine which level is the most detailed that's missing
+                    let mostDetailedMissingLevel = null;
+                    if (city && missingComponents.includes('city')) {
+                        mostDetailedMissingLevel = 'city';
+                    } else if (region && missingComponents.includes('region')) {
+                        mostDetailedMissingLevel = 'region';
+                    } else if (country && missingComponents.includes('country')) {
+                        mostDetailedMissingLevel = 'country';
+                    }
+                    
+                    // Create status indicators for each component
+                    const cityStatus = (city && mostDetailedMissingLevel === 'city') ? 
+                        '<span class="badge bg-danger">Missing</span>' : 
+                        (city && !missingComponents.includes('city')) ? '<span class="badge bg-success">Found</span>' : '';
+                        
+                    const regionStatus = (region && mostDetailedMissingLevel === 'region') ? 
+                        '<span class="badge bg-danger">Missing</span>' : 
+                        (region && !missingComponents.includes('region')) ? '<span class="badge bg-success">Found</span>' : '';
+                        
+                    const countryStatus = (country && mostDetailedMissingLevel === 'country') ? 
+                        '<span class="badge bg-danger">Missing</span>' : 
+                        (country && !missingComponents.includes('country')) ? '<span class="badge bg-success">Found</span>' : '';
+                    
+                    row.innerHTML = `
+                        <td>${safeBusinessName}</td>
+                        <td>${safeCity} ${cityStatus}</td>
+                        <td>${safeRegion} ${regionStatus}</td>
+                        <td>${safeCountry} ${countryStatus}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="importUnmatchedLocation('${safeBusinessName}', '${safeCity}', '${safeRegion}', '${safeCountry}')">
+                                <i class="bi bi-plus-circle"></i> Add to Locations
+                            </button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // Function to load business data
+            async function loadBusinessData(url = 'https://btcaccepted.org/businessData.json') {
+                const unmatchedStatus = document.getElementById('unmatchedStatus');
+                const unmatchedStatusText = document.getElementById('unmatchedStatusText');
+                const unmatchedSpinner = document.getElementById('unmatchedSpinner');
+                
+                unmatchedStatus.style.display = 'block';
+                unmatchedStatusText.textContent = 'Loading business data...';
+                
+                try {
+                    // Add cache-busting parameter to prevent browser caching
+                    const timestamp = new Date().getTime();
+                    const cacheBuster = `?v=${timestamp}`;
+                    // Add cache buster to URL while preserving any existing parameters
+                    const urlWithCache = url.includes('?') ? 
+                        `${url}&v=${timestamp}` : 
+                        `${url}${cacheBuster}`;
+                    
+                    // Load business data
+                    const response = await fetch(urlWithCache);
+                    if (!response.ok) {
+                        throw new Error(`Failed to load business data from ${url}. Status: ${response.status}`);
+                    }
+                    
+                    // Update status to show we're using fresh data
+                    unmatchedStatusText.textContent = 'Loading fresh business data (cache bypassed)...';
+                    
+                    const data = await response.json();
+                    
+                    // Handle different possible data structures
+                    if (Array.isArray(data)) {
+                        businessData = data;
+                    } else if (data.businesses) {
+                        businessData = data.businesses;
+                    } else if (data.locations) {
+                        businessData = data.locations;
+                    } else {
+                        businessData = [];
+                    }
+
+                    // Process the location data to ensure all locations are in the correct format
+                    const currentLocations = locationData.locations.map(loc => {
+                        return {
+                            city: loc.city || '',
+                            region: loc.region || '',
+                            country: loc.country || ''
+                        };
+                    });
+
+                    // Find unmatched locations
+                    const unmatchedLocations = findUnmatchedLocations(businessData, currentLocations);
+                    updateUnmatchedLocationsTable(unmatchedLocations);
+                    
+                    if (businessData.length === 0) {
+                        unmatchedStatusText.textContent = `No business data found in ${url}.`;
+                    } else {
+                        unmatchedStatusText.textContent = `Found ${unmatchedLocations.length} unmatched locations out of ${businessData.length} businesses.`;
+                    }
+                    
+                    return unmatchedLocations;
+                } catch (error) {
+                    console.error('Error loading business data:', error);
+                    unmatchedStatusText.textContent = `Error loading business data from ${url}: ${error.message}`;
+                    return [];
+                } finally {
+                    unmatchedSpinner.style.display = 'none';
+                }
+            }
+
+            // Function to import an unmatched location
+            window.importUnmatchedLocation = function(businessName, city, region, country) {
+                // Set form fields with the location data
+                document.getElementById('locationKey').value = `${city},${region},${country}`.toLowerCase();
+                document.getElementById('searchLocation').value = `${city}, ${region}, ${country}`;
+
+                // Auto-geocode the location
+                geocodeLocation(`${city}, ${region}, ${country}`);
+                
+                // Scroll to form
+                document.getElementById('locationForm').scrollIntoView({ behavior: 'smooth' });
+                
+                // Show a message
+                document.getElementById('searchStatus').textContent = `Location data from "${businessName}" imported. Please review and click "Add Location" to save.`;
+                document.getElementById('searchStatus').style.color = '#198754';
+            };
+            
+            // Function to geocode a location when importing
+            async function geocodeLocation(searchLocation) {
+                if (!searchLocation) return;
+                
+                loadingIndicator.style.display = 'block';
+                document.getElementById('searchStatus').textContent = 'Searching...';
+                document.getElementById('searchStatus').style.color = '';
+                
+                try {
+                    const params = new URLSearchParams({
+                        format: 'json',
+                        q: searchLocation,
+                        limit: '1',
+                        addressdetails: '1',
+                        'accept-language': 'en'
+                    });
+
+                    const response = await fetch(`https://nominatim.openstreetmap.org/search?${params.toString()}`);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (data && data.length > 0) {
+                        const result = data[0];
+                        
+                        // Update latitude and longitude
+                        document.getElementById('latitude').value = parseFloat(result.lat).toFixed(4);
+                        document.getElementById('longitude').value = parseFloat(result.lon).toFixed(4);
+                        
+                        // Update map
+                        updateMap(parseFloat(result.lat), parseFloat(result.lon));
+                        
+                        // Show success message
+                        document.getElementById('searchStatus').textContent = 'Location found. Review the details and click "Add Location" to save it.';
+                        document.getElementById('searchStatus').style.color = '#198754';
+                    } else {
+                        document.getElementById('searchStatus').textContent = 'No matching location found. Please enter coordinates manually.';
+                        document.getElementById('searchStatus').style.color = '#dc3545';
+                    }
+                } catch (error) {
+                    console.error('Error geocoding location:', error);
+                    document.getElementById('searchStatus').textContent = 'Error finding location. Please enter coordinates manually.';
+                    document.getElementById('searchStatus').style.color = '#dc3545';
+                } finally {
+                    loadingIndicator.style.display = 'none';
+                }
+            }
+
+            // Add check unmatched button event listener
+            document.getElementById('checkUnmatchedBtn').addEventListener('click', async function() {
+                const unmatchedContainer = document.getElementById('unmatchedLocationsContainer');
+                unmatchedContainer.style.display = 'block';
+                
+                // Load business data and find unmatched locations
+                await loadBusinessData();
+                
+                // Scroll to the unmatched locations section
+                unmatchedContainer.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html> 

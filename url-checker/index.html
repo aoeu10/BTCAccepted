@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Status Checker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            padding-bottom: 60px;
+        }
+        .header {
+            background-color: #f7931a;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        .content-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .url-input {
+            min-height: 120px;
+        }
+        .result-item {
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .result-item.success {
+            background-color: #d4edda;
+        }
+        .result-item.error {
+            background-color: #f8d7da;
+        }
+        .status-indicator {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        .spinner-border {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 10px;
+        }
+        #checkingStatus {
+            display: none;
+        }
+        .check-count {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 10px;
+        }
+        #bulkInput::placeholder {
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>URL Status Checker</h1>
+            <p class="mb-0">Check if URLs are accessible and returning valid responses</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="content-section">
+            <div class="row">
+                <div class="col-12">
+                    <h4>Enter URLs to Check</h4>
+                    <p class="text-muted">Enter one URL per line. You can check multiple URLs at once.</p>
+                    
+                    <ul class="nav nav-tabs mb-3" id="inputTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="manual-tab" data-bs-toggle="tab" data-bs-target="#manual-input" type="button" role="tab" aria-controls="manual-input" aria-selected="true">Manual Input</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="json-tab" data-bs-toggle="tab" data-bs-target="#json-input" type="button" role="tab" aria-controls="json-input" aria-selected="false">From JSON</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="website-tab" data-bs-toggle="tab" data-bs-target="#website-input" type="button" role="tab" aria-controls="website-input" aria-selected="false">From Website</button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="inputTabsContent">
+                        <!-- Manual Input Tab -->
+                        <div class="tab-pane fade show active" id="manual-input" role="tabpanel" aria-labelledby="manual-tab">
+                            <div class="mb-3">
+                                <textarea class="form-control url-input" id="bulkInput" rows="5" 
+                                    placeholder="https://example.com
+https://another-example.com
+https://test-site.org"></textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- JSON Input Tab -->
+                        <div class="tab-pane fade" id="json-input" role="tabpanel" aria-labelledby="json-tab">
+                            <div class="mb-3">
+                                <label for="jsonFile" class="form-label">Select JSON File</label>
+                                <input class="form-control" type="file" id="jsonFile" accept=".json">
+                                <div class="form-text">Select a JSON file with URLs to check. The file should contain an array of objects with URL properties.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="jsonPropertyPath" class="form-label">JSON Property Path</label>
+                                <input type="text" class="form-control" id="jsonPropertyPath" placeholder="e.g., website or socialMedia.twitter">
+                                <div class="form-text">Specify the property path to extract URLs from each object. Use dot notation for nested properties.</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Website Input Tab -->
+                        <div class="tab-pane fade" id="website-input" role="tabpanel" aria-labelledby="website-tab">
+                            <div class="mb-3">
+                                <label for="websiteUrl" class="form-label">Website URL</label>
+                                <input type="text" class="form-control" id="websiteUrl" placeholder="https://example.com">
+                                <div class="form-text">Enter a website URL to extract links from.</div>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="extractExternalLinks" checked>
+                                <label class="form-check-label" for="extractExternalLinks">
+                                    Include external links
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center mb-3">
+                        <button class="btn btn-primary" id="checkButton" style="background-color: #f7931a; border-color: #f7931a;">
+                            <i class="bi bi-check2-circle me-2"></i>Check URLs
+                        </button>
+                        <div class="ms-3" id="checkingStatus">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            <span>Checking URLs... <span id="progressCount">0/0</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="resultsSection" style="display: none;">
+            <h4>Results</h4>
+            <div class="check-count mb-3">
+                <span id="successCount">0</span> successful, <span id="errorCount">0</span> failed
+            </div>
+            <div id="resultsContainer">
+                <!-- Results will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkButton = document.getElementById('checkButton');
+            const bulkInput = document.getElementById('bulkInput');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const resultsSection = document.getElementById('resultsSection');
+            const checkingStatus = document.getElementById('checkingStatus');
+            const progressCount = document.getElementById('progressCount');
+            const successCount = document.getElementById('successCount');
+            const errorCount = document.getElementById('errorCount');
+
+            checkButton.addEventListener('click', async function() {
+                // Get URLs based on active tab
+                const activeTab = document.querySelector('#inputTabs .nav-link.active').id;
+                let urls = [];
+                
+                switch (activeTab) {
+                    case 'manual-tab':
+                        // Get URLs from textarea
+                        urls = bulkInput.value.split('\n')
+                            .map(url => url.trim())
+                            .filter(url => url && url.length > 0);
+                        break;
+                        
+                    case 'json-tab':
+                        // Get URLs from JSON file
+                        const jsonFile = document.getElementById('jsonFile').files[0];
+                        const jsonPropertyPath = document.getElementById('jsonPropertyPath').value.trim();
+                        
+                        if (!jsonFile) {
+                            alert('Please select a JSON file');
+                            return;
+                        }
+                        
+                        if (!jsonPropertyPath) {
+                            alert('Please specify a property path');
+                            return;
+                        }
+                        
+                        try {
+                            const jsonData = await readJsonFile(jsonFile);
+                            if (!Array.isArray(jsonData)) {
+                                alert('JSON file must contain an array of objects');
+                                return;
+                            }
+                            
+                            // Extract URLs from JSON objects
+                            urls = extractUrlsFromJson(jsonData, jsonPropertyPath);
+                            
+                            if (urls.length === 0) {
+                                alert(`No URLs found with property path "${jsonPropertyPath}"`);
+                                return;
+                            }
+                        } catch (error) {
+                            alert('Error reading JSON file: ' + error.message);
+                            return;
+                        }
+                        break;
+                        
+                    case 'website-tab':
+                        // Get URLs from website
+                        const websiteUrl = document.getElementById('websiteUrl').value.trim();
+                        const extractExternalLinks = document.getElementById('extractExternalLinks').checked;
+                        
+                        if (!websiteUrl) {
+                            alert('Please enter a website URL');
+                            return;
+                        }
+                        
+                        try {
+                            // Show extracting status
+                            checkingStatus.style.display = 'block';
+                            checkingStatus.querySelector('span:last-child').textContent = 'Extracting links...';
+                            checkButton.disabled = true;
+                            
+                            // Extract URLs from website
+                            urls = await extractUrlsFromWebsite(websiteUrl, extractExternalLinks);
+                            
+                            if (urls.length === 0) {
+                                alert('No URLs found on the website');
+                                checkingStatus.style.display = 'none';
+                                checkButton.disabled = false;
+                                return;
+                            }
+                        } catch (error) {
+                            alert('Error extracting URLs from website: ' + error.message);
+                            checkingStatus.style.display = 'none';
+                            checkButton.disabled = false;
+                            return;
+                        }
+                        break;
+                }
+                
+                if (urls.length === 0) {
+                    alert('Please enter at least one URL');
+                    return;
+                }
+
+                // Clear previous results
+                resultsContainer.innerHTML = '';
+                resultsSection.style.display = 'block';
+                successCount.textContent = '0';
+                errorCount.textContent = '0';
+                
+                // Show checking status
+                checkingStatus.style.display = 'block';
+                checkingStatus.querySelector('span:last-child').textContent = `Checking URLs... <span id="progressCount">0/${urls.length}</span>`;
+                progressCount.textContent = `0/${urls.length}`;
+                checkButton.disabled = true;
+                
+                let completed = 0;
+                let successes = 0;
+                let errors = 0;
+                
+                // Create result item placeholders
+                const resultItems = urls.map((url, index) => {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'result-item';
+                    resultItem.id = `result-${index}`;
+                    resultItem.innerHTML = `
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span>${url}</span>
+                    `;
+                    resultsContainer.appendChild(resultItem);
+                    return resultItem;
+                });
+
+                // Check each URL
+                const promises = urls.map((url, index) => {
+                    // Make sure URL has a protocol
+                    if (!url.match(/^https?:\/\//i)) {
+                        url = 'https://' + url;
+                    }
+
+                    return checkUrl(url)
+                        .then(isValid => {
+                            // Update result item
+                            const resultItem = resultItems[index];
+                            if (isValid) {
+                                resultItem.className = 'result-item success';
+                                resultItem.innerHTML = `
+                                    <span class="status-indicator text-success"><i class="bi bi-check-circle-fill"></i></span>
+                                    <span>${url}</span>
+                                `;
+                                successes++;
+                            } else {
+                                resultItem.className = 'result-item error';
+                                resultItem.innerHTML = `
+                                    <span class="status-indicator text-danger"><i class="bi bi-x-circle-fill"></i></span>
+                                    <span>${url}</span>
+                                `;
+                                errors++;
+                            }
+                            
+                            // Update progress
+                            completed++;
+                            progressCount.textContent = `${completed}/${urls.length}`;
+                            successCount.textContent = successes;
+                            errorCount.textContent = errors;
+                        });
+                });
+
+                // Wait for all checks to complete
+                await Promise.all(promises);
+                
+                // Hide checking status
+                checkingStatus.style.display = 'none';
+                checkButton.disabled = false;
+            });
+
+            // Function to read a JSON file
+            function readJsonFile(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = event => {
+                        try {
+                            const jsonData = JSON.parse(event.target.result);
+                            resolve(jsonData);
+                        } catch (error) {
+                            reject(new Error('Invalid JSON file'));
+                        }
+                    };
+                    reader.onerror = () => reject(new Error('Error reading file'));
+                    reader.readAsText(file);
+                });
+            }
+
+            // Function to extract URLs from JSON objects
+            function extractUrlsFromJson(jsonData, propertyPath) {
+                const props = propertyPath.split('.');
+                const urls = [];
+                
+                jsonData.forEach(item => {
+                    // Navigate through the object using the property path
+                    let value = item;
+                    for (const prop of props) {
+                        if (value && typeof value === 'object') {
+                            value = value[prop];
+                        } else {
+                            value = null;
+                            break;
+                        }
+                    }
+                    
+                    // If we found a valid URL, add it to the list
+                    if (value && typeof value === 'string' && value.trim()) {
+                        urls.push(value.trim());
+                    }
+                });
+                
+                return urls;
+            }
+
+            // Function to extract URLs from a website
+            async function extractUrlsFromWebsite(websiteUrl, includeExternal) {
+                try {
+                    // Create URL object to get hostname
+                    const url = new URL(websiteUrl.startsWith('http') ? websiteUrl : `https://${websiteUrl}`);
+                    const hostname = url.hostname;
+                    
+                    // Use our backend to fetch the website HTML
+                    const response = await fetch(`/api/extract?url=${encodeURIComponent(url.href)}`);
+                    const data = await response.json();
+                    
+                    if (!data.success) {
+                        throw new Error(data.message || 'Failed to extract links');
+                    }
+                    
+                    // Filter and process links
+                    const allLinks = data.links || [];
+                    const urls = new Set();
+                    
+                    allLinks.forEach(link => {
+                        try {
+                            // Parse the URL
+                            const linkUrl = new URL(link.startsWith('http') ? link : `${url.origin}${link.startsWith('/') ? '' : '/'}${link}`);
+                            
+                            // Check if it's an external link
+                            const isExternal = linkUrl.hostname !== hostname;
+                            
+                            // Add to the set if it's valid and matches our filter
+                            if (includeExternal || !isExternal) {
+                                urls.add(linkUrl.href);
+                            }
+                        } catch (error) {
+                            // Invalid URL, skip it
+                        }
+                    });
+                    
+                    return Array.from(urls);
+                } catch (error) {
+                    // If our API fails, try a fallback method
+                    alert('Link extraction API is not available. You can enter URLs manually or from a JSON file.');
+                    return [];
+                }
+            }
+
+            // Function to check if a URL is valid
+            async function checkUrl(url) {
+                try {
+                    // Use our backend server to check the URL
+                    const response = await fetch('/api/check?url=' + encodeURIComponent(url));
+                    const data = await response.json();
+                    
+                    return data.status && data.status.success;
+                } catch (error) {
+                    console.error(`Error checking URL ${url}:`, error);
+                    return false;
+                }
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

@@ -1,0 +1,865 @@
+[
+  {
+    "name": "Northland Dirt Works & Land Clearing",
+    "slug": "northland-dirt",
+    "categories": [
+      "Landscaping",
+      "Excavation",
+      "Land Clearing",
+      "Forestry Mulching",
+      "Right of Way Clearing"
+    ],
+    "website": "northlanddirt.com",
+    "country": "US",
+    "region": "MN",
+    "city": "Carlton",
+    "owner": "Heins",
+    "submittedBy": "Owner",
+    "email": "dlheins@northlanddirt.com",
+    "phone": "218-393-0410",
+    "description": "Excavation - Forestry Mulching - Brush Removal - Hauling - Site Preparation - Demolition. Accepting bitcoin via Coinos. Please call or email and ask for more details.",
+    "logoUrl": "images/logos/northlandLogo.png",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true
+    },
+    "socialMedia": {},
+    "lastVerified": "2025-03-22",
+    "id": 1,
+    "category": "Landscaping"
+  },
+  {
+    "name": "Ethical Tree Care & Landscaping",
+    "slug": "ethical-tree-care",
+    "categories": [
+      "Landscaping",
+      "Tree Care"
+    ],
+    "website": "https://www.facebook.com/ethicaltreecare/",
+    "country": "US",
+    "isGlobalOrOnline": false,
+    "region": "MN",
+    "city": "St. Cloud",
+    "owner": "Kyle",
+    "submittedBy": "User",
+    "email": "ethicaltreecare1@gmail.com",
+    "phone": "320-310-5603",
+    "description": "Tree care services specializing in sustainable practices and accepting Bitcoin for all services.",
+    "logoUrl": "images/logos/ethicalTreeCareLogo.jpg",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "facebook": "ethicaltreecare"
+    },
+    "lastVerified": "2025-03-22",
+    "id": 2,
+    "category": "Landscaping"
+  },
+  {
+    "name": "Soap Miner",
+    "slug": "soap-miner",
+    "categories": [
+      "Skin Care",
+      "Beauty/Cosmetic",
+      "Personal Care"
+    ],
+    "website": "https://soapminer.com",
+    "country": "",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "This is the soap your great grandma used to make. Gentle, natural, and moisturizing , and free from anything toxic. These are humble soaps. Once you try our soaps, you will love our soaps.\n\nOur natural soaps are the heart and soul of our brand. Each bar is meticulously crafted using only the finest ingredients, sourced sustainably to ensure that we’re kind to both your skin and the environment. We’re committed to transparency and quality, so you can trust that each product is free from harmful chemicals and artificial additives.\n\nWe view soap making as an art, a harmonious blend of nature’s bounties that speaks to our commitment to sustainability and wellness. Our products are not just soaps; they are a reflection of our passion for purity and self-care.",
+    "logoUrl": "images/logos/soapMinerLogo.webp",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "@soapminer1",
+      "nostr": "npub1zzmxvr9sw49lhzfx236aweurt8h5tmzjw7x3gfsazlgd8j64ql0sexw5wy"
+    },
+    "lastVerified": "2025-03-26",
+    "id": 3,
+    "category": "Skin Care"
+  },
+  {
+    "name": "Tallowz",
+    "slug": "tallowz",
+    "categories": [
+      "Skin Care",
+      "Beauty/Cosmetic",
+      "Personal Care"
+    ],
+    "website": "https://tallowz.com/",
+    "country": "US",
+    "isGlobalOrOnline": true,
+    "region": "Colorado",
+    "city": "",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "Tallowz was founded in 2023 with a simple mission: Create the perfect natural lotion you would use everyday, while supporting the rebuilding of our food system by funding local ranchers and farmers. It's simple, use what has worked for thousands of years before \"Big Lotion\" showed up. Ditch the man-made bullsh*t by using a better product, all while supporting local ranchers in the process.",
+    "logoUrl": "images/logos/tallowzLogo.jpg",
+    "paymentMethods": {
+      "onchain": false,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "tallowzskincare",
+      "instagram": "@tallowzskincare"
+    },
+    "lastVerified": "2025-03-26",
+    "id": 4,
+    "category": "Skin Care"
+  },
+  {
+    "name": "Heart & Soil",
+    "slug": "heart-soil",
+    "categories": [
+      "Health & Fitness",
+      "Farm",
+      "Supplements"
+    ],
+    "website": "https://heartandsoil.co/",
+    "country": "",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "Heart & Soil was founded in 2020 by Paul Saladino, MD so more people could enjoy the nourishment of organs in a clean, convenient and taste-free capsule.  Organs are the most nutrient-rich foods on the planet. You can get 100 times more nutrients from organs compared to muscle meats! They include everything your body needs to thrive: vitamins, minerals, peptides, proteins, and growth factors. That’s why our ancestors were strong, virile, and vital! That’s how they thrived generation after generation in the world’s harshest environments. And that’s why we’re making treasured organs easily accessible.",
+    "logoUrl": "images/logos/heartsoil.png",
+    "paymentMethods": {
+      "onchain": false,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "heartandsoilhq",
+      "facebook": "heartandsoilsupplements",
+      "instagram": "heartandsoilsupplements"
+    },
+    "lastVerified": "2025-03-26",
+    "id": 5,
+    "category": "Health & Fitness"
+  },
+  {
+    "name": "Clara & Fritz",
+    "slug": "clara-fritz",
+    "categories": [
+      "Skin Care",
+      "Beauty/Cosmetic",
+      "Personal Care"
+    ],
+    "website": "https://claraandfritz.com/",
+    "country": "",
+    "isGlobalOrOnline": true,
+    "region": "New Jersey",
+    "city": "",
+    "owner": "Nicole",
+    "submittedBy": "User",
+    "email": "help@claraandfritz.com",
+    "phone": "",
+    "description": "CLARA & FRITZ IS A FAMILY-OWNED SHOP SPECIALIZING IN PROVIDING CLEAN, SIMPLE SKIN CARE. \n\nWe strive to make everything with clean, natural ingredients.\nWe value the good, the true, and the beautiful.\nWe treat others the way we want to be treated.\nWe are committed to doing everything with excellence.",
+    "logoUrl": "images/logos/claraFritzLog.avif",
+    "paymentMethods": {
+      "onchain": false,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "ClaraAndFritz",
+      "facebook": "claraandfritzshop",
+      "instagram": "claraandfritztallowshop"
+    },
+    "lastVerified": "2025-03-26",
+    "id": 6,
+    "category": "Skin Care"
+  },
+  {
+    "name": "Salt of the Earth",
+    "slug": "salt-of-the-earth",
+    "categories": [
+      "Food & Drink",
+      "Health & Fitness",
+      "Supplements",
+      "Personal Care"
+    ],
+    "website": "https://drinksote.com/",
+    "country": "",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "Welcome to Salt of the Earth, your trusted source of premium electrolyte products. Founded in 2023 by a group of friends in Bali who share a deep passion for surfing and fitness, our company emerged from the common desire to maintain peak performance and optimal hydration amidst the breathtaking waves of Bali. We've used the highest levels of sports nutrition testing and have worked with former Gatorade Sports Science Institute athletes to develop our formula.\nAt Salt of the Earth, we are dedicated to upholding excellence in quality, taste, and performance. Recognizing the vital role of electrolytes in sustaining optimal hydration levels, particularly during strenuous physical endeavors, we have meticulously designed our electrolyte products to deliver unrivaled hydration and maintain an ideal electrolyte equilibrium.\n",
+    "logoUrl": "images/logos/soteLogo.png",
+    "paymentMethods": {
+      "onchain": false,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "drink_sote",
+      "facebook": "https://www.facebook.com/people/Salt-of-the-Earth-Electrolytes/61550993548488/",
+      "instagram": "drink_sote"
+    },
+    "lastVerified": "2025-03-26",
+    "id": 7,
+    "category": "Food & Drink"
+  },
+  {
+    "name": "The LeatherMint",
+    "slug": "the-leathermint",
+    "categories": [
+      "Fashion accessories",
+      "Leather products",
+      "Bitcoin Accessories",
+      "Leather"
+    ],
+    "website": "theleathermint.com",
+    "country": "Canada",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "Montreal",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "Located in the historic neighborhood of Quartier Saint-Henri in Montréal, where leathercraft was born during the foundation of Nouvelle-France, The LeatherMint is rebuilding from the ground up—this time, on the Bitcoin standard. We are a sovereign and hyperbitcoinized business dedicated to financial independence and craftsmanship. Our operation is unregistered by design, as we believe in commerce without permission, upholding the values of freedom and autonomy that Bitcoin represents.\n\nFull grain leather and solid brass hardware. Belts, Wallets, Sleeves for Hardware Signing Devices, Passport Holders.",
+    "logoUrl": "images/logos/theleathermintLogo.webp",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "theleathermint",
+      "nostr": "npub1v0tfjv5ahr3c260jtzdk5w48krerrnkg8fmcnc5lpguk0qda04eqzm3m3e"
+    },
+    "lastVerified": "2025-03-26",
+    "id": 8,
+    "category": "Fashion accessories"
+  },
+  {
+    "name": "Ketolish",
+    "slug": "ketolish",
+    "categories": [
+      "Food & Drink",
+      "Meat"
+    ],
+    "website": "https://ketolish.us",
+    "country": "US",
+    "isGlobalOrOnline": true,
+    "region": "MN",
+    "city": "St. Paul",
+    "owner": "B.J.W.",
+    "submittedBy": "User",
+    "email": "bjw@ketolish.us",
+    "phone": "",
+    "description": "Low sugar beef jerky that’s deliciously made in Minnesota using locally-sourced lean ground meats and quality ingredients. Payment only in sats. DM or email to receive the payment invoice.\nMy low-sugar jerky is made per your order, from fresh (never frozen) beef that’s sourced from St. Michael, MN and freshly ground the day we get it from our processor (never pink slime in a tube from a grocery chain!). We strive to make each batch within 1-2 days and ship no later than 2 business days after it’s made, to provide you the freshest low sugar jerky. Ground meat jerky is easier to chew than jerky made from strips of muscle meat, because it’s got a more tender texture. We also occasionally make ground bison, ground elk, and ground chicken jerky (limited to supply availability).",
+    "logoUrl": "images/logos/ketolishLogo.png",
+    "paymentMethods": {
+      "onchain": false,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "nostr": "npub1cwhy4k8qd2guyqz8t45u4yzyp4k4fhnjn573ukh6e77mde2dgm9s2lujc5 npub1cwhy4k8qd2guyqz8t45u4yzyp4k4fhnjn573ukh6e77mde2dgm9s2lujc5"
+    },
+    "lastVerified": "2025-03-26",
+    "id": 9,
+    "category": "Food & Drink"
+  },
+  {
+    "name": "Start9",
+    "slug": "start9",
+    "categories": [
+      "Bitcoin Hardware"
+    ],
+    "website": "https://start9.com",
+    "country": "",
+    "isGlobalOrOnline": true,
+    "region": "CO",
+    "city": "Denver",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "Take back control\nEverything you do online is intermediated - your actions permissioned, your data custodied.\n\nOpt out by running a private server.\n\nPreviously, this was only available to the tech savvy and the wealthy. Start9 levels the playing field by making it possible for everyone else.",
+    "logoUrl": "images/logos/start9Logo.jpeg",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "@start9labs",
+      "nostr": "npub126ntw5mnermmj0znhjhgdk8lh2af72sm8qfzq48umdlnhaj9kuns3le9ll"
+    },
+    "lastVerified": "2025-04-04",
+    "id": 92,
+    "category": "Bitcoin Hardware"
+  },
+  {
+    "name": "Bitcoin Infinity Store",
+    "slug": "bitcoin-infinity-store",
+    "categories": [
+      "Books/Magazines",
+      "Apparel and Accessories",
+      "Clothing",
+      "Fashion accessories",
+      "Headwear"
+    ],
+    "website": "https://bitcoininfinitystore.com",
+    "country": "",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "",
+    "logoUrl": "images/logos/bitcoinInfinityStoreLogo.png",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "@BtcInfinityShow",
+      "nostr": "npub1h727rfzm6hk9egx5yr602hxszezu0pyl2l7azwuvttlvf67uepyq559jmf"
+    },
+    "lastVerified": "2025-04-07",
+    "id": 95,
+    "category": "Books/Magazines"
+  },
+  {
+    "name": "Bitcoin Magazine Store",
+    "slug": "bitcoin-magazine-store",
+    "categories": [
+      "Books/Magazines",
+      "Bitcoin Hardware",
+      "Apparel and Accessories",
+      "Clothing",
+      "Fashion accessories",
+      "Headwear",
+      "Art",
+      "Prints"
+    ],
+    "website": "https://store.bitcoinmagazine.com",
+    "country": "",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "store@btcmedia.org",
+    "phone": "",
+    "description": "The Bitcoin Magazine Store is an online retail platform offering a diverse range of Bitcoin-themed products. The store features print magazines including their latest \"The Mining Issue,\" alongside books like \"The Satoshi Papers\" and \"Fiat Ruins Everything.\" \n\nTheir merchandise collection includes clothing (t-shirts, sweaters), accessories (hats, mugs), and even Bitcoin-themed Crocs. The store also sells hardware for Bitcoin storage and limited-edition art pieces including the \"Fiat House of Cards,\" \"Bitcoin War Bonds,\" and \"Bukele Bucks\" collections. \n\nFor Bitcoin enthusiasts seeking collectibles, the store offers exclusive items through their \"Bitcoin Originals\" and \"Pepenardo Collection.\" They accept Bitcoin payments via IBEX, ship from the US, and provide interest-free payment options for customers. ",
+    "logoUrl": "images/logos/BitcoinMagazineLogo.png",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "@bitcoinmagazine",
+      "facebook": "facebook.com/BitcoinMagazine",
+      "instagram": "@bitcoinmagazine"
+    },
+    "lastVerified": "2025-04-07",
+    "id": 111,
+    "category": "Books/Magazines"
+  },
+  {
+    "name": "BTC Financial Advisors Network",
+    "slug": "btc-financial-advisors-network",
+    "categories": [
+      "Finance",
+      "Accounting",
+      "Estate and Trust Administration",
+      "Estate, tax and business planning",
+      "Financial Advisors"
+    ],
+    "website": "https://bitcoinfinancialadvisorsnetwork.com",
+    "country": "",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "The Bitcoin Financial Advisors Network is a group of independent financial planning experts who meet qualifications and standards that exceed those of most financial planners.\n\nWe each operate our own separate businesses, but are united by our commitment to provide clients with the highest quality of advice. All of our members believe that bitcoin is money, adopt it personally, and recommend to clients. ",
+    "logoUrl": "",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {},
+    "lastVerified": "2025-04-07",
+    "id": 250,
+    "category": "Finance"
+  },
+  {
+    "name": "BTC Aloha",
+    "slug": "btc-aloha",
+    "categories": [
+      "Apparel and Accessories",
+      "Clothing",
+      "Fashion accessories",
+      "Swimwear"
+    ],
+    "website": "https://btcaloha.shop",
+    "country": "",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "Naomi Olson",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "Aloha! I'm the Bitcoin artist \"Sea is Medicine\" otherwise known as Naomi Olson\n\nBTC Aloha combines my collage art, my love of the surf + sea, with my passion for Bitcoin. I create sustainable, high quality wearable art, aloha shirts & beach accessories that make you feel like one in 21 Million. Peace & prosperity is the foundation of the Bitcoin economy. I want you to feel that simplicity, value, elegance and heart in every BTC Aloha product.\n\nThe Bitcoin Beachwear Brand\nHandmade to Order in England or Limited Editions Handmade in Mexico\nBitcoiner Owned Business. Bitcoin Artist Designs\nLuxury Natural Fabrics 100% Cotton, Silk, Linen\nSustainable Slow Fashion\nFull of Seaspiration",
+    "logoUrl": "images/logos/btcalohaLogo.png",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "@SEAisMEDICINE",
+      "instagram": "@theseaismedicine"
+    },
+    "lastVerified": "2025-04-07",
+    "id": 304,
+    "category": "Apparel and Accessories"
+  },
+  {
+    "name": "FOMO21",
+    "slug": "fomo21",
+    "categories": [
+      "Apparel and Accessories",
+      "Clothing",
+      "Fashion accessories",
+      "Headwear",
+      "Stickers"
+    ],
+    "website": "https://fomo21.com",
+    "country": "",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "help@fomo21.com",
+    "phone": "",
+    "description": "At FOMO21, we believe Bitcoin is more than just a technology—it’s a movement reshaping the way we think about freedom, innovation, and the future. Its revolutionary, non-violent principles inspire hope for a better world. Our mission is to create fun, high-quality merchandise that not only promotes Bitcoin adoption but also celebrates the values of decentralization, independence, and financial empowerment. Whether you're a die-hard Bitcoiner or exploring the ethos of this transformative lifestyle, FOMO21 is here to help you wear your passion and spark conversations about a brighter, freer future.",
+    "logoUrl": "",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "@FOMO21Shop",
+      "facebook": "https://www.facebook.com/fomo21shop",
+      "instagram": "@FOMO21Shop"
+    },
+    "lastVerified": "2025-04-07",
+    "id": 330,
+    "category": "Apparel and Accessories"
+  },
+  {
+    "name": "Highland Wealth Management",
+    "slug": "highland-wealth-management",
+    "categories": [
+      "Financial Advisors"
+    ],
+    "website": "www.highland-wealthmanagement.com/",
+    "country": "United States ",
+    "isGlobalOrOnline": false,
+    "region": "Iowa",
+    "city": "Cedar Falls ",
+    "owner": "axel hoogland",
+    "submittedBy": "Owner",
+    "email": "hooglandaxel@highland-wealthmanagement.com",
+    "phone": "+17158200377",
+    "description": "Fee only financial advising",
+    "logoUrl": "images/logos/highlandWealthLogo.png",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "facebook": "https://www.facebook.com/Highland-Wealth-Management-2164402733829290"
+    },
+    "lastVerified": "2025-04-08",
+    "id": 384
+  },
+  {
+    "name": "The Saif House",
+    "slug": "the-saif-house",
+    "categories": [
+      "Books/Magazines",
+      "Education",
+      "Books",
+      "Economics"
+    ],
+    "website": "https://thesaifhouse.com",
+    "country": "",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "info@saifedean.com",
+    "phone": "",
+    "description": "THE BITCOINERS' BOOKSHOP\nThe best bitcoin books delivered worldwide in all formats, at the best prices, with the best bitcoin & fiat checkout experience.\n\nFounded by best-selling author Saifedean Ammous, The Saif House makes the best Bitcoin books available worldwide, in physical, digital, and audio formats, while allowing you to pay in bitcoin (lightning or on-chain), or with fiat.",
+    "logoUrl": "images/logos/thesaifhouse.png",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "@saifedean"
+    },
+    "lastVerified": "2025-04-07",
+    "id": 448,
+    "category": "Books/Magazines"
+  },
+  {
+    "name": "Sweet Sats",
+    "slug": "sweet-sats",
+    "categories": [
+      "Stickers",
+      "Apiculture",
+      "Maple Syrup",
+      "Jam",
+      "Preserves"
+    ],
+    "website": "https://sweetsats.io",
+    "country": "",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "SweetSats is itcoin only. Prices are listed in Sats, and payment is accepted only in Bitcoin. This site is self-hosted and payments are processed via BTCPay server direct to our node or Zaps sent to our self-custodial Lightning address. Meaning: there are no third parties involved. No tracking, no credit card processors, no sales tax, no bullshit. Simply trading pure honey, maple syrup and other homemade & homegrown products for Bitcoin!",
+    "logoUrl": "images/logos/SweetSatsLogo.png",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "nostr": "npub1sweetl0gskmka0n5qevt7v2wj9q56ntwkmaeywffw4ftaucmcakquhns6h"
+    },
+    "lastVerified": "2025-04-07",
+    "id": 453,
+    "category": "Stickers"
+  },
+  {
+    "name": "Kagi Search",
+    "slug": "kagi-search",
+    "categories": [
+      "Internet Services",
+      "Search"
+    ],
+    "website": "https://kagi.com",
+    "country": "",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "Kagi Search is a highly accurate, lightning-fast, user-centric, 100% privacy-respecting search engine with results augmented by non-commercial indexes and personalized searches. Kagi features a clean, high-performance user interface with only the most relevant results and no telemetry, ads, or collection of private information. You can learn more about its unique features, including the use of Lenses and Personalized Results.\n\nWe are confident that Kagi will help you amplify your search abilities, become more creative in finding information, and accelerate your productivity.",
+    "logoUrl": "images/logos/kagiLogo.svg",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "@kagihq",
+      "nostr": "npub1xsgymm0ne3vndqpvsvy285qfpu59049t5n5twg9vetmt92cyn95snyzazx"
+    },
+    "lastVerified": "2025-04-04",
+    "id": 460,
+    "category": "Internet Services"
+  },
+  {
+    "name": "Satoshi Coffee Co.",
+    "slug": "satoshi-coffee-co",
+    "categories": [
+      "Coffee"
+    ],
+    "website": "https://sats.coffee",
+    "country": "",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "Our Roast is the Proof of Work\nNow you can taste freedom first thing in the morning and also participate in the circular bitcoin economy. Satoshi Coffee Co. offers fresh-roasted coffee that you can purchase using the Lightning Network or on-chain BTC. We try to ship the same day as your order, so you can ensure you receive the freshest, highest quality coffee from us.",
+    "logoUrl": "images/logos/satsCoffeeLogo.png",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "@satscoffee",
+      "instagram": "@satscoffee",
+      "nostr": "npub1a6zkqnuwcmjwynuw4u4xyngy9675x8dwgj87z9me4h8mdwmc2a0q8mvhjk"
+    },
+    "lastVerified": "2025-04-06",
+    "id": 621,
+    "category": "Coffee"
+  },
+  {
+    "name": "Rizful",
+    "slug": "rizful",
+    "categories": [
+      "Lightning Node"
+    ],
+    "website": "https://rizful.com",
+    "country": "",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "Your Lightning Node In The Cloud\n🚀 High-performance.  🕙 Online 24/7.   📱💻 Works on any device. 🚮 Disposable.  Nostr Wallet Connect Icon Nostr wallet connect.",
+    "logoUrl": "images/logos/rizfulLogo.png",
+    "paymentMethods": {
+      "onchain": false,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "nostr": "npub1jluy3twvf338v6zlujzzdhjkzjy8ezj34ksydr8vw8a6jwp89ygshpp2kq"
+    },
+    "lastVerified": "2025-04-06",
+    "id": 645,
+    "category": "Lightning Node"
+  },
+  {
+    "name": "Proof of Ink",
+    "slug": "proof-of-ink",
+    "categories": [
+      "Merchandise",
+      "Apparel and Accessories",
+      "Creative",
+      "Clothing",
+      "Headwear",
+      "Art",
+      "Pins",
+      "Prints",
+      "Stickers"
+    ],
+    "website": "https://proofofink.com",
+    "country": "US",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "John Galt",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "At Proof of Ink, we’re driven by a love for Bitcoin and exceptional T-shirt art. Our mission is to partner with talented Bitcoin artists, turning their bold designs into high-quality, hand-crafted screen-printed T-shirts that are as unique as the blockchain itself. Each shirt is more than just clothing—it’s a wearable piece of art, a collectible, and a nod to the Bitcoin movement.",
+    "logoUrl": "images/logos/proofOfInkLogo.png",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "@ProofofInk",
+      "telegram": "john52galt"
+    },
+    "lastVerified": "2025-04-07",
+    "id": 691,
+    "category": "Merchandise"
+  },
+  {
+    "name": "Sovran Systems",
+    "slug": "sovran-systems",
+    "categories": [
+      "Bitcoin Hardware"
+    ],
+    "website": "https://sovransystems.com",
+    "country": "",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "Dustin Plattner",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "Sovran Systems was created out of necessity from the ever growing reach of big tech and governments into our digital lives. Their systems promote greater surveillance and the closing of our privacy and digital freedom. Sovran Systems mission is to give us more choices outside of these monopolistic enterprises, which only seek to gain more control. We need practical hope from this dystopic technocratic nightmare.\n\nSovran Systems curates all the best privacy software into one system that is easy to use. We are grounded in Natural Law and are on the front lines of this battle to get all people to digital Freedom and digital Sovereignty.\n\nCome join this computer movement to become the ultimate digital Freedom Warrior you were born to be!",
+    "logoUrl": "images/logos/sovranSystemsLogo.svg",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "nostr": "npub1z3r2s5020hplyvzrkhc04lt2yvwc3anlmtr8kerjhp8qj5m5yhyqvuzmvf",
+      "matrix": "https://matrix.to/#/#sovran-systems:anarchyislove.xyz"
+    },
+    "lastVerified": "2025-04-04",
+    "id": 818,
+    "category": "Bitcoin Hardware"
+  },
+  {
+    "name": "CryptoCloaks",
+    "slug": "cryptocloaks",
+    "categories": [
+      "Bitcoin Hardware",
+      "Bitcoin Mining",
+      "Clothing",
+      "Accessories",
+      "Hardware",
+      "Home Mining",
+      "Art",
+      "Pins",
+      "Prints",
+      "Stickers"
+    ],
+    "website": "https://www.cryptocloaks.com",
+    "country": "US",
+    "isGlobalOrOnline": true,
+    "region": "CO",
+    "city": "Loveland",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "support@cryptocloaks.com",
+    "phone": "907-791-1061",
+    "description": "CryptoCloaks LLC was born from the love of 3D printing and the idea of Bitcoin. Our passion for 3D design sparked in December of 2017 with our first product, a Ledger Nano S mount. This product allowed us to safely and securely keep the Ledger hidden. After the success from this mount we quickly grew and have been designing and manufacturing ever since, thanks to our customers who believe in our products!\n\nWe strive for quality products and innovative solutions for keeping your Bitcoin safe and looking great. ",
+    "logoUrl": "images/logos/cryptoCloaksLogo.jpeg",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "@CryptoCloaks",
+      "instagram": "@cryptocloaks",
+      "telegram": "https://t.me/+VHijd8LhSv1WCjPK"
+    },
+    "lastVerified": "2025-04-07",
+    "id": 840,
+    "category": "Bitcoin Hardware"
+  },
+  {
+    "name": "Solo Satoshi",
+    "slug": "solo-satoshi",
+    "categories": [
+      "Bitcoin Hardware",
+      "Bitcoin Mining",
+      "Clothing",
+      "Headwear",
+      "Accessories",
+      "Hardware",
+      "Home Mining"
+    ],
+    "website": "https://www.solosatoshi.com",
+    "country": "",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "Solo Satoshi is dedicated to the advancement of open-sourced Bitcoin mining, with a steadfast commitment to the security and decentralization of the Bitcoin network. As a pioneering force in the Bitcoin space, our mission is to empower individuals and businesses worldwide with innovative, secure, and decentralized mining solutions.\n\nAt Solo Satoshi, we believe in the transformative power of open-source software and the potential it holds for the future of Bitcoin mining. We strive to foster a community of developers and enthusiasts who share our vision of a more secure and decentralized Bitcoin landscape. Our dedication to open-source principles is at the heart of our mission, driving our commitment to transparency, collaboration, and innovation.\n\nWe are passionate about supporting the growth and development of the Bitcoin network, and we recognize the critical role that open-source software and developers play in achieving this goal. By promoting and contributing to the open-source ecosystem, we aim to facilitate a more robust and resilient Bitcoin network, ensuring its longevity and success for years to come.\n\nAt Solo Satoshi, our mission is not only to provide cutting-edge mining solutions but also to educate and inspire others about the importance of decentralization and open-source principles in the Bitcoin space. We believe that by working together, we can create a future where Bitcoin mining is more accessible, efficient, and aligned with the core values of decentralization and open collaboration.",
+    "logoUrl": "images/logos/solosatoshiLogo.png",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "@SoloSatoshi",
+      "nostr": "npub1k8s3skyy5mg5h07w8zvuk5lgrqadmejz7fjdpl60zaznw8sxzdxqxm6y88"
+    },
+    "lastVerified": "2025-04-07",
+    "id": 996,
+    "category": "Bitcoin Hardware"
+  }
+]

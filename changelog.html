@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Changelog & Attribution - Bitcoin-Accepting Businesses Directory</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .header {
+            background-color: #f7931a;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        .bitcoin-icon {
+            height: 48px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        .header h1 {
+            display: inline-block;
+            margin: 0;
+            vertical-align: middle;
+        }
+        .content-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .version-header {
+            border-bottom: 2px solid #f7931a;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .version-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #f7931a;
+        }
+        .version-date {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        .changelog-entry {
+            margin-bottom: 40px;
+        }
+        .changelog-list {
+            padding-left: 20px;
+        }
+        .feature-item {
+            margin-bottom: 8px;
+        }
+        .category-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #495057;
+        }
+        .badge-new {
+            background-color: #28a745;
+            color: white;
+        }
+        .badge-improved {
+            background-color: #17a2b8;
+            color: white;
+        }
+        .badge-fixed {
+            background-color: #dc3545;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="d-flex align-items-center">
+                <a href="index.html" class="text-white text-decoration-none">
+                    <img src="images/icons/btcLogo.svg" alt="Bitcoin Logo" class="bitcoin-icon">
+                    <h1>Accepted</h1>
+                </a>
+            </div>
+            <p class="mb-0">Find businesses that accept Bitcoin payments</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="content-section">
+            <h2>Changelog & Attribution</h2>
+            <p class="lead">Track the evolution of the Bitcoin-Accepting Businesses Directory with our changelog, documenting all updates, improvements, and bug fixes. Also find information about the open-source components and resources used in this project.</p>
+
+            <!-- Version 0.2 - Future Release Placeholder -->
+            <div class="changelog-entry">
+                <div class="version-header">
+                    <div class="version-number">Coming Soon</div>
+                    <div class="version-date">Planned</div>
+                </div>
+                
+                <div class="category-label">
+                    <span class="badge badge-improved">Planned</span> Future Enhancements
+                </div>
+                <ul class="changelog-list text-muted">
+                    <li class="feature-item">Enhanced search with advanced filtering options</li>
+                    <li class="feature-item">Interactive map view for geographic browsing</li>
+                    <li class="feature-item">Ability to search BTCMap listings integrated into the directory</li>
+                    <li class="feature-item">Implementation of ratings and reviews for businesses</li>
+                    <li class="feature-item">Business verification system</li>
+                </ul>
+            </div>
+
+            <!-- Version 0.1 - Initial Release -->
+            <div class="changelog-entry">
+                <div class="version-header">
+                    <div class="version-number">Version 0.1 - Initial Release</div>
+                    <div class="version-date">March 19, 2025</div>
+                </div>
+                
+                <div class="category-label">
+                    <span class="badge badge-new">New</span> Core Features
+                </div>
+                <ul class="changelog-list">
+                    <li class="feature-item">Launched the Bitcoin-Accepting Businesses Directory with initial business listings</li>
+                    <li class="feature-item">Implemented basic search and filtering functionality (by category, location, and text search)</li>
+                    <li class="feature-item">Added support for multi-category businesses</li>
+                    <li class="feature-item">Created card and list view options for browsing businesses</li>
+                    <li class="feature-item">Built detailed business profile pages with shareable links</li>
+                    <li class="feature-item">Added support for displaying Bitcoin payment methods (on-chain and Lightning Network)</li>
+                    <li class="feature-item">Included social media links for businesses</li>
+                </ul>
+
+                <div class="category-label mt-4">
+                    <span class="badge badge-new">New</span> Location Features
+                </div>
+                <ul class="changelog-list">
+                    <li class="feature-item">Integrated location-based search functionality</li>
+                    <li class="feature-item">Added support for sorting businesses by distance from selected location</li>
+                    <li class="feature-item">Implemented "Use My Location" feature for geolocation-based searching</li>
+                    <li class="feature-item">Created location dropdown with major cities worldwide</li>
+                </ul>
+
+                <div class="category-label mt-4">
+                    <span class="badge badge-new">New</span> User Interface
+                </div>
+                <ul class="changelog-list">
+                    <li class="feature-item">Designed responsive layout for all device sizes</li>
+                    <li class="feature-item">Added category counts in filter dropdown menus</li>
+                    <li class="feature-item">Implemented filter status display to show active filters</li>
+                    <li class="feature-item">Created "About," "Contact Us," and "Links" information pages</li>
+                    <li class="feature-item">Added "Clear Filters" option for easy reset</li>
+                    <li class="feature-item">Improved list view with website and social media icons</li>
+                    <li class="feature-item">Reorganized category structure for better organization</li>
+                    <li class="feature-item">Added visual indicators for website and social media links</li>
+                </ul>
+
+                <div class="category-label mt-4">
+                    <span class="badge badge-improved">Improved</span> Category Management
+                </div>
+                <ul class="changelog-list">
+                    <li class="feature-item">Moved "Bitcoin Hardware" to individual categories section</li>
+                    <li class="feature-item">Added "Beauty/Cosmetic" and "Personal Care" as subcategories under "Health & Fitness"</li>
+                    <li class="feature-item">Streamlined category selection interface</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Attribution Section -->
+        <div class="content-section">
+            <h2>Attribution</h2>
+            <p class="lead">This project uses various open-source components and resources. We gratefully acknowledge the following:</p>
+
+            <div class="category-label">
+                <span class="badge badge-new">Maps & Location</span>
+            </div>
+            <ul class="changelog-list">
+                <li class="feature-item">
+                    <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> - © OpenStreetMap contributors (<a href="https://opendatacommons.org/licenses/odbl/" target="_blank" rel="noopener noreferrer">Open Data Commons Open Database License</a>)
+                </li>
+            </ul>
+
+            <div class="category-label mt-4">
+                <span class="badge badge-new">Icons & UI Components</span>
+            </div>
+            <ul class="changelog-list">
+                <li class="feature-item">
+                    <a href="https://icons.getbootstrap.com/" target="_blank" rel="noopener noreferrer">Bootstrap Icons</a> - <a href="https://github.com/twbs/bootstrap/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
+                </li>
+                <li class="feature-item">
+                    <a href="https://getbootstrap.com/" target="_blank" rel="noopener noreferrer">Bootstrap Framework</a> - <a href="https://github.com/twbs/bootstrap/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
+                </li>
+                <li class="feature-item">
+                    <a href="https://www.svgrepo.com/svg/423732/link-external" target="_blank" rel="noopener noreferrer">Link External SVG Vector</a> - <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons Attribution 4.0 License</a>
+                </li>
+                <li>
+                    <a href="https://github.com/satscoffee/nostr_icons" target="_blank" rel="noopener noreferrer">Nostr Icons</a> - Open Domain
+                </li>
+                <li>
+                    <a href="https://github.com/twbs/icons" target="_blank" rel="noopener noreferrer">Bootstrap Icons</a> - <a href="https://github.com/twbs/bootstrap/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
+                </li>
+            </ul>
+
+            <div class="category-label mt-4">
+                <span class="badge badge-new">Template for Future Attributions</span>
+            </div>
+            <ul class="changelog-list text-muted">
+                <li class="feature-item">
+                    <a href="[Project URL]" target="_blank" rel="noopener noreferrer">[Component Name]</a> - <a href="[License URL]" target="_blank" rel="noopener noreferrer">[License Type]</a>
+                </li>
+                <li class="feature-item">
+                    <a href="[Project URL]" target="_blank" rel="noopener noreferrer">[Component Name]</a> - <a href="[License URL]" target="_blank" rel="noopener noreferrer">[License Type]</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <footer class="mt-5 py-3 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <p>© 2025 BTCAccepted.org</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="about.html" class="me-3 text-decoration-none">About</a>
+                    <a href="contact_us.html" class="me-3 text-decoration-none">Contact Us</a>
+                    <a href="links.html" class="me-3 text-decoration-none">Links</a>
+                    <a href="changelog.html" class="me-3 text-decoration-none">Changelog/Attributions</a>
+                    <a href="https://btcmap.org" target="_blank" class="text-decoration-none">BTCMap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

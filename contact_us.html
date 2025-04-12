@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Bitcoin-Accepting Businesses Directory</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .header {
+            background-color: #f7931a;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        .bitcoin-icon {
+            height: 48px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        .header h1 {
+            display: inline-block;
+            margin: 0;
+            vertical-align: middle;
+        }
+        .content-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .contact-method {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+        .contact-icon {
+            font-size: 2rem;
+            color: #f7931a;
+            margin-bottom: 10px;
+        }
+        #submissionSuccess {
+            display: none;
+        }
+        #submissionForm {
+            display: block;
+        }
+        .social-media-section {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .validation-error {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 5px;
+            display: none;
+        }
+        .business-preview {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+            border: 1px solid #dee2e6;
+        }
+        pre {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .download-btn {
+            margin-top: 15px;
+        }
+        #loadingIndicator {
+            display: none;
+        }
+
+/* Improve category selection container */
+#categorySelection {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    width: 100%;
+    overflow-x: hidden;
+    background-color: #f8f9fa;
+}
+
+/* Ensure category labels display properly */
+.form-check-label {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    display: inline-block;
+    width: auto;
+    max-width: 100%;
+}
+
+/* Improve spacing between checkboxes */
+.form-check {
+    padding-left: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Make subcategory section more clearly defined */
+.subcategories {
+    border-top: 1px dashed #ddd;
+    padding-top: 10px;
+    margin-top: 8px;
+    padding-left: 20px !important;
+}
+
+/* Improve category group styling */
+.category-group {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Add responsive adjustments for small screens */
+@media (max-width: 576px) {
+    .col-sm-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+/* Make sure there's proper horizontal spacing */
+.row .col-lg-3,
+.row .col-md-4,
+.row .col-sm-6 {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+/* Ensure category selection height is appropriate */
+#categorySelection .row {
+    margin-left: -15px;
+    margin-right: -15px;
+}
+
+/* Add styles for selected category badges */
+.selected-category-badge {
+    background-color: #f7931a;
+    color: white;
+    border-radius: 20px;
+    padding: 4px 12px;
+    margin: 4px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.875rem;
+}
+
+.selected-category-badge .remove-badge {
+    margin-left: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.selected-category-badge .remove-badge:hover {
+    opacity: 1;
+}
+
+/* Style for custom categories display */
+#customCategoriesDisplay {
+    margin-top: 12px;
+}
+
+/* Ensure gap between badges */
+.d-flex.flex-wrap.gap-2 > * {
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="d-flex align-items-center">
+                <a href="index.html" class="text-white text-decoration-none">
+                    <img src="images/icons/btcLogo.svg" alt="Bitcoin Logo" class="bitcoin-icon">
+                    <h1>Accepted</h1>
+                </a>
+            </div>
+            <p class="mb-0">Find businesses that accept Bitcoin payments</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="content-section">
+            <h2>Contact Us</h2>
+            <p class="lead">We'd love to hear from you! Whether you want to suggest a business, report an issue, or just say hello, here's how you can reach us:</p>
+
+            <div class="row mt-4">
+                <div class="col-12 mb-4">
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="bi bi-chat-dots-fill"></i>
+                        </div>
+                        <h4>Send a Message</h4>
+                        <p>Use our contact form to send us a message:</p>
+                        <form id="my-form" action="https://formspree.io/f/xvgkrleo" method="POST">
+                            <div class="mb-2">
+                                <label class="form-label">Email:</label>
+                                <input type="email" name="email" class="form-control" />
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Message:</label>
+                                <input type="text" name="message" class="form-control" />
+                            </div>
+                            <button id="my-form-button" class="btn btn-primary">Submit</button>
+                            <p id="my-form-status" class="mt-2"></p>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="bi bi-envelope-fill"></i>
+                        </div>
+                        <h4>Email</h4>
+                        <p>For general comments or questions:</p>
+                        <p><a href="mailto:scott@btcaccepted.org">scott@btcaccepted.org</a></p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="bi bi-github"></i>
+                        </div>
+                        <h4>GitHub</h4>
+                        <p>Contribute to our open-source directory:</p>
+                        <p><a href="https://github.com/bitcoin-businesses/directory" target="_blank">github.com/aoeu10/BTCAccepted</a></p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        <h4>Social Media</h4>
+                        <p>Connect with us on:</p>
+                        <p>Twitter/X: <a href="https://twitter.com/btcaccepted1" target="_blank">@BTCAccepted1</a></p>
+                        <p>Nostr: <a href="https://njump.me/npub14u4l48alhqffgg5jsjk474967g2lcwpw02s5eqx8qc25s2vaaxes3h7ed5" target="_blank"><code>npub14u4l48alhqffgg5jsjk474967g2lcwpw02s5eqx8qc25s2vaaxes3h7ed5</code></a></p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="bi bi-lightning-charge-fill"></i>
+                        </div>
+                        <h4>Lightning Address</h4>
+                        <p>Send us sats or messages via Lightning:</p>
+                        <p><code><a href="https://getalby.com/p/btcaccepted" target="_blank">⚡ btcaccepted@getalby.com</a></code></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submission Form -->
+            <div id="submissionForm">
+                <h3 class="mt-4">Submit a Business</h3>
+                <p>Know a business that accepts Bitcoin? Help us grow the directory by submitting their information below:</p>
+
+                <!-- Using Formspree as the email service - Replace YOUR_FORMSPREE_ENDPOINT with your actual endpoint -->
+                <form class="mt-3" id="businessSubmitForm" action="https://formspree.io/f/mqapkobz" method="POST">
+                    <!-- Hidden field for JSON data -->
+                    <input type="hidden" name="jsonData" id="jsonDataField">
+                    
+                    <div class="mb-3">
+                        <label for="businessName" class="form-label">Business Name *</label>
+                        <input type="text" class="form-control" id="businessName" name="businessName" required>
+                        <div class="validation-error" id="businessNameError">Please enter a business name</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="categorySelection" class="form-label">Categories *</label>
+                        <div class="alert alert-info small">Select all categories that apply to the business. You can select multiple categories and subcategories.</div>
+                        
+                        <div id="categorySelection">
+                            <!-- Main categories section -->
+                            <div class="row mb-3">
+                                <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-books" value="Books/Magazines">
+                                        <label class="form-check-label" for="cat-books">Books/Magazines</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-bitcoin-hardware" value="Bitcoin Hardware">
+                                        <label class="form-check-label" for="cat-bitcoin-hardware">Bitcoin Hardware</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-consulting" value="Consulting">
+                                        <label class="form-check-label" for="cat-consulting">Consulting</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-event" value="Event Organizer">
+                                        <label class="form-check-label" for="cat-event">Event Organizer</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-gift-cards" value="Gift Cards">
+                                        <label class="form-check-label" for="cat-gift-cards">Gift Cards</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-hardware-wallets" value="Hardware Wallets/Signing Devices">
+                                        <label class="form-check-label" for="cat-hardware-wallets">Hardware Wallets/Signing Devices</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-homesteading" value="Homesteading">
+                                        <label class="form-check-label" for="cat-homesteading">Homesteading</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-lawyer" value="Lawyer">
+                                        <label class="form-check-label" for="cat-lawyer">Lawyer</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-marketplace" value="Marketplace">
+                                        <label class="form-check-label" for="cat-marketplace">Marketplace</label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-merchandise" value="Merchandise">
+                                        <label class="form-check-label" for="cat-merchandise">Merchandise</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Parent categories with subcategories -->
+                            <!-- Apparel and Accessories category -->
+                            <div class="category-group mb-3">
+                                <div class="main-category-heading">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-apparel" value="Apparel and Accessories">
+                                        <label class="form-check-label fw-bold" for="cat-apparel">Apparel and Accessories</label>
+                                    </div>
+                                </div>
+                                <div class="subcategories ps-4 mt-1">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-apparel-clothing" value="Clothing" data-parent="Apparel and Accessories">
+                                                <label class="form-check-label" for="subcat-apparel-clothing">Clothing</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-apparel-fashion" value="Fashion accessories" data-parent="Apparel and Accessories">
+                                                <label class="form-check-label" for="subcat-apparel-fashion">Fashion accessories</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-apparel-headwear" value="Headwear" data-parent="Apparel and Accessories">
+                                                <label class="form-check-label" for="subcat-apparel-headwear">Headwear</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-apparel-leather" value="Leather products" data-parent="Apparel and Accessories">
+                                                <label class="form-check-label" for="subcat-apparel-leather">Leather products</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bitcoin Mining category -->
+                            <div class="category-group mb-3">
+                                <div class="main-category-heading">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-mining" value="Bitcoin Mining">
+                                        <label class="form-check-label fw-bold" for="cat-mining">Bitcoin Mining</label>
+                                    </div>
+                                </div>
+                                <div class="subcategories ps-4 mt-1">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-mining-accessories" value="Accessories" data-parent="Bitcoin Mining">
+                                                <label class="form-check-label" for="subcat-mining-accessories">Accessories</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-mining-hardware" value="Hardware" data-parent="Bitcoin Mining">
+                                                <label class="form-check-label" for="subcat-mining-hardware">Hardware</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-mining-home" value="Home Mining" data-parent="Bitcoin Mining">
+                                                <label class="form-check-label" for="subcat-mining-home">Home Mining</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-mining-hosted" value="Hosted" data-parent="Bitcoin Mining">
+                                                <label class="form-check-label" for="subcat-mining-hosted">Hosted</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Creative category -->
+                            <div class="category-group mb-3">
+                                <div class="main-category-heading">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-creative" value="Creative">
+                                        <label class="form-check-label fw-bold" for="cat-creative">Creative</label>
+                                    </div>
+                                </div>
+                                <div class="subcategories ps-4 mt-1">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-advertising" value="Advertising & Marketing" data-parent="Creative">
+                                                <label class="form-check-label" for="subcat-advertising">Advertising & Marketing</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-art" value="Art" data-parent="Creative">
+                                                <label class="form-check-label" for="subcat-art">Art</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-graphic-design" value="Graphic Design" data-parent="Creative">
+                                                <label class="form-check-label" for="subcat-graphic-design">Graphic Design</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-media" value="Media Production" data-parent="Creative">
+                                                <label class="form-check-label" for="subcat-media">Media Production</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-photography" value="Photography" data-parent="Creative">
+                                                <label class="form-check-label" for="subcat-photography">Photography</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-pins" value="Pins" data-parent="Creative">
+                                                <label class="form-check-label" for="subcat-pins">Pins</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-prints" value="Prints" data-parent="Creative">
+                                                <label class="form-check-label" for="subcat-prints">Prints</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-stickers" value="Stickers" data-parent="Creative">
+                                                <label class="form-check-label" for="subcat-stickers">Stickers</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-webdev" value="Web Developer" data-parent="Creative">
+                                                <label class="form-check-label" for="subcat-webdev">Web Developer</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Online Services category -->
+                            <div class="category-group mb-3">
+                                <div class="main-category-heading">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-online-services" value="Online Services">
+                                        <label class="form-check-label fw-bold" for="cat-online-services">Online Services</label>
+                                    </div>
+                                </div>
+                                <div class="subcategories ps-4 mt-1">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-ai" value="AI" data-parent="Online Services">
+                                                <label class="form-check-label" for="subcat-ai">AI</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-lightning-node" value="Lightning Node" data-parent="Online Services">
+                                                <label class="form-check-label" for="subcat-lightning-node">Lightning Node</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-online-payments" value="Payments & Processing" data-parent="Online Services">
+                                                <label class="form-check-label" for="subcat-online-payments">Payments & Processing</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-search" value="Search" data-parent="Online Services">
+                                                <label class="form-check-label" for="subcat-search">Search</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Food & Drink category -->
+                            <div class="category-group mb-3">
+                                <div class="main-category-heading">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-food" value="Food & Drink">
+                                        <label class="form-check-label fw-bold" for="cat-food">Food & Drink</label>
+                                    </div>
+                                </div>
+                                <div class="subcategories ps-4 mt-1">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-apiculture" value="Apiculture" data-parent="Food & Drink">
+                                                <label class="form-check-label" for="subcat-apiculture">Apiculture</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-bakery" value="Bakery" data-parent="Food & Drink">
+                                                <label class="form-check-label" for="subcat-bakery">Bakery</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-bar" value="Bar" data-parent="Food & Drink">
+                                                <label class="form-check-label" for="subcat-bar">Bar</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-brewery" value="Brewery" data-parent="Food & Drink">
+                                                <label class="form-check-label" for="subcat-brewery">Brewery</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-coffee" value="Coffee" data-parent="Food & Drink">
+                                                <label class="form-check-label" for="subcat-coffee">Coffee</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-eggs" value="Eggs" data-parent="Food & Drink">
+                                                <label class="form-check-label" for="subcat-eggs">Eggs</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-farm" value="Farm" data-parent="Food & Drink">
+                                                <label class="form-check-label" for="subcat-farm">Farm</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-maple-syrup" value="Maple Syrup" data-parent="Food & Drink">
+                                                <label class="form-check-label" for="subcat-maple-syrup">Maple Syrup</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-meat" value="Meat" data-parent="Food & Drink">
+                                                <label class="form-check-label" for="subcat-meat">Meat</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-restaurant" value="Restaurant" data-parent="Food & Drink">
+                                                <label class="form-check-label" for="subcat-restaurant">Restaurant</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-food-supplements" value="Supplements" data-parent="Food & Drink">
+                                                <label class="form-check-label" for="subcat-food-supplements">Supplements</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-tea" value="Tea" data-parent="Food & Drink">
+                                                <label class="form-check-label" for="subcat-tea">Tea</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-wine" value="Wine/Vineyard" data-parent="Food & Drink">
+                                                <label class="form-check-label" for="subcat-wine">Wine/Vineyard</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pet Care category -->
+                            <div class="category-group mb-3">
+                                <div class="main-category-heading">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-pet-care" value="Pet Care">
+                                        <label class="form-check-label fw-bold" for="cat-pet-care">Pet Care</label>
+                                    </div>
+                                </div>
+                                <div class="subcategories ps-4 mt-1">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-breeders" value="Breeders" data-parent="Pet Care">
+                                                <label class="form-check-label" for="subcat-breeders">Breeders</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-daycare" value="Daycare" data-parent="Pet Care">
+                                                <label class="form-check-label" for="subcat-daycare">Daycare</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-pet-store" value="Pet Store" data-parent="Pet Care">
+                                                <label class="form-check-label" for="subcat-pet-store">Pet Store</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-veterinary" value="Veterinary Clinic" data-parent="Pet Care">
+                                                <label class="form-check-label" for="subcat-veterinary">Veterinary Clinic</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Health & Fitness category -->
+                            <div class="category-group mb-3">
+                                <div class="main-category-heading">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-health" value="Health & Fitness">
+                                        <label class="form-check-label fw-bold" for="cat-health">Health & Fitness</label>
+                                    </div>
+                                </div>
+                                <div class="subcategories ps-4 mt-1">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-acupuncture" value="Acupuncture" data-parent="Health & Fitness">
+                                                <label class="form-check-label" for="subcat-acupuncture">Acupuncture</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-beauty" value="Beauty/Cosmetic" data-parent="Health & Fitness">
+                                                <label class="form-check-label" for="subcat-beauty">Beauty/Cosmetic</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-chiropractic" value="Chiropractic" data-parent="Health & Fitness">
+                                                <label class="form-check-label" for="subcat-chiropractic">Chiropractic</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-dental" value="Dental & Orthodontics" data-parent="Health & Fitness">
+                                                <label class="form-check-label" for="subcat-dental">Dental & Orthodontics</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-healthcare" value="Healthcare" data-parent="Health & Fitness">
+                                                <label class="form-check-label" for="subcat-healthcare">Healthcare</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-massage" value="Massage Therapy" data-parent="Health & Fitness">
+                                                <label class="form-check-label" for="subcat-massage">Massage Therapy</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-personal-care" value="Personal Care" data-parent="Health & Fitness">
+                                                <label class="form-check-label" for="subcat-personal-care">Personal Care</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-skin-care" value="Skin Care" data-parent="Health & Fitness">
+                                                <label class="form-check-label" for="subcat-skin-care">Skin Care</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-health-supplements" value="Supplements" data-parent="Health & Fitness">
+                                                <label class="form-check-label" for="subcat-health-supplements">Supplements</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-swimming" value="Swimming" data-parent="Health & Fitness">
+                                                <label class="form-check-label" for="subcat-swimming">Swimming</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Finance category -->
+                            <div class="category-group mb-3">
+                                <div class="main-category-heading">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-finance" value="Finance">
+                                        <label class="form-check-label fw-bold" for="cat-finance">Finance</label>
+                                    </div>
+                                </div>
+                                <div class="subcategories ps-4 mt-1">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-accounting" value="Accounting" data-parent="Finance">
+                                                <label class="form-check-label" for="subcat-accounting">Accounting</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-estate-admin" value="Estate and Trust Administration" data-parent="Finance">
+                                                <label class="form-check-label" for="subcat-estate-admin">Estate and Trust Administration</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-estate-planning" value="Estate, tax and business planning" data-parent="Finance">
+                                                <label class="form-check-label" for="subcat-estate-planning">Estate, tax and business planning</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-financial-advisors" value="Financial Advisors" data-parent="Finance">
+                                                <label class="form-check-label" for="subcat-financial-advisors">Financial Advisors</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Trades category -->
+                            <div class="category-group mb-3">
+                                <div class="main-category-heading">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-trades" value="Trades">
+                                        <label class="form-check-label fw-bold" for="cat-trades">Trades</label>
+                                    </div>
+                                </div>
+                                <div class="subcategories ps-4 mt-1">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-construction" value="Construction" data-parent="Trades">
+                                                <label class="form-check-label" for="subcat-construction">Construction</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-drywall" value="Drywall" data-parent="Trades">
+                                                <label class="form-check-label" for="subcat-drywall">Drywall</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-gardening" value="Gardening" data-parent="Trades">
+                                                <label class="form-check-label" for="subcat-gardening">Gardening</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-landscaping" value="Landscaping" data-parent="Trades">
+                                                <label class="form-check-label" for="subcat-landscaping">Landscaping</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-plumbing" value="Plumbing & Heating" data-parent="Trades">
+                                                <label class="form-check-label" for="subcat-plumbing">Plumbing & Heating</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-treecare" value="Tree Care" data-parent="Trades">
+                                                <label class="form-check-label" for="subcat-treecare">Tree Care</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-cardetailing" value="Car Detailing" data-parent="Trades">
+                                                <label class="form-check-label" for="subcat-cardetailing">Car Detailing</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Travel & Tours category -->
+                            <div class="category-group mb-3">
+                                <div class="main-category-heading">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-travel" value="Travel & Tours">
+                                        <label class="form-check-label fw-bold" for="cat-travel">Travel & Tours</label>
+                                    </div>
+                                </div>
+                                <div class="subcategories ps-4 mt-1">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-accommodations" value="Accommodations" data-parent="Travel & Tours">
+                                                <label class="form-check-label" for="subcat-accommodations">Accommodations</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-cruises" value="Cruises" data-parent="Travel & Tours">
+                                                <label class="form-check-label" for="subcat-cruises">Cruises</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-transportation" value="Transportation" data-parent="Travel & Tours">
+                                                <label class="form-check-label" for="subcat-transportation">Transportation</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Music category -->
+                            <div class="category-group mb-3">
+                                <div class="main-category-heading">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-music" value="Music">
+                                        <label class="form-check-label fw-bold" for="cat-music">Music</label>
+                                    </div>
+                                </div>
+                                <div class="subcategories ps-4 mt-1">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-music-equipment" value="Equipment" data-parent="Music">
+                                                <label class="form-check-label" for="subcat-music-equipment">Equipment</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-music-lessons" value="Lessons" data-parent="Music">
+                                                <label class="form-check-label" for="subcat-music-lessons">Lessons</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-recording-studio" value="Recording Studio" data-parent="Music">
+                                                <label class="form-check-label" for="subcat-recording-studio">Recording Studio</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-streaming" value="Streaming" data-parent="Music">
+                                                <label class="form-check-label" for="subcat-streaming">Streaming</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="validation-error" id="categoryError">Please select at least one category or add a custom category</div>
+                    </div>
+
+                    <!-- Custom Category Section -->
+                    <div class="mb-3">
+                        <label class="form-label">Custom Categories (Optional)</label>
+                        <p class="text-muted small mb-2">If the business doesn't fit into any of the categories above, you can add custom categories here.</p>
+                        
+                        <div id="customCategoriesContainer">
+                            <div class="custom-category-row mb-2 d-flex align-items-center">
+                                <input type="text" class="form-control form-control-sm me-2 custom-category-input" placeholder="Enter a custom category">
+                                <button type="button" class="btn btn-sm btn-outline-danger remove-custom-category-btn" style="display: none;"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="addCustomCategoryBtn">
+                            <i class="bi bi-plus-circle me-1"></i>Add Another Custom Category
+                        </button>
+                    </div>
+
+                    <!-- Display for custom categories -->
+                    <div id="customCategoriesDisplay" class="selected-categories mt-3" style="display: none;">
+                        <div class="small text-muted mb-1">Custom categories:</div>
+                        <div id="customCategoriesList" class="d-flex flex-wrap gap-2"></div>
+                    </div>
+                    
+                    <!-- Selected categories display -->
+                    <div id="selectedCategoriesDisplay" class="selected-categories mt-3" style="display: none;">
+                        <div class="small text-muted mb-1">Selected categories:</div>
+                        <div id="selectedCategoriesList" class="d-flex flex-wrap gap-2"></div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="website" class="form-label">Website</label>
+                        <input type="text" class="form-control" id="website" name="website" placeholder="example.com">
+                        <div class="form-text">Just enter the domain name, no need for http:// or https://</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="country" class="form-label">Country *</label>
+                        <input type="text" class="form-control" id="country" name="country" required>
+                        <div class="validation-error" id="countryError">Please enter a country</div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="region" class="form-label">Region/State *</label>
+                        <input type="text" class="form-control" id="region" name="region" required>
+                        <div class="validation-error" id="regionError">Please enter a region or state</div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="city" class="form-label">City</label>
+                        <input type="text" class="form-control" id="city" name="city">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="owner" class="form-label">Business Owner/Contact Name</label>
+                    <input type="text" class="form-control" id="owner" name="owner">
+                </div>
+
+                <div class="mb-3">
+                    <label for="businessEmail" class="form-label">Business Email</label>
+                    <input type="email" class="form-control" id="businessEmail" name="businessEmail" placeholder="contact@business.com">
+                    <div class="form-text">Email address for the business (not your personal email)</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Business Phone</label>
+                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="+1 (555) 123-4567">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Relationship to business:</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="submitterType" id="submitterOwner" value="Owner">
+                        <label class="form-check-label" for="submitterOwner">
+                            I am the business owner or authorized representative
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="submitterType" id="submitterUser" value="User" checked>
+                        <label class="form-check-label" for="submitterUser">
+                            I am a user/customer of this business
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="logoUrl" class="form-label">Logo URL</label>
+                    <input type="text" class="form-control" id="logoUrl" name="logoUrl" placeholder="logo-url.com/image.png">
+                    <div class="form-text">URL to the business logo (optional, with or without http://)</div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Bitcoin Payment Methods Accepted *</label>
+                    <div class="form-check">
+                        <input class="form-check-input payment-method-check" type="checkbox" id="onchain" name="onchain">
+                        <label class="form-check-label" for="onchain">
+                            Bitcoin On-chain
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input payment-method-check" type="checkbox" id="lightning" name="lightning">
+                        <label class="form-check-label" for="lightning">
+                            Lightning Network
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input payment-method-check" type="checkbox" id="ecash" name="ecash">
+                        <label class="form-check-label" for="ecash">
+                            eCash
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input payment-method-check" type="checkbox" id="fedi" name="fedi">
+                        <label class="form-check-label" for="fedi">
+                            Fedi
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input payment-method-check" type="checkbox" id="liquid" name="liquid">
+                        <label class="form-check-label" for="liquid">
+                            Liquid BTC
+                        </label>
+                    </div>
+                    <div class="validation-error" id="paymentMethodError">Please select at least one payment method</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="3" placeholder="Brief description of the business and their Bitcoin payment process"></textarea>
+                </div>
+
+                <!-- Social Media Section -->
+                <div class="social-media-section">
+                    <h4>Social Media (Optional)</h4>
+                    <p class="text-muted small mb-3">Add social media details for the business</p>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="twitter" class="form-label">Twitter</label>
+                            <input type="text" class="form-control" id="twitter" name="twitter" placeholder="@username">
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label for="telegram" class="form-label">Telegram</label>
+                            <input type="text" class="form-control" id="telegram" name="telegram" placeholder="username or https://t.me/username">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="facebook" class="form-label">Facebook</label>
+                            <input type="text" class="form-control" id="facebook" name="facebook" placeholder="username or full URL">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="instagram" class="form-label">Instagram</label>
+                            <input type="text" class="form-control" id="instagram" name="instagram" placeholder="@username">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nostr" class="form-label">Nostr</label>
+                            <input type="text" class="form-control" id="nostr" name="nostr" placeholder="npub...">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="signal" class="form-label">Signal</label>
+                            <input type="text" class="form-control" id="signal" name="signal" placeholder="+1234567890">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="matrix" class="form-label">Matrix</label>
+                            <input type="text" class="form-control" id="matrix" name="matrix" placeholder="@username:matrix.org">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="mastodon" class="form-label">Mastodon</label>
+                            <input type="text" class="form-control" id="mastodon" name="mastodon" placeholder="@username@instance.social">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="keet" class="form-label">Keet</label>
+                            <input type="text" class="form-control" id="keet" name="keet" placeholder="Keet ID or handle">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="yourEmail" class="form-label">Your Email *</label>
+                    <input type="email" class="form-control" id="yourEmail" name="yourEmail" required>
+                    <div class="validation-error" id="emailError">Please enter a valid email address</div>
+                    <div class="form-text">We'll only use this to contact you if we need more information.</div>
+                </div>
+
+                <div id="loadingIndicator" class="alert alert-info">
+                    <div class="d-flex align-items-center">
+                        <div class="spinner-border spinner-border-sm me-2" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <span>Submitting your business information...</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submitButton" style="background-color: #f7931a; border-color: #f7931a;">Submit Business</button>
+            </form>
+        </div>
+
+        <!-- Success Message -->
+        <div id="submissionSuccess" class="text-center">
+            <div class="alert alert-success mt-4" role="alert">
+                <h4 class="alert-heading"><i class="bi bi-check-circle-fill me-2"></i>Business Submitted Successfully!</h4>
+                <p>Thank you for contributing to the Bitcoin-Accepting Businesses Directory. We'll review your submission and add it to our directory soon.</p>
+                <hr>
+                <p class="mb-0">Want to add another business? <a href="#" id="submitAnotherBtn" class="alert-link">Click here</a> to submit another entry.</p>
+            </div>
+            
+            <!-- Business Preview -->
+            <div class="business-preview">
+                <h4>Business Data Preview</h4>
+                <p class="text-muted">Here's the information that was submitted:</p>
+                <pre id="businessDataJson"></pre>
+                <button class="btn btn-outline-primary download-btn" id="downloadJsonBtn">
+                    <i class="bi bi-download me-2"></i>Download JSON
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="mt-5 py-3 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 text-center text-md-start">
+                <p>© 2025 BTCAccepted.org</p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <a href="about.html" class="me-3 text-decoration-none">About</a>
+                <a href="contact_us.html" class="me-3 text-decoration-none">Contact Us</a>
+                <a href="links.html" class="me-3 text-decoration-none">Links</a>
+                <a href="changelog.html" class="me-3 text-decoration-none">Changelog/Attributions</a>
+                <a href="https://btcmap.org" target="_blank" class="text-decoration-none">BTCMap</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the form and success elements
+    const form = document.getElementById('businessSubmitForm');
+    const submissionFormSection = document.getElementById('submissionForm');
+    const submissionSuccessSection = document.getElementById('submissionSuccess');
+    const businessDataJson = document.getElementById('businessDataJson');
+    const submitAnotherBtn = document.getElementById('submitAnotherBtn');
+    const downloadJsonBtn = document.getElementById('downloadJsonBtn');
+    const jsonDataField = document.getElementById('jsonDataField');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    
+    // Get validation error elements
+    const nameError = document.getElementById('businessNameError');
+    const categoryError = document.getElementById('categoryError');
+    const countryError = document.getElementById('countryError');
+    const regionError = document.getElementById('regionError');
+    const paymentMethodError = document.getElementById('paymentMethodError');
+    const emailError = document.getElementById('emailError');
+    
+    // Store the JSON data
+    let businessData = {};
+    
+    // Generate a slug from a string (for URL-friendly identifiers)
+    function generateSlug(text) {
+        return text
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)/g, '');
+    }
+
+    // Set up category selection functionality
+    const mainCategories = document.querySelectorAll('.main-category');
+    const subcategories = document.querySelectorAll('.subcategory');
+
+    // Function to get all selected categories (including subcategories)
+    function getSelectedCategories() {
+        const categories = [];
+        
+        // Add main categories
+        mainCategories.forEach(mainCategory => {
+            if (mainCategory.checked) {
+                categories.push(mainCategory.value);
+            }
+        });
+        
+        // Add subcategories
+        subcategories.forEach(subcategory => {
+            if (subcategory.checked) {
+                categories.push(subcategory.value);
+            }
+        });
+        
+        return categories;
+    }
+
+    // Function to update the selected categories display
+    function updateSelectedCategoriesDisplay() {
+        const selectedCategories = getSelectedCategories();
+        const selectedCategoriesDisplay = document.getElementById('selectedCategoriesDisplay');
+        const selectedCategoriesList = document.getElementById('selectedCategoriesList');
+        
+        if (selectedCategories.length > 0) {
+            // Show the display and update the list
+            selectedCategoriesDisplay.style.display = 'block';
+            
+            // Clear the current list
+            selectedCategoriesList.innerHTML = '';
+            
+            // Add each selected category as a badge with delete button
+            selectedCategories.forEach(category => {
+                const categoryBadge = document.createElement('div');
+                categoryBadge.className = 'selected-category-badge';
+                categoryBadge.innerHTML = `
+                    ${category}
+                    <span class="remove-badge" data-category="${category}">
+                        <i class="bi bi-x-circle"></i>
+                    </span>
+                `;
+                selectedCategoriesList.appendChild(categoryBadge);
+                
+                // Add event listener to the delete button
+                const removeBtn = categoryBadge.querySelector('.remove-badge');
+                removeBtn.addEventListener('click', function() {
+                    // Find and uncheck the corresponding checkbox
+                    const categoryValue = this.getAttribute('data-category');
+                    const checkbox = findCheckboxByValue(categoryValue);
+                    if (checkbox) {
+                        checkbox.checked = false;
+                        updateSelectedCategoriesDisplay();
+                    }
+                });
+            });
+        } else {
+            // Hide the display if no categories are selected
+            selectedCategoriesDisplay.style.display = 'none';
+        }
+    }
+    
+    // Helper function to find checkbox by its value
+    function findCheckboxByValue(value) {
+        // First check main categories
+        let checkbox = Array.from(mainCategories).find(cb => cb.value === value);
+        if (checkbox) return checkbox;
+        
+        // Then check subcategories
+        checkbox = Array.from(subcategories).find(cb => cb.value === value);
+        return checkbox;
+    }
+
+    // Update the form validation and submission logic
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        // Reset validation errors
+        nameError.style.display = 'none';
+        categoryError.style.display = 'none';
+        countryError.style.display = 'none';
+        regionError.style.display = 'none';
+        paymentMethodError.style.display = 'none';
+        emailError.style.display = 'none';
+        
+        // Validate required fields
+        let isValid = true;
+        
+        if (!document.getElementById('businessName').value) {
+            nameError.style.display = 'block';
+            isValid = false;
+        }
+        
+        // Check if at least one category (standard or custom) is selected
+        const selectedCategories = getSelectedCategories();
+        const customCategories = getCustomCategories();
+        if (selectedCategories.length === 0 && customCategories.length === 0) {
+            categoryError.style.display = 'block';
+            isValid = false;
+        } else {
+            categoryError.style.display = 'none';
+        }
+        
+        if (!document.getElementById('country').value) {
+            countryError.style.display = 'block';
+            isValid = false;
+        }
+        
+        if (!document.getElementById('region').value) {
+            regionError.style.display = 'block';
+            isValid = false;
+        }
+        
+        // Check if at least one payment method is selected
+        const onchain = document.getElementById('onchain').checked;
+        const lightning = document.getElementById('lightning').checked;
+        if (!onchain && !lightning) {
+            paymentMethodError.style.display = 'block';
+            isValid = false;
+        }
+        
+        if (!document.getElementById('yourEmail').value) {
+            emailError.style.display = 'block';
+            isValid = false;
+        }
+        
+        if (!isValid) {
+            return;
+        }
+        
+        // Get form values
+        const businessName = document.getElementById('businessName').value;
+        const website = document.getElementById('website').value;
+        // Handle website with or without protocol
+        const websiteValue = website.trim();
+        const websiteFormatted = websiteValue ? 
+            (websiteValue.startsWith('http://') || websiteValue.startsWith('https://')) ?
+            websiteValue.replace(/^https?:\/\//, '') : websiteValue : "";
+        const country = document.getElementById('country').value;
+        const region = document.getElementById('region').value;
+        const city = document.getElementById('city').value;
+        const owner = document.getElementById('owner').value;
+        const businessEmail = document.getElementById('businessEmail').value;
+        const phone = document.getElementById('phone').value;
+        const logoUrl = document.getElementById('logoUrl').value;
+        const description = document.getElementById('description').value;
+        const email = document.getElementById('yourEmail').value;
+        
+        // Social media values
+        const twitter = document.getElementById('twitter').value;
+        const telegram = document.getElementById('telegram').value;
+        const facebook = document.getElementById('facebook').value;
+        const instagram = document.getElementById('instagram').value;
+        const nostr = document.getElementById('nostr').value;
+        const signal = document.getElementById('signal').value;
+        const matrix = document.getElementById('matrix').value;
+        const mastodon = document.getElementById('mastodon').value;
+        const keet = document.getElementById('keet').value;
+        
+        // Get submitter type
+        const submitterType = document.querySelector('input[name="submitterType"]:checked')?.value || "User";
+        
+        // Create business data object
+        businessData = {
+            id: Math.floor(Math.random() * 1000) + 1, // Generate random ID
+            name: businessName,
+            slug: generateSlug(businessName),
+            logoUrl: logoUrl || "",
+            categories: [...selectedCategories, ...customCategories], // Include both selected and custom categories
+            category: selectedCategories.length > 0 ? selectedCategories[0] : customCategories[0] || "", // Keep first category for backward compatibility
+            country: country,
+            region: region,
+            city: city || "",
+            owner: owner || "",
+            website: websiteFormatted,
+            phone: phone || "",
+            email: businessEmail || "",
+            description: description || "",
+            socialMedia: {},
+            paymentMethods: {
+                onchain: onchain,
+                lightning: lightning,
+                ecash: document.getElementById('ecash').checked,
+                fedi: document.getElementById('fedi').checked,
+                liquid: document.getElementById('liquid').checked
+            },
+            lastVerified: new Date().toISOString(),
+            submittedBy: submitterType
+        };
+        
+        // Add social media if provided
+        if (twitter) businessData.socialMedia.twitter = twitter;
+        if (telegram) businessData.socialMedia.telegram = telegram;
+        if (facebook) businessData.socialMedia.facebook = facebook;
+        if (instagram) businessData.socialMedia.instagram = instagram;
+        if (nostr) businessData.socialMedia.nostr = nostr;
+        if (signal) businessData.socialMedia.signal = signal;
+        if (matrix) businessData.socialMedia.matrix = matrix;
+        if (mastodon) businessData.socialMedia.mastodon = mastodon;
+        if (keet) businessData.socialMedia.keet = keet;
+        
+        // If socialMedia is empty, set it to an empty object
+        if (Object.keys(businessData.socialMedia).length === 0) {
+            businessData.socialMedia = {};
+        }
+        
+        // Create a formatted JSON string for display and emails
+        const formattedJson = JSON.stringify(businessData, null, 2);
+        
+        // Add the JSON data to the hidden form field for Formspree
+        jsonDataField.value = formattedJson;
+        
+        // Display business data as JSON
+        businessDataJson.textContent = formattedJson;
+        
+        // Show loading indicator
+        loadingIndicator.style.display = 'block';
+        
+        // Create a FormData object from the form
+        const formData = new FormData(form);
+        
+        // Add a field with the complete JSON for easier processing
+        formData.append('complete_business_json', formattedJson);
+        
+        // Add a field with instructions for easier integration
+        formData.append('integration_instructions', 
+            'To add this business to businessData.json, copy the JSON data above and add it to your businessData.json file.');
+        
+        // Submit the form to Formspree
+        fetch(form.action, {
+            method: form.method,
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            // Hide loading indicator
+            loadingIndicator.style.display = 'none';
+            
+            // Show success message and hide form
+            submissionFormSection.style.display = 'none';
+            submissionSuccessSection.style.display = 'block';
+            
+            // Scroll to success message
+            submissionSuccessSection.scrollIntoView({ behavior: 'smooth' });
+        })
+        .catch(error => {
+            // Hide loading indicator
+            loadingIndicator.style.display = 'none';
+            
+            // Show error message
+            alert('There was a problem submitting your form. Please try again later or contact us directly via email.');
+            console.error('Error:', error);
+        });
+    });
+
+    // Submit another business button
+    submitAnotherBtn.addEventListener('click', function(event) {
+        event.preventDefault();
+        
+        // Reset form
+        form.reset();
+        
+        // Hide success message and show form
+        submissionSuccessSection.style.display = 'none';
+        submissionFormSection.style.display = 'block';
+    });
+    
+    // Download JSON button
+    downloadJsonBtn.addEventListener('click', function() {
+        // Create a Blob with the JSON data
+        const blob = new Blob([JSON.stringify(businessData, null, 2)], { type: 'application/json' });
+        
+        // Create a download link
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${businessData.slug}.json`;
+        document.body.appendChild(a);
+        a.click();
+        
+        // Clean up
+        setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }, 100);
+    });
+
+    // Contact form handling
+    var contactForm = document.getElementById("my-form");
+    
+    async function handleSubmit(event) {
+        event.preventDefault();
+        var status = document.getElementById("my-form-status");
+        var data = new FormData(event.target);
+        fetch(event.target.action, {
+            method: contactForm.method,
+            body: data,
+            headers: {
+                'Accept': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                status.innerHTML = "Thanks for your submission!";
+                contactForm.reset()
+            } else {
+                response.json().then(data => {
+                    if (Object.hasOwn(data, 'errors')) {
+                        status.innerHTML = data["errors"].map(error => error["message"]).join(", ")
+                    } else {
+                        status.innerHTML = "Oops! There was a problem submitting your form"
+                    }
+                })
+            }
+        }).catch(error => {
+            status.innerHTML = "Oops! There was a problem submitting your form"
+        });
+    }
+    contactForm.addEventListener("submit", handleSubmit)
+
+    // Function to update the custom categories display
+    function updateCustomCategoriesDisplay() {
+        const customCategories = getCustomCategories();
+        const customCategoriesDisplay = document.getElementById('customCategoriesDisplay');
+        const customCategoriesList = document.getElementById('customCategoriesList');
+        
+        if (customCategories.length > 0) {
+            // Show the display and update the list
+            customCategoriesDisplay.style.display = 'block';
+            
+            // Clear the current list
+            customCategoriesList.innerHTML = '';
+            
+            // Add each custom category as a badge with delete button
+            customCategories.forEach(category => {
+                const categoryBadge = document.createElement('div');
+                categoryBadge.className = 'selected-category-badge';
+                categoryBadge.innerHTML = `
+                    ${category}
+                    <span class="remove-badge" data-category="${category}">
+                        <i class="bi bi-x-circle"></i>
+                    </span>
+                `;
+                customCategoriesList.appendChild(categoryBadge);
+                
+                // Add event listener to the delete button
+                const removeBtn = categoryBadge.querySelector('.remove-badge');
+                removeBtn.addEventListener('click', function() {
+                    // Find and remove the corresponding input
+                    const categoryValue = this.getAttribute('data-category');
+                    const inputs = document.querySelectorAll('.custom-category-input');
+                    inputs.forEach(input => {
+                        if (input.value.trim() === categoryValue) {
+                            input.value = '';
+                            const removeBtn = input.closest('.custom-category-row').querySelector('.remove-custom-category-btn');
+                            removeBtn.style.display = 'none';
+                        }
+                    });
+                    updateCustomCategoriesDisplay();
+                });
+            });
+        } else {
+            // Hide the display if no custom categories are entered
+            customCategoriesDisplay.style.display = 'none';
+        }
+    }
+    
+    // Function to get all custom categories
+    function getCustomCategories() {
+        const customCategories = [];
+        document.querySelectorAll('.custom-category-input').forEach(input => {
+            if (input.value.trim()) {
+                customCategories.push(input.value.trim());
+            }
+        });
+        return customCategories;
+    }
+    
+    // Setup custom category functionality
+    const addCustomCategoryBtn = document.getElementById('addCustomCategoryBtn');
+    const customCategoriesContainer = document.getElementById('customCategoriesContainer');
+    
+    // Add another custom category input
+    addCustomCategoryBtn.addEventListener('click', function() {
+        const newRow = document.createElement('div');
+        newRow.className = 'custom-category-row mb-2 d-flex align-items-center';
+        newRow.innerHTML = `
+            <input type="text" class="form-control form-control-sm me-2 custom-category-input" placeholder="Enter a custom category">
+            <button type="button" class="btn btn-sm btn-outline-danger remove-custom-category-btn"><i class="bi bi-trash"></i></button>
+        `;
+        customCategoriesContainer.appendChild(newRow);
+        
+        // Add event listener to the new input
+        const newInput = newRow.querySelector('.custom-category-input');
+        newInput.addEventListener('input', updateCustomCategoriesDisplay);
+        
+        // Add event listener to the remove button
+        const removeBtn = newRow.querySelector('.remove-custom-category-btn');
+        removeBtn.addEventListener('click', function() {
+            newRow.remove();
+            updateCustomCategoriesDisplay();
+        });
+    });
+    
+    // Add event listener to the first custom category input
+    document.querySelector('.custom-category-input').addEventListener('input', function() {
+        updateCustomCategoriesDisplay();
+        // Show remove button if there's text
+        const removeBtn = this.closest('.custom-category-row').querySelector('.remove-custom-category-btn');
+        removeBtn.style.display = this.value.trim() ? 'block' : 'none';
+    });
+
+    // Add listeners to all category checkboxes to update the display
+    document.querySelectorAll('.main-category, .subcategory').forEach(checkbox => {
+        checkbox.addEventListener('change', updateSelectedCategoriesDisplay);
+    });
+});
+</script>
+</body>
+</html>

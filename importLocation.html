@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Locations - BTCAccepted</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .header {
+            background-color: #f7931a;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        .bitcoin-icon {
+            height: 48px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        .header h1 {
+            display: inline-block;
+            margin: 0;
+            vertical-align: middle;
+        }
+        .content-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        #loadingIndicator {
+            display: none;
+        }
+        .table-container {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .sortable {
+            cursor: pointer;
+        }
+        .sortable:hover {
+            background-color: #f8f9fa;
+        }
+        .sort-icon {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="d-flex align-items-center">
+                <a href="index.html" class="text-white text-decoration-none">
+                    <img src="images/icons/btcLogo.svg" alt="Bitcoin Logo" class="bitcoin-icon">
+                    <h1>Accepted</h1>
+                </a>
+            </div>
+            <p class="mb-0">Import Locations from Business Data</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="content-section">
+            <div class="mb-4">
+                <h4>Location Data from Businesses</h4>
+                <p class="text-muted">This tool helps you find and import location data from the business database.</p>
+            </div>
+
+            <!-- Data Source Section -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Data Source</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="dataSourceUrl" value="https://btcaccepted.org/businessData.json" readonly>
+                                <button class="btn btn-outline-secondary" type="button" id="loadDefaultData">Load Default Data</button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="file" class="form-control" id="fileInput" accept=".json">
+                                <button class="btn btn-outline-primary" type="button" id="loadFileData">Load File</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="locationDataSourceUrl" value="https://btcaccepted.org/locationData.json" readonly>
+                                <button class="btn btn-outline-secondary" type="button" id="loadDefaultLocationData">Load Default Location Data</button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="file" class="form-control" id="locationFileInput" accept=".json">
+                                <button class="btn btn-outline-primary" type="button" id="loadLocationFileData">Load Location File</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="loadingIndicator" class="alert alert-info mb-3">
+                <div class="d-flex align-items-center">
+                    <div class="spinner-border spinner-border-sm me-2" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <span>Loading business data...</span>
+                </div>
+            </div>
+
+            <!-- Search and Filter Section -->
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Search by business name, location, or address...">
+                </div>
+                <div class="col-md-4">
+                    <select class="form-select" id="filterSelect">
+                        <option value="all">All Locations</option>
+                        <option value="with_coords">With Coordinates</option>
+                        <option value="without_coords">Without Coordinates</option>
+                        <option value="global">Global/Online Only</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Status Message -->
+            <div id="statusMessage" class="alert alert-info mb-3" style="display: none;">
+                <div class="d-flex align-items-center">
+                    <div class="spinner-border spinner-border-sm me-2" role="status" id="statusSpinner" style="display: none;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div id="statusText"></div>
+                </div>
+            </div>
+
+            <!-- Business Data Status -->
+            <div id="businessStatus" class="alert mb-3" style="display: none;">
+                <div id="businessStatusText"></div>
+            </div>
+
+            <!-- Location Data Status -->
+            <div id="locationStatus" class="alert mb-3" style="display: none;">
+                <div id="locationStatusText"></div>
+            </div>
+
+            <!-- Unmatched Locations Section -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Unmatched Locations</h5>
+                    <p class="text-muted">These businesses have locations that are not yet in the location database.</p>
+                    <div id="unmatchedLocations" class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Business Name</th>
+                                    <th>City</th>
+                                    <th>Region</th>
+                                    <th>Country</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="unmatchedLocationsBody">
+                                <!-- Unmatched locations will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Count -->
+            <div class="mb-3">
+                <span id="resultsCount" class="text-muted"></span>
+            </div>
+
+            <!-- Location Table -->
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-sort="business">Business Name <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                            <th class="sortable" data-sort="city">City <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                            <th class="sortable" data-sort="region">Region <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                            <th class="sortable" data-sort="country">Country <i class="bi bi-arrow-down-up sort-icon"></i></th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="locationTableBody">
+                        <!-- Location rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Location Data Debug Section -->
+    <div class="container mb-5">
+        <div class="card">
+            <div class="card-header" id="locationDataDebugHeader">
+                <div class="d-flex justify-content-between align-items-center">
+                    <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#locationDataDebug" aria-expanded="false" aria-controls="locationDataDebug">
+                        Debug: Show Location Data (<span id="locationDataCount">0</span> locations)
+                    </button>
+                    <button class="btn btn-success" id="exportLocationData">
+                        <i class="bi bi-download"></i> Export locationData.json
+                    </button>
+                </div>
+            </div>
+            <div id="locationDataDebug" class="collapse">
+                <div class="card-body">
+                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                        <table class="table table-sm table-striped">
+                            <thead>
+                                <tr>
+                                    <th>City</th>
+                                    <th>Region</th>
+                                    <th>Country</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="locationDataDebugBody">
+                                <!-- Location data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Location</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm">
+                        <input type="hidden" id="editIndex">
+                        <div class="mb-3">
+                            <label for="editBusiness" class="form-label">Business Name</label>
+                            <input type="text" class="form-control" id="editBusiness" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editCity" class="form-label">City</label>
+                            <input type="text" class="form-control" id="editCity">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editRegion" class="form-label">Region</label>
+                            <input type="text" class="form-control" id="editRegion">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editCountry" class="form-label">Country</label>
+                            <input type="text" class="form-control" id="editCountry">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveEdit">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rerun Matching Button -->
+    <div class="alert alert-secondary mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <span>Location and business data matching</span>
+            <button class="btn btn-primary" id="rerunMatching">
+                <i class="bi bi-arrow-repeat"></i> Rerun Matching Check
+            </button>
+        </div>
+    </div>
+
+    <footer class="mt-5 py-3 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <p>© 2025 BTCAccepted.org</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="about.html" class="me-3 text-decoration-none">About</a>
+                    <a href="contact_us.html" class="me-3 text-decoration-none">Contact Us</a>
+                    <a href="links.html" class="me-3 text-decoration-none">Links</a>
+                    <a href="changelog.html" class="me-3 text-decoration-none">Changelog</a>
+                    <a href="https://btcmap.org" target="_blank" class="text-decoration-none">BTCMap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize variables
+            let businessData = [];
+            let locationData = [];
+            let currentSort = { column: 'business', direction: 'asc' };
+            
+            // Get DOM elements
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const searchInput = document.getElementById('searchInput');
+            const filterSelect = document.getElementById('filterSelect');
+            const locationTableBody = document.getElementById('locationTableBody');
+            const resultsCount = document.getElementById('resultsCount');
+
+            // Load location data
+            async function loadLocationData(url = 'https://btcaccepted.org/locationData.json') {
+                const locationStatus = document.getElementById('locationStatus');
+                const locationStatusText = document.getElementById('locationStatusText');
+                const statusSpinner = document.getElementById('statusSpinner');
+                
+                locationStatus.style.display = 'block';
+                statusSpinner.style.display = 'inline-block';
+                
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`Failed to load location data from ${url}. Status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    console.log('Raw location data structure:', JSON.stringify(data).substring(0, 500) + '...');
+                    
+                    // Handle different possible location data structures
+                    let rawLocationData = [];
+                    if (Array.isArray(data)) {
+                        rawLocationData = data;
+                        console.log('Location data is an array');
+                    } else if (data.locations && Array.isArray(data.locations)) {
+                        rawLocationData = data.locations;
+                        console.log('Using data.locations array');
+                    } else if (data.data && Array.isArray(data.data)) {
+                        rawLocationData = data.data;
+                        console.log('Using data.data array');
+                    } else {
+                        console.log('Unknown data structure:', Object.keys(data));
+                        // Try to find an array property
+                        for (const key in data) {
+                            if (Array.isArray(data[key]) && data[key].length > 0) {
+                                rawLocationData = data[key];
+                                console.log(`Found array in property: ${key}`);
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // Process the location data to ensure it has the right format
+                    locationData = rawLocationData.map(item => {
+                        // If item is a string, try to parse it as city,region,country
+                        if (typeof item === 'string') {
+                            const parts = item.split(',').map(p => p.trim());
+                            return {
+                                city: parts[0] || '',
+                                region: parts[1] || '',
+                                country: parts[2] || ''
+                            };
+                        }
+                        
+                        // If item is an object but doesn't have the expected properties,
+                        // try to normalize it
+                        if (typeof item === 'object' && item !== null) {
+                            const result = {
+                                city: '',
+                                region: '',
+                                country: ''
+                            };
+                            
+                            // Check for common property names
+                            if (item.city) result.city = item.city;
+                            else if (item.town) result.city = item.town;
+                            else if (item.locality) result.city = item.locality;
+                            
+                            if (item.region) result.region = item.region;
+                            else if (item.state) result.region = item.state;
+                            else if (item.province) result.region = item.province;
+                            else if (item.county) result.region = item.county;
+                            
+                            if (item.country) result.country = item.country;
+                            else if (item.nation) result.country = item.nation;
+                            
+                            // If item has a location string, try to parse it
+                            if (item.location && typeof item.location === 'string') {
+                                const parts = item.location.split(',').map(p => p.trim());
+                                if (!result.city && parts[0]) result.city = parts[0];
+                                if (!result.region && parts[1]) result.region = parts[1];
+                                if (!result.country && parts[2]) result.country = parts[2];
+                            }
+                            
+                            return result;
+                        }
+                        
+                        // Default empty object
+                        return { city: '', region: '', country: '' };
+                    });
+                    
+                    console.log('Processed location data (first 5 items):', locationData.slice(0, 5));
+                    locationStatusText.textContent = `Successfully loaded location data from ${url}. Found ${locationData.length} locations.`;
+                    locationStatus.className = 'alert alert-success mb-3';
+                    
+                    // Update the debug table
+                    updateLocationDebugTable();
+                    
+                    return locationData;
+                } catch (error) {
+                    console.warn('Error loading location data:', error);
+                    locationStatusText.textContent = `Error loading location data from ${url}: ${error.message}`;
+                    locationStatus.className = 'alert alert-warning mb-3';
+                    return [];
+                } finally {
+                    statusSpinner.style.display = 'none';
+                }
+            }
+
+            // Load location data from file
+            function loadLocationDataFromFile(file) {
+                const locationStatus = document.getElementById('locationStatus');
+                const locationStatusText = document.getElementById('locationStatusText');
+                const statusSpinner = document.getElementById('statusSpinner');
+                
+                locationStatus.style.display = 'block';
+                statusSpinner.style.display = 'inline-block';
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        console.log('Raw location file data structure:', JSON.stringify(data).substring(0, 500) + '...');
+                        
+                        // Handle different possible location data structures
+                        let rawLocationData = [];
+                        if (Array.isArray(data)) {
+                            rawLocationData = data;
+                            console.log('Location data is an array');
+                        } else if (data.locations && Array.isArray(data.locations)) {
+                            rawLocationData = data.locations;
+                            console.log('Using data.locations array');
+                        } else if (data.data && Array.isArray(data.data)) {
+                            rawLocationData = data.data;
+                            console.log('Using data.data array');
+                        } else {
+                            console.log('Unknown data structure:', Object.keys(data));
+                            // Try to find an array property
+                            for (const key in data) {
+                                if (Array.isArray(data[key]) && data[key].length > 0) {
+                                    rawLocationData = data[key];
+                                    console.log(`Found array in property: ${key}`);
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        // Process the location data to ensure it has the right format
+                        locationData = rawLocationData.map(item => {
+                            // If item is a string, try to parse it as city,region,country
+                            if (typeof item === 'string') {
+                                const parts = item.split(',').map(p => p.trim());
+                                return {
+                                    city: parts[0] || '',
+                                    region: parts[1] || '',
+                                    country: parts[2] || ''
+                                };
+                            }
+                            
+                            // If item is an object but doesn't have the expected properties,
+                            // try to normalize it
+                            if (typeof item === 'object' && item !== null) {
+                                const result = {
+                                    city: '',
+                                    region: '',
+                                    country: ''
+                                };
+                                
+                                // Check for common property names
+                                if (item.city) result.city = item.city;
+                                else if (item.town) result.city = item.town;
+                                else if (item.locality) result.city = item.locality;
+                                
+                                if (item.region) result.region = item.region;
+                                else if (item.state) result.region = item.state;
+                                else if (item.province) result.region = item.province;
+                                else if (item.county) result.region = item.county;
+                                
+                                if (item.country) result.country = item.country;
+                                else if (item.nation) result.country = item.nation;
+                                
+                                // If item has a location string, try to parse it
+                                if (item.location && typeof item.location === 'string') {
+                                    const parts = item.location.split(',').map(p => p.trim());
+                                    if (!result.city && parts[0]) result.city = parts[0];
+                                    if (!result.region && parts[1]) result.region = parts[1];
+                                    if (!result.country && parts[2]) result.country = parts[2];
+                                }
+                                
+                                return result;
+                            }
+                            
+                            // Default empty object
+                            return { city: '', region: '', country: '' };
+                        });
+                        
+                        console.log('Processed location data (first 5 items):', locationData.slice(0, 5));
+                        
+                        // Update the debug table
+                        updateLocationDebugTable();
+                        
+                        // Update the unmatched locations table if we have business data
+                        if (businessData.length > 0) {
+                            const unmatchedLocations = findUnmatchedLocations(businessData, locationData);
+                            updateUnmatchedLocationsTable(unmatchedLocations);
+                            locationStatusText.textContent = `Successfully loaded location data from file "${file.name}". Found ${locationData.length} locations and ${unmatchedLocations.length} unmatched locations.`;
+                        } else {
+                            locationStatusText.textContent = `Successfully loaded location data from file "${file.name}". Found ${locationData.length} locations. Load business data to see unmatched locations.`;
+                        }
+                        locationStatus.className = 'alert alert-success mb-3';
+                    } catch (error) {
+                        console.error('Error parsing location data file:', error);
+                        locationStatusText.textContent = `Error parsing location data file "${file.name}": ${error.message}`;
+                        locationStatus.className = 'alert alert-danger mb-3';
+                    } finally {
+                        statusSpinner.style.display = 'none';
+                    }
+                };
+                reader.onerror = function() {
+                    locationStatusText.textContent = `Error reading location data file "${file.name}". Please try again.`;
+                    locationStatus.className = 'alert alert-danger mb-3';
+                    statusSpinner.style.display = 'none';
+                };
+                reader.readAsText(file);
+            }
+
+            // Update loadBusinessData to use the current locationData
+            async function loadBusinessData(url = 'https://btcaccepted.org/businessData.json') {
+                const businessStatus = document.getElementById('businessStatus');
+                const businessStatusText = document.getElementById('businessStatusText');
+                const statusSpinner = document.getElementById('statusSpinner');
+                
+                businessStatus.style.display = 'block';
+                statusSpinner.style.display = 'inline-block';
+                businessStatusText.textContent = 'Loading business data...';
+                businessStatus.className = 'alert alert-info mb-3';
+                
+                try {
+                    // Load business data
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`Failed to load business data from ${url}. Status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    console.log('Raw data:', data);
+                    
+                    // Handle different possible data structures
+                    if (Array.isArray(data)) {
+                        businessData = data;
+                    } else if (data.businesses) {
+                        businessData = data.businesses;
+                    } else if (data.locations) {
+                        businessData = data.locations;
+                    } else {
+                        businessData = [];
+                    }
+
+                    // Find unmatched locations using current locationData
+                    const unmatchedLocations = findUnmatchedLocations(businessData, locationData);
+                    updateUnmatchedLocationsTable(unmatchedLocations);
+                    
+                    console.log('Processed business data:', businessData);
+                    
+                    if (businessData.length === 0) {
+                        businessStatusText.textContent = `No business data found in ${url}.`;
+                        businessStatus.className = 'alert alert-warning mb-3';
+                    } else {
+                        businessStatusText.textContent = `Successfully loaded ${businessData.length} businesses from ${url}. Found ${unmatchedLocations.length} unmatched locations.`;
+                        businessStatus.className = 'alert alert-success mb-3';
+                    }
+                    
+                    updateTable();
+                } catch (error) {
+                    console.error('Error loading business data:', error);
+                    businessStatusText.textContent = `Error loading business data from ${url}: ${error.message}`;
+                    businessStatus.className = 'alert alert-danger mb-3';
+                } finally {
+                    statusSpinner.style.display = 'none';
+                }
+            }
+
+            // Find unmatched locations
+            function findUnmatchedLocations(businesses, locations) {
+                if (!Array.isArray(locations)) {
+                    console.warn('Location data is not in expected format');
+                    return businesses.map(business => {
+                        if (!business) return null;
+                        
+                        // Get location components from either direct properties or location string
+                        const locationString = business.location || '';
+                        const locationParts = locationString.split(',').map(part => part.trim());
+                        const city = business.city || locationParts[0] || '';
+                        const region = business.region || locationParts[1] || '';
+                        const country = business.country || locationParts[2] || '';
+                        
+                        if (!city && !region && !country) return null;
+                        
+                        return {
+                            business,
+                            missingComponents: ['city', 'region', 'country'],
+                            city, region, country
+                        };
+                    }).filter(item => item !== null);
+                }
+
+                // Dictionary of normalized location components from locationData
+                const existingLocations = {
+                    cities: new Set(),
+                    regions: new Set(),
+                    countries: new Set()
+                };
+
+                // Populate with existing location data
+                locations.forEach(loc => {
+                    if (typeof loc === 'object' && loc !== null) {
+                        const city = (loc.city || '').trim().toLowerCase();
+                        const region = (loc.region || '').trim().toLowerCase();
+                        const country = (loc.country || '').trim().toLowerCase();
+                        
+                        if (city) existingLocations.cities.add(city);
+                        if (region) existingLocations.regions.add(region);
+                        if (country) existingLocations.countries.add(country);
+                    }
+                });
+
+                console.log('Existing cities count:', existingLocations.cities.size);
+                console.log('Existing regions count:', existingLocations.regions.size);
+                console.log('Existing countries count:', existingLocations.countries.size);
+
+                const unmatchedBusinesses = [];
+
+                // Check each business
+                businesses.forEach(business => {
+                    if (!business) return;
+                    
+                    // Get location components from either direct properties or location string
+                    const locationString = business.location || '';
+                    const locationParts = locationString.split(',').map(part => part.trim());
+                    
+                    // Prioritize direct properties if available
+                    const city = (business.city || locationParts[0] || '').trim().toLowerCase();
+                    const region = (business.region || locationParts[1] || '').trim().toLowerCase();
+                    const country = (business.country || locationParts[2] || '').trim().toLowerCase();
+                    
+                    // Skip empty locations
+                    if (!city && !region && !country) return;
+                    
+                    // For debugging
+                    console.log(`Checking business: ${business.name}, City: "${city}", Region: "${region}", Country: "${country}"`);
+                    
+                    // Check which components are missing from location database
+                    const missingComponents = [];
+                    let isMatched = true;
+                    
+                    if (city && !existingLocations.cities.has(city)) {
+                        console.log(`  Missing city: "${city}"`);
+                        missingComponents.push('city');
+                        isMatched = false;
+                    }
+                    
+                    if (region && !existingLocations.regions.has(region)) {
+                        console.log(`  Missing region: "${region}"`);
+                        missingComponents.push('region');
+                        isMatched = false;
+                    }
+                    
+                    if (country && !existingLocations.countries.has(country)) {
+                        console.log(`  Missing country: "${country}"`);
+                        missingComponents.push('country');
+                        isMatched = false;
+                    }
+                    
+                    // If any component is missing, add business to unmatched list
+                    if (!isMatched) {
+                        console.log(`Unmatched business: "${business.name}", Components: ${missingComponents.join(', ')}`);
+                        
+                        // For display, use the non-lowercase versions
+                        const displayCity = (business.city || locationParts[0] || '').trim();
+                        const displayRegion = (business.region || locationParts[1] || '').trim();
+                        const displayCountry = (business.country || locationParts[2] || '').trim();
+                        
+                        unmatchedBusinesses.push({
+                            business,
+                            missingComponents,
+                            city: displayCity,
+                            region: displayRegion,
+                            country: displayCountry
+                        });
+                    }
+                });
+
+                console.log(`Found ${unmatchedBusinesses.length} unmatched businesses out of ${businesses.length} total`);
+                return unmatchedBusinesses;
+            }
+
+            // Update unmatched locations table
+            function updateUnmatchedLocationsTable(unmatchedLocations) {
+                const tableBody = document.getElementById('unmatchedLocationsBody');
+                tableBody.innerHTML = '';
+                
+                unmatchedLocations.forEach(item => {
+                    if (!item) return;
+                    
+                    const { business, missingComponents, city, region, country } = item;
+                    const row = document.createElement('tr');
+                    const safeBusinessName = (business.name || '').replace(/"/g, '&quot;');
+                    const safeCity = city.replace(/"/g, '&quot;');
+                    const safeRegion = region.replace(/"/g, '&quot;');
+                    const safeCountry = country.replace(/"/g, '&quot;');
+                    
+                    // Create status indicators for each component
+                    const cityStatus = missingComponents.includes('city') ? 
+                        '<span class="badge bg-danger">Missing</span>' : 
+                        '<span class="badge bg-success">Found</span>';
+                    const regionStatus = missingComponents.includes('region') ? 
+                        '<span class="badge bg-danger">Missing</span>' : 
+                        '<span class="badge bg-success">Found</span>';
+                    const countryStatus = missingComponents.includes('country') ? 
+                        '<span class="badge bg-danger">Missing</span>' : 
+                        '<span class="badge bg-success">Found</span>';
+                    
+                    row.innerHTML = `
+                        <td>${safeBusinessName}</td>
+                        <td>${safeCity} ${cityStatus}</td>
+                        <td>${safeRegion} ${regionStatus}</td>
+                        <td>${safeCountry} ${countryStatus}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="importLocation('${safeBusinessName}', '${safeCity}', '${safeRegion}', '${safeCountry}')">
+                                <i class="bi bi-plus-circle"></i> Add to Locations
+                            </button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // Load data from file
+            function loadDataFromFile(file) {
+                const businessStatus = document.getElementById('businessStatus');
+                const businessStatusText = document.getElementById('businessStatusText');
+                const statusSpinner = document.getElementById('statusSpinner');
+                
+                businessStatus.style.display = 'block';
+                statusSpinner.style.display = 'inline-block';
+                businessStatusText.textContent = 'Loading file data...';
+                businessStatus.className = 'alert alert-info mb-3';
+                
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        console.log('Raw file data:', data);
+                        
+                        // Handle different possible data structures
+                        if (Array.isArray(data)) {
+                            businessData = data;
+                        } else if (data.businesses) {
+                            businessData = data.businesses;
+                        } else if (data.locations) {
+                            businessData = data.locations;
+                        } else {
+                            businessData = [];
+                        }
+
+                        // Load location data for comparison
+                        let locationData = [];
+                        try {
+                            const locationResponse = await fetch('https://btcaccepted.org/locationData.json');
+                            if (locationResponse.ok) {
+                                const locationJson = await locationResponse.json();
+                                // Handle different possible location data structures
+                                if (Array.isArray(locationJson)) {
+                                    locationData = locationJson;
+                                } else if (locationJson.locations) {
+                                    locationData = locationJson.locations;
+                                } else if (locationJson.data) {
+                                    locationData = locationJson.data;
+                                }
+                            }
+                        } catch (error) {
+                            console.warn('Error loading location data:', error);
+                            const locationStatus = document.getElementById('locationStatus');
+                            const locationStatusText = document.getElementById('locationStatusText');
+                            locationStatus.style.display = 'block';
+                            locationStatusText.textContent = `Error loading location data from https://btcaccepted.org/locationData.json: ${error.message}`;
+                            locationStatus.className = 'alert alert-warning mb-3';
+                        }
+                        
+                        // Find unmatched locations
+                        const unmatchedLocations = findUnmatchedLocations(businessData, locationData);
+                        updateUnmatchedLocationsTable(unmatchedLocations);
+                        
+                        if (businessData.length === 0) {
+                            businessStatusText.textContent = `No business data found in file "${file.name}".`;
+                            businessStatus.className = 'alert alert-warning mb-3';
+                        } else {
+                            businessStatusText.textContent = `Successfully loaded ${businessData.length} businesses from file "${file.name}". Found ${unmatchedLocations.length} unmatched locations.`;
+                            businessStatus.className = 'alert alert-success mb-3';
+                        }
+                        
+                        updateTable();
+                    } catch (error) {
+                        console.error('Error parsing JSON file:', error);
+                        businessStatusText.textContent = `Error parsing business data file "${file.name}": ${error.message}`;
+                        businessStatus.className = 'alert alert-danger mb-3';
+                    } finally {
+                        statusSpinner.style.display = 'none';
+                    }
+                };
+                reader.onerror = function() {
+                    businessStatusText.textContent = `Error reading business data file "${file.name}". Please try again.`;
+                    businessStatus.className = 'alert alert-danger mb-3';
+                    statusSpinner.style.display = 'none';
+                };
+                reader.readAsText(file);
+            }
+
+            // Add event listeners for data loading
+            document.getElementById('loadDefaultData').addEventListener('click', function() {
+                loadBusinessData();
+            });
+
+            document.getElementById('loadFileData').addEventListener('click', function() {
+                const fileInput = document.getElementById('fileInput');
+                if (fileInput.files.length > 0) {
+                    loadDataFromFile(fileInput.files[0]);
+                } else {
+                    alert('Please select a file first');
+                }
+            });
+
+            // Add event listeners for location data loading
+            document.getElementById('loadDefaultLocationData').addEventListener('click', async function() {
+                const statusSpinner = document.getElementById('statusSpinner');
+                statusSpinner.style.display = 'inline-block';
+                locationData = await loadLocationData();
+                if (businessData.length > 0) {
+                    const unmatchedLocations = findUnmatchedLocations(businessData, locationData);
+                    updateUnmatchedLocationsTable(unmatchedLocations);
+                }
+                statusSpinner.style.display = 'none';
+            });
+
+            document.getElementById('loadLocationFileData').addEventListener('click', function() {
+                const fileInput = document.getElementById('locationFileInput');
+                if (fileInput.files.length > 0) {
+                    loadLocationDataFromFile(fileInput.files[0]);
+                } else {
+                    alert('Please select a location data file first');
+                }
+            });
+
+            // Add rerun matching event listener
+            document.getElementById('rerunMatching').addEventListener('click', function() {
+                if (businessData.length > 0 && locationData.length > 0) {
+                    const unmatchedLocations = findUnmatchedLocations(businessData, locationData);
+                    updateUnmatchedLocationsTable(unmatchedLocations);
+                    const businessStatus = document.getElementById('businessStatus');
+                    const businessStatusText = document.getElementById('businessStatusText');
+                    businessStatus.style.display = 'block';
+                    businessStatusText.textContent = `Matching complete. Found ${unmatchedLocations.length} unmatched locations out of ${businessData.length} businesses.`;
+                    businessStatus.className = 'alert alert-info mb-3';
+                } else {
+                    alert('Please load both location data and business data first.');
+                }
+            });
+
+            // Update table based on search and filter
+            function updateTable() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const filterValue = filterSelect.value;
+                
+                console.log('Updating table with business data:', businessData);
+                
+                // Filter businesses based on search term and filter
+                let filteredBusinesses = businessData.filter(business => {
+                    if (!business) return false;
+                    
+                    const matchesSearch = 
+                        (business.name && business.name.toLowerCase().includes(searchTerm)) ||
+                        (business.location && business.location.toLowerCase().includes(searchTerm)) ||
+                        (business.address && business.address.toLowerCase().includes(searchTerm));
+
+                    // Handle different coordinate structures
+                    const hasCoords = business.coordinates && 
+                        ((business.coordinates.latitude && business.coordinates.longitude) ||
+                         (business.coordinates.lat && business.coordinates.lng));
+
+                    switch (filterValue) {
+                        case 'with_coords':
+                            return matchesSearch && hasCoords;
+                        case 'without_coords':
+                            return matchesSearch && !hasCoords;
+                        case 'global':
+                            return matchesSearch && business.isGlobalOnline;
+                        default:
+                            return matchesSearch;
+                    }
+                });
+
+                console.log('Filtered businesses:', filteredBusinesses);
+
+                // Sort businesses
+                filteredBusinesses.sort((a, b) => {
+                    let aValue, bValue;
+                    switch (currentSort.column) {
+                        case 'business':
+                            aValue = a.name || '';
+                            bValue = b.name || '';
+                            break;
+                        case 'city':
+                            aValue = a.city || (a.location || '').split(',')[0] || '';
+                            bValue = b.city || (b.location || '').split(',')[0] || '';
+                            break;
+                        case 'region':
+                            aValue = a.region || (a.location || '').split(',')[1] || '';
+                            bValue = b.region || (b.location || '').split(',')[1] || '';
+                            break;
+                        case 'country':
+                            aValue = a.country || (a.location || '').split(',')[2] || '';
+                            bValue = b.country || (b.location || '').split(',')[2] || '';
+                            break;
+                    }
+                    return currentSort.direction === 'asc' ? 
+                        aValue.localeCompare(bValue) : 
+                        bValue.localeCompare(aValue);
+                });
+
+                // Update results count
+                resultsCount.textContent = `Found ${filteredBusinesses.length} locations`;
+
+                // Clear and populate table
+                locationTableBody.innerHTML = '';
+                filteredBusinesses.forEach((business, index) => {
+                    if (!business) return; // Skip invalid entries
+                    
+                    const row = document.createElement('tr');
+                    
+                    // Get location data, prioritizing direct properties over location string
+                    const city = business.city || (business.location || '').split(',')[0] || '';
+                    const region = business.region || (business.location || '').split(',')[1] || '';
+                    const country = business.country || (business.location || '').split(',')[2] || '';
+                    
+                    console.log('Processing business:', business);
+                    
+                    // Escape special characters in business name for HTML
+                    const safeBusinessName = (business.name || '').replace(/"/g, '&quot;');
+                    const safeCity = city.replace(/"/g, '&quot;');
+                    const safeRegion = region.replace(/"/g, '&quot;');
+                    const safeCountry = country.replace(/"/g, '&quot;');
+                    
+                    row.innerHTML = `
+                        <td>${safeBusinessName}</td>
+                        <td>${safeCity}</td>
+                        <td>${safeRegion}</td>
+                        <td>${safeCountry}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="editLocation(${index}, '${safeBusinessName}', '${safeCity}', '${safeRegion}', '${safeCountry}')">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                        </td>
+                    `;
+                    locationTableBody.appendChild(row);
+                });
+            }
+
+            // Edit location function
+            window.editLocation = function(index, businessName, city, region, country) {
+                document.getElementById('editIndex').value = index;
+                document.getElementById('editBusiness').value = businessName;
+                document.getElementById('editCity').value = city;
+                document.getElementById('editRegion').value = region;
+                document.getElementById('editCountry').value = country;
+                
+                const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+                editModal.show();
+            };
+
+            // Save edited location
+            document.getElementById('saveEdit').addEventListener('click', function() {
+                const index = document.getElementById('editIndex').value;
+                const city = document.getElementById('editCity').value;
+                const region = document.getElementById('editRegion').value;
+                const country = document.getElementById('editCountry').value;
+                
+                // Update the business data with individual fields
+                businessData[index].city = city;
+                businessData[index].region = region;
+                businessData[index].country = country;
+                
+                // Also update the location string for backward compatibility
+                businessData[index].location = `${city},${region},${country}`;
+                
+                // Update the table
+                updateTable();
+                
+                // Close the modal
+                bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
+            });
+
+            // Add event listeners
+            searchInput.addEventListener('input', updateTable);
+            filterSelect.addEventListener('change', updateTable);
+
+            // Add sort event listeners to table headers
+            document.querySelectorAll('.sortable').forEach(header => {
+                header.addEventListener('click', function() {
+                    const column = this.dataset.sort;
+                    if (currentSort.column === column) {
+                        currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        currentSort.column = column;
+                        currentSort.direction = 'asc';
+                    }
+                    updateTable();
+                });
+            });
+
+            // View on map function
+            window.viewOnMap = function(businessName, lat, lng) {
+                // Open location in OpenStreetMap
+                window.open(`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}&zoom=15`, '_blank');
+            };
+
+            // Update the importLocation function to add location directly to the locationData array
+            window.importLocation = function(businessName, city, region, country) {
+                // Create new location object
+                const newLocation = {
+                    city: city,
+                    region: region,
+                    country: country
+                };
+                
+                // Add to locationData array
+                locationData.push(newLocation);
+                
+                // Update the location debug table
+                updateLocationDebugTable();
+                
+                // Re-run the matching check to update statuses
+                const unmatchedLocations = findUnmatchedLocations(businessData, locationData);
+                updateUnmatchedLocationsTable(unmatchedLocations);
+                
+                // Show success message
+                const locationStatus = document.getElementById('locationStatus');
+                const locationStatusText = document.getElementById('locationStatusText');
+                locationStatus.style.display = 'block';
+                locationStatusText.textContent = `Successfully added ${city}, ${region}, ${country} to location database.`;
+                locationStatus.className = 'alert alert-success mb-3';
+                
+                // Update the location count
+                document.getElementById('locationDataCount').textContent = locationData.length;
+                
+                // Automatically hide the success message after 4 seconds
+                setTimeout(() => {
+                    locationStatus.style.display = 'none';
+                }, 4000);
+            };
+
+            // Update location debug table
+            function updateLocationDebugTable() {
+                const tableBody = document.getElementById('locationDataDebugBody');
+                const locationDataCount = document.getElementById('locationDataCount');
+                
+                tableBody.innerHTML = '';
+                locationDataCount.textContent = locationData.length;
+                
+                // Sort locations for easier debugging
+                const sortedLocations = [...locationData].sort((a, b) => {
+                    // Sort by country, then region, then city
+                    const countryCompare = (a.country || '').localeCompare(b.country || '');
+                    if (countryCompare !== 0) return countryCompare;
+                    
+                    const regionCompare = (a.region || '').localeCompare(b.region || '');
+                    if (regionCompare !== 0) return regionCompare;
+                    
+                    return (a.city || '').localeCompare(b.city || '');
+                });
+                
+                sortedLocations.forEach((loc, index) => {
+                    if (!loc) return;
+                    
+                    const row = document.createElement('tr');
+                    const city = loc.city || '';
+                    const region = loc.region || '';
+                    const country = loc.country || '';
+                    
+                    // Find the original index in the locationData array
+                    const originalIndex = locationData.findIndex(item => 
+                        item.city === loc.city && 
+                        item.region === loc.region && 
+                        item.country === loc.country
+                    );
+                    
+                    const safeCity = city.replace(/"/g, '&quot;');
+                    const safeRegion = region.replace(/"/g, '&quot;');
+                    const safeCountry = country.replace(/"/g, '&quot;');
+                    
+                    row.innerHTML = `
+                        <td>${city}</td>
+                        <td>${region}</td>
+                        <td>${country}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteLocation(${originalIndex}, '${safeCity}', '${safeRegion}', '${safeCountry}')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // Delete location function
+            window.deleteLocation = function(index, city, region, country) {
+                if (confirm(`Are you sure you want to delete the location "${city}, ${region}, ${country}"?`)) {
+                    // Remove the location from the array
+                    if (index >= 0 && index < locationData.length) {
+                        locationData.splice(index, 1);
+                        
+                        // Update the location debug table
+                        updateLocationDebugTable();
+                        
+                        // Re-run the matching check to update unmatched locations
+                        if (businessData.length > 0) {
+                            const unmatchedLocations = findUnmatchedLocations(businessData, locationData);
+                            updateUnmatchedLocationsTable(unmatchedLocations);
+                        }
+                        
+                        // Show success message
+                        const locationStatus = document.getElementById('locationStatus');
+                        const locationStatusText = document.getElementById('locationStatusText');
+                        locationStatus.style.display = 'block';
+                        locationStatusText.textContent = `Successfully deleted ${city}, ${region}, ${country} from location database.`;
+                        locationStatus.className = 'alert alert-success mb-3';
+                        
+                        // Update the location count
+                        document.getElementById('locationDataCount').textContent = locationData.length;
+                        
+                        // Automatically hide the success message after 4 seconds
+                        setTimeout(() => {
+                            locationStatus.style.display = 'none';
+                        }, 4000);
+                    }
+                }
+            };
+
+            // Load initial data
+            async function loadInitialData() {
+                // First load location data
+                await loadLocationData();
+                
+                // Then load business data
+                await loadBusinessData();
+            }
+            
+            // Start loading data when the page is ready
+            loadInitialData();
+
+            // Export location data as JSON file
+            document.getElementById('exportLocationData').addEventListener('click', function() {
+                // Convert location data to JSON string
+                const jsonData = JSON.stringify(locationData, null, 2);
+                
+                // Create a blob with the JSON data
+                const blob = new Blob([jsonData], { type: 'application/json' });
+                
+                // Create a URL for the blob
+                const url = URL.createObjectURL(blob);
+                
+                // Create a temporary download link
+                const downloadLink = document.createElement('a');
+                downloadLink.href = url;
+                downloadLink.download = 'locationData.json';
+                
+                // Append the link to the document
+                document.body.appendChild(downloadLink);
+                
+                // Click the link to trigger the download
+                downloadLink.click();
+                
+                // Clean up
+                document.body.removeChild(downloadLink);
+                URL.revokeObjectURL(url);
+                
+                // Show success message
+                const locationStatus = document.getElementById('locationStatus');
+                const locationStatusText = document.getElementById('locationStatusText');
+                locationStatus.style.display = 'block';
+                locationStatusText.textContent = `Exported ${locationData.length} locations to locationData.json`;
+                locationStatus.className = 'alert alert-success mb-3';
+                
+                // Automatically hide the success message after 4 seconds
+                setTimeout(() => {
+                    locationStatus.style.display = 'none';
+                }, 4000);
+            });
+        });
+    </script>
+</body>
+</html> 
