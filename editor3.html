@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BTCAccepted Data Editor</title>
+    <title>BTCAccepted Combined Editor</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -298,45 +298,53 @@
             <div class="welcome-icon">
                 <i class="bi bi-file-earmark-code"></i>
             </div>
-            <h2>BTCAccepted Data Editor</h2>
+            <h2>BTCAccepted Combined Editor</h2>
             <p class="lead my-4">Manage your Bitcoin-accepting businesses and location data in one place.</p>
             
-            <div class="mb-4">
-                <h5>Load Business Data:</h5>
-                <div class="row g-3 justify-content-center mb-3">
-                    <div class="col-md-4">
-                        <button id="importBusinessButton" class="btn btn-primary w-100" style="background-color: #f7931a; border-color: #f7931a;">
-                            <i class="bi bi-upload me-2"></i>Upload Custom File
-                        </button>
-                    </div>
-                    <div class="col-md-4">
-                        <button id="loadBusinessFromWebButton" class="btn btn-outline-primary w-100">
-                            <i class="bi bi-cloud-download me-2"></i>Load From BTCAccepted.org
-                        </button>
-                    </div>
-                </div>
-                <input type="file" id="businessFileInput" accept=".json" style="display: none;">
-            </div>
-            
-            <div class="mb-4">
-                <h5>Load Location Data:</h5>
-                <div class="row g-3 justify-content-center">
-                    <div class="col-md-4">
-                        <button id="importLocationButton" class="btn btn-primary w-100" style="background-color: #f7931a; border-color: #f7931a;">
-                            <i class="bi bi-upload me-2"></i>Upload Custom File
-                        </button>
-                    </div>
-                    <div class="col-md-4">
-                        <button id="loadLocationFromWebButton" class="btn btn-outline-primary w-100">
-                            <i class="bi bi-cloud-download me-2"></i>Load From BTCAccepted.org
-                        </button>
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <h5><i class="bi bi-shop me-2"></i>Business Data</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <button id="importBusinessButton" class="btn btn-primary" style="background-color: #f7931a; border-color: #f7931a;">
+                                    <i class="bi bi-upload me-2"></i>Upload Custom File
+                                </button>
+                                <button id="loadBusinessFromWebButton" class="btn btn-outline-primary">
+                                    <i class="bi bi-cloud-download me-2"></i>Load From BTCAccepted.org
+                                </button>
+                            </div>
+                            <small id="businessFileStatus" class="form-text mt-2">No file loaded</small>
+                            <input type="file" id="businessFileInput" accept=".json" style="display: none;">
+                        </div>
                     </div>
                 </div>
-                <input type="file" id="locationFileInput" accept=".json" style="display: none;">
+                
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <h5><i class="bi bi-geo-alt me-2"></i>Location Data</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <button id="importLocationButton" class="btn btn-primary" style="background-color: #f7931a; border-color: #f7931a;">
+                                    <i class="bi bi-upload me-2"></i>Upload Custom File
+                                </button>
+                                <button id="loadLocationFromWebButton" class="btn btn-outline-primary">
+                                    <i class="bi bi-cloud-download me-2"></i>Load From BTCAccepted.org
+                                </button>
+                            </div>
+                            <small id="locationFileStatus" class="form-text mt-2">No file loaded</small>
+                            <input type="file" id="locationFileInput" accept=".json" style="display: none;">
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div class="mt-4">
-                <button id="startEditorButton" class="btn btn-success" disabled>
+                <button id="startEditorButton" class="btn btn-success btn-lg" disabled>
                     <i class="bi bi-pencil-square me-2"></i>Start Editing
                 </button>
                 <div id="startInfoMessage" class="form-text mt-2">Please load both business and location data to begin editing</div>
@@ -631,9 +639,150 @@
                             <label class="form-label">Categories *</label>
                             <div class="category-container border rounded p-3">
                                 <div class="accordion" id="categoriesAccordion">
-                                    <!-- Categories list with collapsible sections -->
+                                    <!-- Standalone Categories -->
                                     <div class="row mb-3">
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input main-category" type="checkbox" id="cat-books" value="Books/Magazines">
+                                                <label class="form-check-label" for="cat-books">Books/Magazines</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input main-category" type="checkbox" id="cat-bitcoin-hardware" value="Bitcoin Hardware">
+                                                <label class="form-check-label" for="cat-bitcoin-hardware">Bitcoin Hardware</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input main-category" type="checkbox" id="cat-consulting" value="Consulting">
+                                                <label class="form-check-label" for="cat-consulting">Consulting</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input main-category" type="checkbox" id="cat-event" value="Event Organizer">
+                                                <label class="form-check-label" for="cat-event">Event Organizer</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input main-category" type="checkbox" id="cat-gift-cards" value="Gift Cards">
+                                                <label class="form-check-label" for="cat-gift-cards">Gift Cards</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input main-category" type="checkbox" id="cat-hardware-wallets" value="Hardware Wallets/Signing Devices">
+                                                <label class="form-check-label" for="cat-hardware-wallets">Hardware Wallets/Signing Devices</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input main-category" type="checkbox" id="cat-homesteading" value="Homesteading">
+                                                <label class="form-check-label" for="cat-homesteading">Homesteading</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input main-category" type="checkbox" id="cat-lawyer" value="Lawyer">
+                                                <label class="form-check-label" for="cat-lawyer">Lawyer</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input main-category" type="checkbox" id="cat-marketplace" value="Marketplace">
+                                                <label class="form-check-label" for="cat-marketplace">Marketplace</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input main-category" type="checkbox" id="cat-merchandise" value="Merchandise">
+                                                <label class="form-check-label" for="cat-merchandise">Merchandise</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Categories with subcategories -->
+                                    <!-- Apparel and Accessories category -->
+                                    <div class="category-group mb-3">
+                                        <div class="main-category-heading">
+                                            <div class="form-check">
+                                                <input class="form-check-input main-category" type="checkbox" id="cat-apparel" value="Apparel and Accessories">
+                                                <label class="form-check-label fw-bold" for="cat-apparel">Apparel and Accessories</label>
+                                            </div>
+                                        </div>
+                                        <div class="subcategories ps-4 mt-1">
+                                            <div class="row">
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-apparel-clothing" value="Clothing" data-parent="Apparel and Accessories">
+                                                        <label class="form-check-label" for="subcat-apparel-clothing">Clothing</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-apparel-fashion" value="Fashion accessories" data-parent="Apparel and Accessories">
+                                                        <label class="form-check-label" for="subcat-apparel-fashion">Fashion accessories</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-apparel-headwear" value="Headwear" data-parent="Apparel and Accessories">
+                                                        <label class="form-check-label" for="subcat-apparel-headwear">Headwear</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-apparel-leather" value="Leather products" data-parent="Apparel and Accessories">
+                                                        <label class="form-check-label" for="subcat-apparel-leather">Leather products</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Bitcoin Mining category -->
+                                    <div class="category-group mb-3">
+                                        <div class="main-category-heading">
+                                            <div class="form-check">
+                                                <input class="form-check-input main-category" type="checkbox" id="cat-mining" value="Bitcoin Mining">
+                                                <label class="form-check-label fw-bold" for="cat-mining">Bitcoin Mining</label>
+                                            </div>
+                                        </div>
+                                        <div class="subcategories ps-4 mt-1">
+                                            <div class="row">
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-mining-accessories" value="Accessories" data-parent="Bitcoin Mining">
+                                                        <label class="form-check-label" for="subcat-mining-accessories">Accessories</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-mining-hardware" value="Hardware" data-parent="Bitcoin Mining">
+                                                        <label class="form-check-label" for="subcat-mining-hardware">Hardware</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-mining-home" value="Home Mining" data-parent="Bitcoin Mining">
+                                                        <label class="form-check-label" for="subcat-mining-home">Home Mining</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-mining-hosted" value="Hosted" data-parent="Bitcoin Mining">
+                                                        <label class="form-check-label" for="subcat-mining-hosted">Hosted</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Food & Drink category -->
+                                    <div class="category-group mb-3">
+                                        <div class="main-category-heading">
                                             <div class="form-check">
                                                 <input class="form-check-input main-category" type="checkbox" id="cat-food" value="Food & Drink">
                                                 <label class="form-check-label fw-bold" for="cat-food">Food & Drink</label>
@@ -643,8 +792,8 @@
                                             <div class="row">
                                                 <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                                     <div class="form-check">
-                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-apiculture" value="Apiculture" data-parent="Food & Drink">
-                                                        <label class="form-check-label" for="subcat-apiculture">Apiculture</label>
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-apiculture" value="Apiculture/Honey" data-parent="Food & Drink">
+                                                        <label class="form-check-label" for="subcat-apiculture">Apiculture/Honey</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
@@ -703,14 +852,14 @@
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                                     <div class="form-check">
-                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-restaurant" value="Restaurant" data-parent="Food & Drink">
-                                                        <label class="form-check-label" for="subcat-restaurant">Restaurant</label>
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-pet-store" value="Pet Store" data-parent="Pet Care">
+                                                        <label class="form-check-label" for="subcat-pet-store">Pet Store</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                                     <div class="form-check">
-                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-tea" value="Tea" data-parent="Food & Drink">
-                                                        <label class="form-check-label" for="subcat-tea">Tea</label>
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-breeders" value="Breeders" data-parent="Pet Care">
+                                                        <label class="form-check-label" for="subcat-breeders">Breeders</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
@@ -761,6 +910,24 @@
                                                     <div class="form-check">
                                                         <input class="form-check-input subcategory" type="checkbox" id="subcat-photography" value="Photography" data-parent="Creative">
                                                         <label class="form-check-label" for="subcat-photography">Photography</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-pins" value="Pins" data-parent="Creative">
+                                                        <label class="form-check-label" for="subcat-pins">Pins</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-prints" value="Prints" data-parent="Creative">
+                                                        <label class="form-check-label" for="subcat-prints">Prints</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-stickers" value="Stickers" data-parent="Creative">
+                                                        <label class="form-check-label" for="subcat-stickers">Stickers</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
@@ -823,6 +990,18 @@
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                                     <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-estate-admin" value="Estate and Trust Administration" data-parent="Finance">
+                                                        <label class="form-check-label" for="subcat-estate-admin">Estate and Trust Administration</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-estate-planning" value="Estate, tax and business planning" data-parent="Finance">
+                                                        <label class="form-check-label" for="subcat-estate-planning">Estate, tax and business planning</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
                                                         <input class="form-check-input subcategory" type="checkbox" id="subcat-financial-advisors" value="Financial Advisors" data-parent="Finance">
                                                         <label class="form-check-label" for="subcat-financial-advisors">Financial Advisors</label>
                                                     </div>
@@ -859,6 +1038,12 @@
                                                         <label class="form-check-label" for="subcat-online-payments">Payments & Processing</label>
                                                     </div>
                                                 </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-search" value="Search" data-parent="Online Services">
+                                                        <label class="form-check-label" for="subcat-search">Search</label>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -881,6 +1066,18 @@
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                                     <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-chiropractic" value="Chiropractic" data-parent="Health & Fitness">
+                                                        <label class="form-check-label" for="subcat-chiropractic">Chiropractic</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-dental" value="Dental & Orthodontics" data-parent="Health & Fitness">
+                                                        <label class="form-check-label" for="subcat-dental">Dental & Orthodontics</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
                                                         <input class="form-check-input subcategory" type="checkbox" id="subcat-healthcare" value="Healthcare" data-parent="Health & Fitness">
                                                         <label class="form-check-label" for="subcat-healthcare">Healthcare</label>
                                                     </div>
@@ -889,6 +1086,36 @@
                                                     <div class="form-check">
                                                         <input class="form-check-input subcategory" type="checkbox" id="subcat-health-supplements" value="Supplements" data-parent="Health & Fitness">
                                                         <label class="form-check-label" for="subcat-health-supplements">Supplements</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-massage" value="Massage Therapy" data-parent="Health & Fitness">
+                                                        <label class="form-check-label" for="subcat-massage">Massage Therapy</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-skin-care" value="Skin Care" data-parent="Health & Fitness">
+                                                        <label class="form-check-label" for="subcat-skin-care">Skin Care</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-swimming" value="Swimming" data-parent="Health & Fitness">
+                                                        <label class="form-check-label" for="subcat-swimming">Swimming</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-beauty" value="Beauty/Cosmetic" data-parent="Health & Fitness">
+                                                        <label class="form-check-label" for="subcat-beauty">Beauty/Cosmetic</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-personal-care" value="Personal Care" data-parent="Health & Fitness">
+                                                        <label class="form-check-label" for="subcat-personal-care">Personal Care</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -917,6 +1144,18 @@
                                                         <label class="form-check-label" for="subcat-music-lessons">Lessons</label>
                                                     </div>
                                                 </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-recording-studio" value="Recording Studio" data-parent="Music">
+                                                        <label class="form-check-label" for="subcat-recording-studio">Recording Studio</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-streaming" value="Streaming" data-parent="Music">
+                                                        <label class="form-check-label" for="subcat-streaming">Streaming</label>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -933,14 +1172,118 @@
                                             <div class="row">
                                                 <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                                     <div class="form-check">
-                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-breeders" value="Breeders" data-parent="Pet Care">
-                                                        <label class="form-check-label" for="subcat-breeders">Breeders</label>
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-pet-store" value="Pet Store" data-parent="Pet Care">
+                                                        <label class="form-check-label" for="subcat-pet-store">Pet Store</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                                     <div class="form-check">
-                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-pet-store" value="Pet Store" data-parent="Pet Care">
-                                                        <label class="form-check-label" for="subcat-pet-store">Pet Store</label>
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-day-care" value="Day Care" data-parent="Pet Care">
+                                                        <label class="form-check-label" for="subcat-day-care">Day Care</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-boarding" value="Boarding" data-parent="Pet Care">
+                                                        <label class="form-check-label" for="subcat-boarding">Boarding</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-veterinary" value="Veterinary" data-parent="Pet Care">
+                                                        <label class="form-check-label" for="subcat-veterinary">Veterinary</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-grooming-supplies" value="Grooming Supplies" data-parent="Pet Care">
+                                                        <label class="form-check-label" for="subcat-grooming-supplies">Grooming Supplies</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-food-supplements" value="Supplements" data-parent="Pet Care">
+                                                        <label class="form-check-label" for="subcat-food-supplements">Supplements</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-pet-accessories" value="Pet Accessories" data-parent="Pet Care">
+                                                        <label class="form-check-label" for="subcat-pet-accessories">Pet Accessories</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-pet-food" value="Pet Food" data-parent="Pet Care">
+                                                        <label class="form-check-label" for="subcat-pet-food">Pet Food</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-pet-grooming" value="Pet Grooming" data-parent="Pet Care">
+                                                        <label class="form-check-label" for="subcat-pet-grooming">Pet Grooming</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-pet-health" value="Pet Health" data-parent="Pet Care">
+                                                        <label class="form-check-label" for="subcat-pet-health">Pet Health</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-pet-training" value="Pet Training" data-parent="Pet Care">
+                                                        <label class="form-check-label" for="subcat-pet-training">Pet Training</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sports category -->
+                                    <div class="category-group mb-3">
+                                        <div class="main-category-heading">
+                                            <div class="form-check">
+                                                <input class="form-check-input main-category" type="checkbox" id="cat-sports" value="Sports">
+                                                <label class="form-check-label fw-bold" for="cat-sports">Sports</label>
+                                            </div>
+                                        </div>
+                                        <div class="subcategories ps-4 mt-1">
+                                            <div class="row">
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-sports-apparel" value="Apparel" data-parent="Sports">
+                                                        <label class="form-check-label" for="subcat-sports-apparel">Apparel</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-sports-equipment" value="Equipment" data-parent="Sports">
+                                                        <label class="form-check-label" for="subcat-sports-equipment">Equipment</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-sports-memorabilia" value="Memorabilia" data-parent="Sports">
+                                                        <label class="form-check-label" for="subcat-sports-memorabilia">Memorabilia</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-sports-teams" value="Teams" data-parent="Sports">
+                                                        <label class="form-check-label" for="subcat-sports-teams">Teams</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-sports-tickets" value="Tickets" data-parent="Sports">
+                                                        <label class="form-check-label" for="subcat-sports-tickets">Tickets</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-sports-training" value="Training" data-parent="Sports">
+                                                        <label class="form-check-label" for="subcat-sports-training">Training</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -959,14 +1302,68 @@
                                             <div class="row">
                                                 <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                                     <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-carpentry" value="Carpentry" data-parent="Trades">
+                                                        <label class="form-check-label" for="subcat-carpentry">Carpentry</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-car-detailing" value="Car Detailing" data-parent="Trades">
+                                                        <label class="form-check-label" for="subcat-car-detailing">Car Detailing</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
                                                         <input class="form-check-input subcategory" type="checkbox" id="subcat-construction" value="Construction" data-parent="Trades">
                                                         <label class="form-check-label" for="subcat-construction">Construction</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                                     <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-drywall" value="Drywall" data-parent="Trades">
+                                                        <label class="form-check-label" for="subcat-drywall">Drywall</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-electrical" value="Electrical" data-parent="Trades">
+                                                        <label class="form-check-label" for="subcat-electrical">Electrical</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-gardening" value="Gardening" data-parent="Trades">
+                                                        <label class="form-check-label" for="subcat-gardening">Gardening</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-heating" value="Heating" data-parent="Trades">
+                                                        <label class="form-check-label" for="subcat-heating">Heating</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
                                                         <input class="form-check-input subcategory" type="checkbox" id="subcat-landscaping" value="Landscaping" data-parent="Trades">
                                                         <label class="form-check-label" for="subcat-landscaping">Landscaping</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-plumbing" value="Plumbing" data-parent="Trades">
+                                                        <label class="form-check-label" for="subcat-plumbing">Plumbing</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-roofing" value="Roofing" data-parent="Trades">
+                                                        <label class="form-check-label" for="subcat-roofing">Roofing</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-tree-care" value="Tree Care" data-parent="Trades">
+                                                        <label class="form-check-label" for="subcat-tree-care">Tree Care</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -985,14 +1382,38 @@
                                             <div class="row">
                                                 <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                                     <div class="form-check">
-                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-accommodations" value="Accommodations" data-parent="Travel & Tours">
-                                                        <label class="form-check-label" for="subcat-accommodations">Accommodations</label>
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-airfares" value="Airfares" data-parent="Travel & Tours">
+                                                        <label class="form-check-label" for="subcat-airfares">Airfares</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-cruises" value="Cruises" data-parent="Travel & Tours">
+                                                        <label class="form-check-label" for="subcat-cruises">Cruises</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-hotels" value="Hotels/Accommodations" data-parent="Travel & Tours">
+                                                        <label class="form-check-label" for="subcat-hotels">Hotels/Accommodations</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-tours" value="Tours" data-parent="Travel & Tours">
+                                                        <label class="form-check-label" for="subcat-tours">Tours</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                                     <div class="form-check">
                                                         <input class="form-check-input subcategory" type="checkbox" id="subcat-transportation" value="Transportation" data-parent="Travel & Tours">
                                                         <label class="form-check-label" for="subcat-transportation">Transportation</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-travel-agencies" value="Travel Agencies" data-parent="Travel & Tours">
+                                                        <label class="form-check-label" for="subcat-travel-agencies">Travel Agencies</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1174,7 +1595,9 @@
         let map = null;
         let marker = null;
         let currentBusinessIndex = -1;
+        let locationCurrentKey = null;
         let currentSort = { column: 'name', direction: 'asc' };
+        let locationSort = { column: 'key', direction: 'asc' };
         let businessSearchTerm = '';
         let locationSearchTerm = '';
         let businessFileLoaded = false;
@@ -1192,6 +1615,8 @@
         const locationCount = document.getElementById('locationCount');
         const spinnerBackdrop = document.getElementById('spinnerBackdrop');
         const spinnerMessage = document.getElementById('spinnerMessage');
+        const businessFileStatus = document.getElementById('businessFileStatus');
+        const locationFileStatus = document.getElementById('locationFileStatus');
 
         // Initialize after DOM load
         document.addEventListener('DOMContentLoaded', function() {
@@ -1229,6 +1654,15 @@
                 
                 updateBusinessTable();
                 updateLocationTable();
+                
+                // Ensure the map is properly initialized when switching to the location tab
+                document.getElementById('location-tab').addEventListener('shown.bs.tab', function (e) {
+                    if (map) {
+                        setTimeout(() => {
+                            map.invalidateSize();
+                        }, 100);
+                    }
+                });
             });
             
             // Business editor event handlers
@@ -1249,6 +1683,20 @@
                 document.getElementById('businessSearchInput').value = '';
                 businessSearchTerm = '';
                 updateBusinessTable();
+            });
+            
+            // Sort business table
+            document.querySelectorAll('#businessesTable .sort-icon').forEach(icon => {
+                icon.addEventListener('click', function() {
+                    const column = this.dataset.sort;
+                    if (currentSort.column === column) {
+                        currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        currentSort.column = column;
+                        currentSort.direction = 'asc';
+                    }
+                    updateBusinessTable();
+                });
             });
             
             // Location editor event handlers
@@ -1310,6 +1758,14 @@
             // Setup category selectors and selected categories display
             setupCategorySelectors();
             document.getElementById('addCustomCategoryBtn').addEventListener('click', addCustomCategory);
+            
+            // Add sortable functionality to location table headers
+            document.querySelectorAll('#location-editor .sortable').forEach(header => {
+                header.addEventListener('click', function() {
+                    const column = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+                    sortLocationTable(column);
+                });
+            });
         });
         
         // Category-related functions
@@ -1318,13 +1774,6 @@
             const mainCategories = document.querySelectorAll('.main-category');
             mainCategories.forEach(category => {
                 category.addEventListener('change', function() {
-                    const categoryValue = this.value;
-                    const isChecked = this.checked;
-                    
-                    // Find all subcategories related to this main category
-                    const subcategories = document.querySelectorAll(`.subcategory[data-parent="${categoryValue}"]`);
-                    
-                    // Update the selected categories display
                     updateSelectedCategories();
                 });
             });
@@ -1352,15 +1801,22 @@
         function getSelectedCategories() {
             const selectedCategories = [];
             
-            // Get main categories
-            const mainCategories = document.querySelectorAll('.main-category:checked');
-            mainCategories.forEach(category => {
-                selectedCategories.push(category.value);
+            // Get main categories that don't have subcategories selected
+            document.querySelectorAll('.main-category:checked').forEach(category => {
+                const categoryValue = category.value;
+                // Check if any subcategories for this main category are checked
+                const subcategoriesChecked = document.querySelector(
+                    `.subcategory[data-parent="${categoryValue}"]:checked`
+                );
+                
+                // Only add the main category if no subcategories are selected
+                if (!subcategoriesChecked) {
+                    selectedCategories.push(categoryValue);
+                }
             });
             
-            // Get subcategories
-            const subcategories = document.querySelectorAll('.subcategory:checked');
-            subcategories.forEach(subcategory => {
+            // Get all selected subcategories
+            document.querySelectorAll('.subcategory:checked').forEach(subcategory => {
                 selectedCategories.push(subcategory.value);
             });
             
@@ -1378,44 +1834,82 @@
             const selectedCategoriesList = document.getElementById('selectedCategoriesList');
             const selectedCategoriesDisplay = document.getElementById('selectedCategoriesDisplay');
             
-            // Clear the current list
+            if (!selectedCategoriesList || !selectedCategoriesDisplay) return;
+            
+            // Clear the current list (but preserve custom categories)
+            const customCategories = [];
+            document.querySelectorAll('#selectedCategoriesList .category-badge[data-custom="true"]').forEach(badge => {
+                customCategories.push({
+                    value: badge.dataset.value,
+                    html: badge.innerHTML
+                });
+            });
             selectedCategoriesList.innerHTML = '';
             
-            // Get all selected categories 
-            const selectedCategories = getSelectedCategories();
+            // Get all selected categories from checkboxes
+            const selectedMainCategories = [];
+            const selectedSubcategories = [];
             
-            // Create a badge for each selected category
-            selectedCategories.forEach(category => {
-                const badge = document.createElement('span');
-                badge.className = 'category-badge';
-                badge.dataset.value = category;
+            // Get selected main categories without selected subcategories
+            document.querySelectorAll('.main-category:checked').forEach(category => {
+                const categoryValue = category.value;
+                const hasSubcategories = document.querySelector(
+                    `.subcategory[data-parent="${categoryValue}"]:checked`
+                );
                 
-                // Check if it's a subcategory
-                const subcategoryCheckbox = document.querySelector(`.subcategory[value="${category}"]`);
-                if (subcategoryCheckbox) {
-                    badge.dataset.type = 'subcategory';
-                    badge.dataset.parent = subcategoryCheckbox.dataset.parent;
-                    badge.className += ' subcategory-badge';
-                } else {
-                    // Check if it's a main category
-                    const mainCheckbox = document.querySelector(`.main-category[value="${category}"]`);
-                    if (mainCheckbox) {
-                        badge.dataset.type = 'main';
-                        badge.className += ' main-category-badge';
-                    } else {
-                        // Must be a custom category
-                        badge.dataset.type = 'custom';
-                        badge.dataset.custom = 'true';
-                        badge.className += ' custom-category';
-                    }
+                if (!hasSubcategories) {
+                    selectedMainCategories.push(categoryValue);
                 }
-                
-                badge.innerHTML = `${category} <span class="remove-category" onclick="removeCategory('${category}')">&times;</span>`;
+            });
+            
+            // Get selected subcategories
+            document.querySelectorAll('.subcategory:checked').forEach(subcategory => {
+                selectedSubcategories.push({
+                    value: subcategory.value,
+                    parent: subcategory.dataset.parent
+                });
+            });
+            
+            // Create badges for main categories
+            selectedMainCategories.forEach(category => {
+                const badge = document.createElement('span');
+                badge.className = 'badge bg-primary me-2 mb-2';
+                badge.dataset.value = category;
+                badge.dataset.type = 'main';
+                badge.innerHTML = `${category} <span class="ms-1" style="cursor: pointer;" onclick="removeCategory('${category}')">&times;</span>`;
+                selectedCategoriesList.appendChild(badge);
+            });
+            
+            // Create badges for subcategories
+            selectedSubcategories.forEach(subcategory => {
+                const badge = document.createElement('span');
+                badge.className = 'badge bg-info me-2 mb-2';
+                badge.dataset.value = subcategory.value;
+                badge.dataset.type = 'sub';
+                badge.dataset.parent = subcategory.parent;
+                badge.innerHTML = `${subcategory.value} <span class="ms-1" style="cursor: pointer;" onclick="removeCategory('${subcategory.value}')">&times;</span>`;
+                selectedCategoriesList.appendChild(badge);
+            });
+            
+            // Re-add custom categories
+            customCategories.forEach(category => {
+                const badge = document.createElement('span');
+                badge.className = 'badge bg-secondary me-2 mb-2';
+                badge.dataset.value = category.value;
+                badge.dataset.type = 'custom';
+                badge.dataset.custom = 'true';
+                badge.innerHTML = category.html;
                 selectedCategoriesList.appendChild(badge);
             });
             
             // Show/hide the container based on whether there are selected categories
-            selectedCategoriesDisplay.style.display = selectedCategories.length > 0 ? 'block' : 'none';
+            const totalSelected = selectedMainCategories.length + selectedSubcategories.length + customCategories.length;
+            selectedCategoriesDisplay.style.display = totalSelected > 0 ? 'block' : 'none';
+            
+            // Hide validation error if categories are selected
+            if (totalSelected > 0) {
+                document.getElementById('categoryError').style.display = 'none';
+            }
         }
         
         // Add a custom category
@@ -1435,11 +1929,11 @@
             // Add custom category to the display
             const selectedCategoriesList = document.getElementById('selectedCategoriesList');
             const badge = document.createElement('span');
-            badge.className = 'category-badge custom-category';
+            badge.className = 'badge bg-secondary me-2 mb-2';
             badge.dataset.value = customCategory;
             badge.dataset.custom = 'true';
             badge.dataset.type = 'custom';
-            badge.innerHTML = `${customCategory} <span class="remove-category" onclick="removeCategory('${customCategory}')">&times;</span>`;
+            badge.innerHTML = `${customCategory} <span class="ms-1" style="cursor: pointer;" onclick="removeCategory('${customCategory}')">&times;</span>`;
             selectedCategoriesList.appendChild(badge);
             
             // Show the selected categories display
@@ -1464,7 +1958,7 @@
             }
             
             // Remove the badge from display
-            const badges = document.querySelectorAll('#selectedCategoriesList .category-badge');
+            const badges = document.querySelectorAll('#selectedCategoriesList .badge');
             badges.forEach(badge => {
                 if (badge.dataset.value === category) {
                     badge.remove();
@@ -1475,6 +1969,9 @@
             const selectedCategoriesList = document.getElementById('selectedCategoriesList');
             document.getElementById('selectedCategoriesDisplay').style.display = 
                 selectedCategoriesList.children.length > 0 ? 'block' : 'none';
+                
+            // Update selected categories after removal
+            updateSelectedCategories();
         }
         
         // Show/hide spinner
@@ -1529,6 +2026,7 @@
                     }
                     
                     businessFileLoaded = true;
+                    businessFileStatus.textContent = `Loaded: ${file.name}`;
                     businessFileNameDisplay.innerHTML = `<i class="bi bi-file-earmark-code"></i> ${file.name}`;
                     businessCount.textContent = businessData.length + ' businesses';
                     updateBusinessTable();
@@ -1569,6 +2067,7 @@
                     }
                     
                     businessFileLoaded = true;
+                    businessFileStatus.textContent = `Loaded from BTCAccepted.org`;
                     businessFileNameDisplay.innerHTML = '<i class="bi bi-cloud-download"></i> Loaded from BTCAccepted.org';
                     businessCount.textContent = businessData.length + ' businesses';
                     updateBusinessTable();
@@ -1600,6 +2099,7 @@
                     }
                     
                     locationFileLoaded = true;
+                    locationFileStatus.textContent = `Loaded: ${file.name}`;
                     locationFileNameDisplay.innerHTML = `<i class="bi bi-geo-alt"></i> ${file.name}`;
                     locationCount.textContent = locationData.locations.length + ' locations';
                     updateLocationTable();
@@ -1638,6 +2138,7 @@
                     }
                     
                     locationFileLoaded = true;
+                    locationFileStatus.textContent = `Loaded from BTCAccepted.org`;
                     locationFileNameDisplay.innerHTML = '<i class="bi bi-cloud-download"></i> Loaded from BTCAccepted.org';
                     locationCount.textContent = locationData.locations.length + ' locations';
                     updateLocationTable();
@@ -1687,12 +2188,495 @@
             document.getElementById('businessFileInput').value = '';
             document.getElementById('locationFileInput').value = '';
             
+            businessFileStatus.textContent = 'No file loaded';
+            locationFileStatus.textContent = 'No file loaded';
             businessFileNameDisplay.innerHTML = '<i class="bi bi-file-earmark-code"></i> No file loaded';
             locationFileNameDisplay.innerHTML = '<i class="bi bi-geo-alt"></i> No file loaded';
+            
+            businessCount.textContent = '0 businesses';
+            locationCount.textContent = '0 locations';
             
             checkFilesLoaded();
         }
         
+        // Export business data
+        function exportBusinessData() {
+            const dataStr = JSON.stringify(businessData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = 'businessData.json';
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            showSuccessMessage('Business data exported successfully');
+        }
+        
+        // Export location data
+        function exportLocationData() {
+            const dataStr = JSON.stringify(locationData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = 'locationData.json';
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            showSuccessMessage('Location data exported successfully');
+        }
+        
+        // Export both files as ZIP
+        function exportBothFiles() {
+            // First export business data
+            exportBusinessData();
+            
+            // Then export location data after a delay to avoid browser issues
+            setTimeout(() => {
+                exportLocationData();
+            }, 500);
+            
+            showSuccessMessage('Both files exported successfully');
+        }
+        
+        // Check for unmatched locations
+        function checkUnmatchedLocations() {
+            // This function specifically uses the currently loaded business data
+            // to check for unmatched locations
+            document.getElementById('unmatchedLocationsContainer').style.display = 'block';
+            document.getElementById('unmatchedStatus').style.display = 'block';
+            document.getElementById('unmatchedStatusText').textContent = 'Processing business data...';
+            document.getElementById('unmatchedSpinner').style.display = 'inline-block';
+            
+            setTimeout(() => {
+                findUnmatchedLocations();
+            }, 100);
+        }
+        
+        // Find unmatched locations
+        function findUnmatchedLocations() {
+            const unmatchedLocationsBody = document.getElementById('unmatchedLocationsBody');
+            unmatchedLocationsBody.innerHTML = '';
+            
+            // Create a set of all location keys
+            const locationKeys = new Set();
+            locationData.locations.forEach(location => {
+                const key = [location.city, location.region, location.country].filter(Boolean).join(',').toLowerCase();
+                locationKeys.add(key);
+            });
+            
+            // Find businesses with locations not in the location data
+            const unmatchedBusinesses = [];
+            businessData.forEach(business => {
+                if (!business) return;
+                
+                const city = (business.city || '').toLowerCase();
+                const region = (business.region || '').toLowerCase();
+                const country = (business.country || '').toLowerCase();
+                
+                // Skip if no location data
+                if (!city && !region && !country) return;
+                
+                const locationKey = [city, region, country].filter(Boolean).join(',');
+                
+                if (!locationKeys.has(locationKey)) {
+                    unmatchedBusinesses.push({
+                        name: business.name,
+                        city: business.city,
+                        region: business.region,
+                        country: business.country,
+                        locationKey
+                    });
+                }
+            });
+            
+            // Update status
+            document.getElementById('unmatchedStatusText').textContent = 
+                `Found ${unmatchedBusinesses.length} businesses with unmatched locations`;
+            document.getElementById('unmatchedSpinner').style.display = 'none';
+            
+            // Populate table
+            unmatchedBusinesses.forEach(business => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${business.name || ''}</td>
+                    <td>${business.city || ''}</td>
+                    <td>${business.region || ''}</td>
+                    <td>${business.country || ''}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary import-location-btn" 
+                                data-city="${business.city || ''}" 
+                                data-region="${business.region || ''}" 
+                                data-country="${business.country || ''}">
+                            <i class="bi bi-plus-circle"></i> Add Location
+                        </button>
+                    </td>
+                `;
+                unmatchedLocationsBody.appendChild(row);
+            });
+            
+            // Add event listeners to import buttons
+            document.querySelectorAll('.import-location-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const city = this.dataset.city;
+                    const region = this.dataset.region;
+                    const country = this.dataset.country;
+                    
+                    importUnmatchedLocation(city, region, country);
+                });
+            });
+        }
+        
+        // Import unmatched location
+        function importUnmatchedLocation(city, region, country) {
+            // Fill location form
+            document.getElementById('locationKey').value = [city, region, country].filter(Boolean).join(',').toLowerCase();
+            document.getElementById('searchLocation').value = [city, region, country].filter(Boolean).join(', ');
+            
+            // Try to geocode the location
+            geocodeLocation([city, region, country].filter(Boolean).join(', '));
+            
+            // Show message
+            document.getElementById('searchStatus').textContent = 
+                `Location data imported. Please review and click "Add Location" to save.`;
+            document.getElementById('searchStatus').style.color = '#198754';
+            
+            // Scroll to form
+            document.getElementById('locationForm').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Initialize map
+        function initMap() {
+            if (!map) {
+                map = L.map('map').setView([0, 0], 2);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+                
+                // Add click event to map
+                map.on('click', function(e) {
+                    updateMapMarker(e.latlng.lat, e.latlng.lng);
+                });
+            }
+        }
+        
+        // Update map marker
+        function updateMapMarker(lat, lng) {
+            document.getElementById('latitude').value = lat.toFixed(4);
+            document.getElementById('longitude').value = lng.toFixed(4);
+            
+            if (marker) {
+                marker.setLatLng([lat, lng]);
+            } else {
+                marker = L.marker([lat, lng]).addTo(map);
+            }
+            
+            map.setView([lat, lng], 10);
+        }
+        
+        // Geocode location
+        function geocodeLocation(searchLocation) {
+            if (!searchLocation) return;
+            
+            document.getElementById('loadingIndicator').style.display = 'block';
+            document.getElementById('searchStatus').textContent = 'Searching...';
+            document.getElementById('searchStatus').style.color = '';
+            
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchLocation)}&limit=1`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        const result = data[0];
+                        const lat = parseFloat(result.lat);
+                        const lng = parseFloat(result.lon);
+                        
+                        document.getElementById('latitude').value = lat.toFixed(4);
+                        document.getElementById('longitude').value = lng.toFixed(4);
+                        
+                        updateMapMarker(lat, lng);
+                        
+                        document.getElementById('searchStatus').textContent = 'Location found. Review the details and click "Add Location" to save it.';
+                        document.getElementById('searchStatus').style.color = '#198754';
+                    } else {
+                        document.getElementById('searchStatus').textContent = 'No matching location found. Please enter coordinates manually.';
+                        document.getElementById('searchStatus').style.color = '#dc3545';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error geocoding location:', error);
+                    document.getElementById('searchStatus').textContent = 'Error finding location. Please enter coordinates manually.';
+                    document.getElementById('searchStatus').style.color = '#dc3545';
+                })
+                .finally(() => {
+                    document.getElementById('loadingIndicator').style.display = 'none';
+                });
+        }
+        
+        // Save location
+        function saveLocation() {
+            const locationKey = document.getElementById('locationKey').value.trim();
+            const latInput = document.getElementById('latitude');
+            const lngInput = document.getElementById('longitude');
+            const lat = parseFloat(latInput.value);
+            const lng = parseFloat(lngInput.value);
+            
+            // Validate
+            let isValid = true;
+            
+            if (!locationKey) {
+                document.getElementById('locationKeyError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('locationKeyError').style.display = 'none';
+            }
+            
+            if (isNaN(lat) || lat < -90 || lat > 90) {
+                document.getElementById('latitudeError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('latitudeError').style.display = 'none';
+            }
+            
+            if (isNaN(lng) || lng < -180 || lng > 180) {
+                document.getElementById('longitudeError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('longitudeError').style.display = 'none';
+            }
+            
+            if (!isValid) return;
+            
+            // Parse key to get city, region, country
+            const parts = locationKey.split(',');
+            const city = parts[0] ? parts[0].trim() : '';
+            const region = parts[1] ? parts[1].trim() : '';
+            const country = parts[2] ? parts[2].trim() : '';
+            
+            // Create location object
+            const location = {
+                city,
+                region,
+                country,
+                lat,
+                lng
+            };
+            
+            // Check if editing existing or adding new
+            if (locationCurrentKey) {
+                // Find the index of the existing location
+                const index = locationData.locations.findIndex(l => {
+                    const key = [l.city, l.region, l.country].filter(Boolean).join(',').toLowerCase();
+                    return key === locationCurrentKey;
+                });
+                
+                if (index >= 0) {
+                    locationData.locations[index] = location;
+                } else {
+                    locationData.locations.push(location);
+                }
+            } else {
+                locationData.locations.push(location);
+            }
+            
+            // Update UI
+            resetLocationForm();
+            updateLocationTable();
+            
+            // Update count
+            locationCount.textContent = locationData.locations.length + ' locations';
+            
+            // Show success message
+            document.getElementById('searchStatus').textContent = 'Location saved successfully!';
+            document.getElementById('searchStatus').style.color = '#198754';
+            
+            // If unmatched locations are visible, refresh the list
+            if (document.getElementById('unmatchedLocationsContainer').style.display !== 'none') {
+                findUnmatchedLocations();
+            }
+        }
+        
+        // Edit location
+        function editLocation(key) {
+            // Find the location
+            const location = locationData.locations.find(l => {
+                const locKey = [l.city, l.region, l.country].filter(Boolean).join(',').toLowerCase();
+                return locKey === key;
+            });
+            
+            if (location) {
+                // Set the current key being edited
+                locationCurrentKey = key;
+                
+                // Populate form
+                document.getElementById('locationKey').value = key;
+                document.getElementById('latitude').value = location.lat.toFixed(4);
+                document.getElementById('longitude').value = location.lng.toFixed(4);
+                
+                // Update map
+                updateMapMarker(location.lat, location.lng);
+                
+                // Update form title and buttons
+                document.getElementById('formHeader').textContent = 'Edit Location';
+                document.getElementById('submitLocationButton').textContent = 'Save Changes';
+                document.getElementById('deleteLocationButton').style.display = 'inline-block';
+                document.getElementById('cancelLocationButton').style.display = 'inline-block';
+                
+                // Scroll to form
+                document.getElementById('locationForm').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        // Reset location form
+        function resetLocationForm() {
+            document.getElementById('locationForm').reset();
+            locationCurrentKey = null;
+            document.getElementById('formHeader').textContent = 'Add New Location';
+            document.getElementById('submitLocationButton').textContent = 'Add Location';
+            document.getElementById('deleteLocationButton').style.display = 'none';
+            document.getElementById('cancelLocationButton').style.display = 'none';
+            document.getElementById('searchStatus').textContent = '';
+        }
+        
+        // Delete current location
+        function deleteCurrentLocation() {
+            if (!locationCurrentKey) return;
+            
+            if (confirm('Are you sure you want to delete this location?')) {
+                // Remove location from data
+                locationData.locations = locationData.locations.filter(l => {
+                    const key = [l.city, l.region, l.country].filter(Boolean).join(',').toLowerCase();
+                    return key !== locationCurrentKey;
+                });
+                
+                // Update UI
+                resetLocationForm();
+                updateLocationTable();
+                
+                // Update count
+                locationCount.textContent = locationData.locations.length + ' locations';
+                
+                // Show success message
+                document.getElementById('searchStatus').textContent = 'Location deleted successfully!';
+                document.getElementById('searchStatus').style.color = '#198754';
+                
+                // If unmatched locations are visible, refresh the list
+                if (document.getElementById('unmatchedLocationsContainer').style.display !== 'none') {
+                    findUnmatchedLocations();
+                }
+            }
+        }
+        
+        // Update location table
+        function updateLocationTable() {
+            const tableBody = document.getElementById('locationTableBody');
+            tableBody.innerHTML = '';
+            
+            // Filter locations based on search term
+            const filteredLocations = locationData.locations.filter(location => {
+                if (!locationSearchTerm) return true;
+                
+                const key = [location.city, location.region, location.country].filter(Boolean).join(',').toLowerCase();
+                const lat = location.lat.toString();
+                const lng = location.lng.toString();
+                
+                return key.includes(locationSearchTerm) || 
+                       lat.includes(locationSearchTerm) || 
+                       lng.includes(locationSearchTerm);
+            });
+            
+            // Sort locations
+            filteredLocations.sort((a, b) => {
+                const keyA = [a.city, a.region, a.country].filter(Boolean).join(',').toLowerCase();
+                const keyB = [b.city, b.region, b.country].filter(Boolean).join(',').toLowerCase();
+                
+                switch (locationSort.column) {
+                    case 'key':
+                        return locationSort.direction === 'asc' ? keyA.localeCompare(keyB) : keyB.localeCompare(keyA);
+                    case 'lat':
+                        return locationSort.direction === 'asc' ? a.lat - b.lat : b.lat - a.lat;
+                    case 'lng':
+                        return locationSort.direction === 'asc' ? a.lng - b.lng : b.lng - a.lng;
+                    default:
+                        return locationSort.direction === 'asc' ? keyA.localeCompare(keyB) : keyB.localeCompare(keyA);
+                }
+            });
+            
+            // Populate table
+            filteredLocations.forEach(location => {
+                const key = [location.city, location.region, location.country].filter(Boolean).join(',').toLowerCase();
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td class="editable">${key}</td>
+                    <td class="editable">${location.lat.toFixed(4)}</td>
+                    <td class="editable">${location.lng.toFixed(4)}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary edit-location-btn" data-key="${key}">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger delete-location-btn" data-key="${key}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // Update count
+            document.getElementById('entryCount').textContent = 
+                `${filteredLocations.length}${locationSearchTerm ? ' of ' + locationData.locations.length : ''} entries`;
+            
+            // Add event listeners to edit/delete buttons
+            document.querySelectorAll('.edit-location-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    editLocation(this.dataset.key);
+                });
+            });
+            
+            document.querySelectorAll('.delete-location-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (confirm('Are you sure you want to delete this location?')) {
+                        // Remove location from data
+                        locationData.locations = locationData.locations.filter(l => {
+                            const key = [l.city, l.region, l.country].filter(Boolean).join(',').toLowerCase();
+                            return key !== this.dataset.key;
+                        });
+                        
+                        // Update UI
+                        updateLocationTable();
+                        
+                        // Update count
+                        locationCount.textContent = locationData.locations.length + ' locations';
+                    }
+                });
+            });
+            
+            // Make cells clickable for editing
+            document.querySelectorAll('#locationTableBody .editable').forEach(cell => {
+                cell.addEventListener('click', function() {
+                    const row = this.parentElement;
+                    const key = row.querySelector('.edit-location-btn').dataset.key;
+                    editLocation(key);
+                });
+            });
+        }
+        
+        // Sort location table
+        function sortLocationTable(column) {
+            if (locationSort.column === column) {
+                locationSort.direction = locationSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                locationSort.column = column;
+                locationSort.direction = 'asc';
+            }
+            
+            updateLocationTable();
+        }
+
         // Business Editor Functions
         
         // Update business table
@@ -1864,6 +2848,13 @@
                 checkbox.checked = false;
             });
             
+            // Reset selected categories display
+            const selectedCategoriesList = document.getElementById('selectedCategoriesList');
+            if (selectedCategoriesList) {
+                selectedCategoriesList.innerHTML = '';
+                document.getElementById('selectedCategoriesDisplay').style.display = 'none';
+            }
+            
             // Fill form with business data if editing
             if (business) {
                 document.getElementById('businessId').value = business.id || '';
@@ -1895,9 +2886,10 @@
                     document.getElementById('liquidCheckbox').checked = business.paymentMethods.liquid || false;
                 }
                 
-                // Set categories using the dedicated function
+                // Set categories
                 if (business.categories && Array.isArray(business.categories)) {
                     setCategoryCheckboxes(business.categories);
+                    updateSelectedCategories();
                 }
                 
                 // Set social media
@@ -1909,7 +2901,7 @@
                 }
             }
             
-            // Show the modal - ensure this works with Bootstrap 5
+            // Show the modal
             const modalElement = document.getElementById('businessModal');
             if (modalElement) {
                 // Try both approaches for compatibility
@@ -2060,6 +3052,8 @@
             linkElement.setAttribute('href', dataUri);
             linkElement.setAttribute('download', exportFileDefaultName);
             linkElement.click();
+            
+            showSuccessMessage('Business data exported successfully');
         }
 
         // Location Editor Functions
@@ -2592,21 +3586,25 @@
         function setCategoryCheckboxes(categories) {
             if (!categories || !Array.isArray(categories)) return;
             
-            categories.forEach(category => {
-                // Check if it's a main category
-                const mainCategoryCheckbox = document.querySelector(`.main-category[value="${category}"]`);
-                if (mainCategoryCheckbox) {
-                    mainCategoryCheckbox.checked = true;
-                    return;
+            // First create a set of categories for faster lookup
+            const categorySet = new Set(categories.map(cat => cat.toLowerCase()));
+            
+            // Check all main category checkboxes that match
+            document.querySelectorAll('.main-category').forEach(checkbox => {
+                const value = checkbox.value.toLowerCase();
+                if (categorySet.has(value)) {
+                    checkbox.checked = true;
                 }
-                
-                // Check if it's a subcategory
-                const subcategoryCheckbox = document.querySelector(`.subcategory[value="${category}"]`);
-                if (subcategoryCheckbox) {
-                    subcategoryCheckbox.checked = true;
+            });
+            
+            // Check all subcategory checkboxes that match
+            document.querySelectorAll('.subcategory').forEach(checkbox => {
+                const value = checkbox.value.toLowerCase();
+                if (categorySet.has(value)) {
+                    checkbox.checked = true;
                     
-                    // Also check its parent category
-                    const parentCategory = subcategoryCheckbox.getAttribute('data-parent');
+                    // Also check parent category
+                    const parentCategory = checkbox.dataset.parent;
                     if (parentCategory) {
                         const parentCheckbox = document.querySelector(`.main-category[value="${parentCategory}"]`);
                         if (parentCheckbox) {
@@ -2615,174 +3613,36 @@
                     }
                 }
             });
-        }
-
-        // Add these functions to handle the category selection and display
-
-        // Initialize category event listeners when the DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add event listeners to all category checkboxes
-            document.querySelectorAll('.main-category, .subcategory').forEach(checkbox => {
-                checkbox.addEventListener('change', updateSelectedCategoriesDisplay);
-            });
             
-            // Add event listener to custom category button
-            document.getElementById('addCustomCategoryBtn').addEventListener('click', function() {
-                const customCategoryInput = document.getElementById('customCategory');
-                const customCategory = customCategoryInput.value.trim();
-                
-                if (customCategory) {
-                    addCustomCategory(customCategory);
-                    customCategoryInput.value = '';
-                    updateSelectedCategoriesDisplay();
-                }
-            });
-        });
-
-        // Update the selected categories display
-        function updateSelectedCategoriesDisplay() {
-            const selectedCategoriesDisplay = document.getElementById('selectedCategoriesDisplay');
-            const selectedCategoriesList = document.getElementById('selectedCategoriesList');
-            
-            // Clear the current display
-            selectedCategoriesList.innerHTML = '';
-            
-            // Get all selected categories
-            const selectedCategories = getSelectedCategories();
-            
-            // Display selected categories if any
-            if (selectedCategories.length > 0) {
-                selectedCategoriesDisplay.style.display = 'block';
-                
-                // Create a badge for each selected category
-                selectedCategories.forEach(category => {
-                    const badge = document.createElement('span');
-                    badge.className = 'badge bg-primary me-2 mb-2';
-                    badge.textContent = category;
-                    
-                    // Add a remove button
-                    const removeBtn = document.createElement('span');
-                    removeBtn.className = 'ms-1';
-                    removeBtn.innerHTML = '&times;';
-                    removeBtn.style.cursor = 'pointer';
-                    removeBtn.addEventListener('click', function() {
-                        removeCategory(category);
-                    });
-                    
-                    badge.appendChild(removeBtn);
-                    selectedCategoriesList.appendChild(badge);
-                });
-                
-                // Hide error message if categories are selected
-                document.getElementById('categoryError').style.display = 'none';
-            } else {
-                selectedCategoriesDisplay.style.display = 'none';
-            }
-        }
-
-        // Get all selected categories (both checkbox and custom)
-        function getSelectedCategories() {
-            const selectedCategories = [];
-            
-            // Add main categories that are directly checked
-            document.querySelectorAll('.main-category:checked').forEach(checkbox => {
-                // Only add if no subcategories are selected for this main category
-                const mainCategory = checkbox.value;
-                const hasSelectedSubcategories = document.querySelector(`.subcategory[data-parent="${mainCategory}"]:checked`);
-                
-                if (!hasSelectedSubcategories) {
-                    selectedCategories.push(mainCategory);
-                }
-            });
-            
-            // Add all selected subcategories
-            document.querySelectorAll('.subcategory:checked').forEach(checkbox => {
-                selectedCategories.push(checkbox.value);
-            });
-            
-            // Get custom categories from badges with data-custom="true"
-            document.querySelectorAll('.category-badge[data-custom="true"]').forEach(badge => {
-                selectedCategories.push(badge.dataset.value);
-            });
-            
-            return selectedCategories;
-        }
-
-        // Add a custom category
-        function addCustomCategory(category) {
-            const selectedCategoriesList = document.getElementById('selectedCategoriesList');
-            
-            // Check if it already exists
-            if (document.querySelector(`.category-badge[data-value="${category}"]`)) {
-                return; // Already exists
-            }
-            
-            // Create a new badge for the custom category
-            const badge = document.createElement('span');
-            badge.className = 'category-badge custom-category';
-            badge.dataset.value = category;
-            badge.dataset.custom = 'true';
-            badge.innerHTML = `${category} <span class="remove-category" onclick="removeCategory('${category}')">&times;</span>`;
-            
-            selectedCategoriesList.appendChild(badge);
-            updateSelectedCategoriesDisplay();
-        }
-
-        // Remove a category (uncheck or remove custom)
-        function removeCategory(category) {
-            // Try to find and uncheck a checkbox with this value
-            const mainCategoryCheckbox = document.querySelector(`.main-category[value="${category}"]`);
-            if (mainCategoryCheckbox) {
-                mainCategoryCheckbox.checked = false;
-            }
-            
-            const subcategoryCheckbox = document.querySelector(`.subcategory[value="${category}"]`);
-            if (subcategoryCheckbox) {
-                subcategoryCheckbox.checked = false;
-            }
-            
-            // Remove custom category badge if exists
-            const customBadge = document.querySelector(`.category-badge[data-value="${category}"][data-custom="true"]`);
-            if (customBadge) {
-                customBadge.remove();
-            }
-            
-            updateSelectedCategoriesDisplay();
-        }
-
-        // Modify the setCategoryCheckboxes function to update the selected categories display
-        function setCategoryCheckboxes(categories) {
-            if (!categories || !Array.isArray(categories)) return;
-            
+            // Handle custom categories (those not found in existing checkboxes)
             categories.forEach(category => {
-                // Check if it's a main category
-                const mainCategoryCheckbox = document.querySelector(`.main-category[value="${category}"]`);
-                if (mainCategoryCheckbox) {
-                    mainCategoryCheckbox.checked = true;
-                    return;
-                }
+                // Check if this category exists as a checkbox
+                const mainCategoryExists = document.querySelector(`.main-category[value="${category}"]`);
+                const subcategoryExists = document.querySelector(`.subcategory[value="${category}"]`);
                 
-                // Check if it's a subcategory
-                const subcategoryCheckbox = document.querySelector(`.subcategory[value="${category}"]`);
-                if (subcategoryCheckbox) {
-                    subcategoryCheckbox.checked = true;
+                // If not found in existing checkboxes, add as custom category
+                if (!mainCategoryExists && !subcategoryExists) {
+                    const customCategoryBadge = document.createElement('span');
+                    customCategoryBadge.className = 'category-badge custom-category';
+                    customCategoryBadge.dataset.value = category;
+                    customCategoryBadge.dataset.custom = 'true';
+                    customCategoryBadge.dataset.type = 'custom';
                     
-                    // Also check its parent category
-                    const parentCategory = subcategoryCheckbox.getAttribute('data-parent');
-                    if (parentCategory) {
-                        const parentCheckbox = document.querySelector(`.main-category[value="${parentCategory}"]`);
-                        if (parentCheckbox) {
-                            parentCheckbox.checked = true;
-                        }
+                    // Create the badge with remove button
+                    customCategoryBadge.innerHTML = `${category} <span class="remove-category" onclick="removeCategory('${category}')">&times;</span>`;
+                    
+                    // Add to the selected categories list
+                    const selectedCategoriesList = document.getElementById('selectedCategoriesList');
+                    if (selectedCategoriesList) {
+                        selectedCategoriesList.appendChild(customCategoryBadge);
                     }
-                } else {
-                    // It might be a custom category
-                    addCustomCategory(category);
                 }
             });
             
-            // Update the display after setting all checkboxes
-            updateSelectedCategoriesDisplay();
+            // Show the selected categories display if any categories are selected
+            if (categories.length > 0) {
+                document.getElementById('selectedCategoriesDisplay').style.display = 'block';
+            }
         }
     </script>
 </body>
