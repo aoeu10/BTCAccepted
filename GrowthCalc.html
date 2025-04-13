@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growth Calculator</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 90%; margin: auto; padding: 20px; border: 1px solid #ccc; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; }
+        .form-group input, .form-group select { width: 100%; padding: 8px; box-sizing: border-box; }
+        .result { margin-top: 20px; }
+        .chart-container { position: relative; width: 100%; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { text-align: center; padding: 8px; border: 1px solid #ddd; }
+        th { background-color: #f2f2f2; }
+        .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.4); }
+        .modal-content { background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 400px; }
+        .modal-header { font-size: 1.2em; margin-bottom: 10px; }
+        .modal-footer { text-align: right; margin-top: 20px; display: flex; justify-content: space-between; /* Add space between the transaction list and the buttons below */ }
+        .modal-footer button { margin-left: 10px; }
+        .modal-footer div {
+            display: flex; /* Use flexbox for button alignment */
+            gap: 10px; /* Add spacing between buttons */
+        }
+
+        .clickable-index {
+            color: #007BFF; /* Subtle blue color */
+            text-decoration: underline; /* Underline the text */
+            cursor: pointer; /* Change the cursor to pointer */
+        }
+
+        .clickable-index:hover {
+            color: #0056b3; /* Darker blue when hovered */
+        }
+
+        .modal-body {
+            padding: 20px 0; /* Add padding to create space above and below the transaction list */
+        }
+
+        .transaction-row {
+            display: flex;
+            justify-content: space-between; /* Space between content and delete button */
+            align-items: center; /* Align items vertically center */
+            margin-bottom: 10px; /* Add margin between each transaction row */
+        }
+
+        .transaction-row button {
+            margin-left: auto; /* Push button to the right */
+        }
+
+        .transaction-details {
+            display: flex;
+            gap: 20px; /* Adjust the space between amount/frequency */
+        }
+
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Growth Calculator</h2>
+        <div class="form-group">
+            <label for="startingValue">Starting Value:</label>
+            <input type="number" id="startingValue" required>
+        </div>
+        <div class="form-group">
+            <label for="annualGrowthRate">Annual Growth Rate (%):</label>
+            <input type="number" id="annualGrowthRate" required>
+        </div>
+        <div class="form-group">
+            <label for="years">Number of Years:</label>
+            <input type="number" id="years" required>
+        </div>
+        <div class="form-group">
+            <label for="additionalAmount">Additional Amount:</label>
+            <input type="number" id="additionalAmount" value="0" required>
+        </div>
+        <div class="form-group">
+            <label for="frequency">Frequency:</label>
+            <select id="frequency" required>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="annually">Annually</option>
+            </select>
+        </div>
+
+        <h3>Costs (optional)</h3>
+        <div class="form-group">
+            <label for="etfFee">ETF Fee (%):</label>
+            <input type="number" id="etfFee" step="0.01">
+        </div>
+        <div class="form-group">
+            <label for="loanCosts">Loan Costs (%):</label>
+            <input type="number" id="loanCosts" step="0.01">
+        </div>
+
+        <button onclick="calculateGrowth()">Calculate</button>
+        <button onclick="resetForm()">Reset</button>
+        <div class="chart-container">
+            <canvas id="growthChart"></canvas>
+        </div>
+        <div class="result" id="result"></div>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header" id="modalTitle"></div>
+            <div id="transactionList" class="modal-body">
+                <!-- Transactions will be dynamically inserted here -->
+            </div>
+            <div class="modal-footer">
+                <div>
+                    <button onclick="handleChoice(TransactionType.PURCHASE)">Add Purchase</button>
+                    <button onclick="handleChoice(TransactionType.SALE)">Add Sale</button>
+                    <button onclick="handleChoice(TransactionType.COST)">Add Cost</button>
+                    <button onclick="handleChoice('adjustGrowthRate')">Adjust Growth Rate</button>
+                </div>
+                <div>
+                    <button onclick="cancelModal()">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirm Deletion</h2>
+            </div>
+            <div class="modal-body">
+                <p>Do you want to delete this transaction from the current year only or from this and all subsequent years?</p>
+            </div>
+            <div class="modal-footer">
+                <button onclick="deleteTransaction('current')">Current Year Only</button>
+                <button onclick="deleteTransaction('all')">This and All Subsequent Years</button>
+                <button onclick="cancelConfirm()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Frequency Modal -->
+    <div id="frequencyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Transaction Frequency</div>
+            <div class="modal-footer">
+                <button onclick="setTransactionFrequency('one-time')">One-time</button>
+                <button onclick="setTransactionFrequency('daily')">Daily</button>
+                <button onclick="setTransactionFrequency('weekly')">Weekly</button>
+                <button onclick="setTransactionFrequency('monthly')">Monthly</button>
+                <button onclick="setTransactionFrequency('annually')">Annually</button>
+                <button onclick="cancelModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <!-- Growth Modal -->
+    <div id="growthAffectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Growth Affect</div>
+            <div class="modal-footer">
+                <button onclick="setGrowthPeriodAffect('one')">Just this Year</button>
+                <button onclick="setGrowthPeriodAffect('equalAndGreater')">This and Every Subsequent Year</button>
+                <button onclick="cancelModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        // note: moderate parts of this document AI generated
+
+        let chart;
+        let yearEndingValues = [];
+        let ignoringGrowthValues = []; // starting amount + purchases - sales - costs
+        let selectedYear;
+        let annualGrowthRates = [];
+        let etfFees = [];
+        let loanFees = [];
+
+
+        //purchases, sales, costs
+        let transactions = [];
+        const TransactionType = {
+            PURCHASE: 'purchase',
+            SALE: 'sale',
+            COST: 'cost'
+        };
+        let currentChoice = TransactionType.PURCHASE;
+
+        let transactionIndexToDelete;
+
+
+
+        function calculateGrowth() {
+            const startingValue = parseFloat(document.getElementById('startingValue').value);
+            const initialGrowthRate = parseFloat(document.getElementById('annualGrowthRate').value) / 100;
+            const years = parseInt(document.getElementById('years').value);
+            const additionalAmount = parseFloat(document.getElementById('additionalAmount').value);
+            const frequency = document.getElementById('frequency').value;
+            const etfFee = parseFloat(document.getElementById('etfFee').value) / 100 || 0;
+            const loanCosts = parseFloat(document.getElementById('loanCosts').value) / 100 || 0;
+
+            if (isNaN(startingValue) || isNaN(initialGrowthRate) || isNaN(years) || isNaN(additionalAmount)) {
+                alert("invalid inputs");
+                return;
+            }
+
+            annualGrowthRates = Array.from({length: years}, () => ({
+               value: initialGrowthRate,
+               frequency: "annually"
+            }));
+
+            etfFees = Array.from({length: years}, () => ({
+                value: etfFee,
+                frequency: "annually"
+            }));
+
+            loanFees = Array.from({length: years}, () => ({
+                value: loanCosts,
+                frequency: "annually"
+            }));
+
+
+            transactions = Array.from({ length: years }, () => []);
+
+            if(additionalAmount !== 0) {
+                let additionalAmountObject = {
+                    type: TransactionType.PURCHASE,
+                    amount: additionalAmount,
+                    frequency: frequency
+                };
+                transactions.forEach(innerArray => {
+                    innerArray.push(additionalAmountObject);
+                });
+            }
+
+            recalculateValues(startingValue, years);
+
+            // Grey out all inputs except ETF Fee and Loan Costs
+            document.querySelectorAll('input, select').forEach(element => {
+                if (element.id !== 'etfFee' && element.id !== 'loanCosts') {
+                    element.disabled = true;
+                }
+            });
+        }
+
+        function recalculateValues(startingValue, years) {
+
+            const DoPurchasesAndSales = function(frequency, indexForYear){
+                // apply the amount of purchases/sales
+                let transactionsThisYear = transactions[indexForYear];
+                transactionsThisYear.forEach(transaction => {
+                    if(transaction.type !== TransactionType.COST && transaction.frequency === frequency){
+                        let amountDelta = transaction.amount;
+                        if(transaction.type === TransactionType.SALE){
+                            totalSalesThisYear -= transaction.amount;
+                            amountDelta *= -1;
+                        } else if (transaction.type === TransactionType.PURCHASE) {
+                            totalPurchasesThisYear += transaction.amount;
+                        }
+
+                        totalValue += amountDelta;
+                        ignoreGrowthValue += amountDelta;
+                        valueNetPurchasesSalesCosts += amountDelta;
+                    }
+                });
+            }
+
+            const doGrowthRate = function(frequency, indexForYear){
+                // apply growth rate
+                let currentGrowthRate = annualGrowthRates[indexForYear];
+                if(currentGrowthRate.frequency === frequency && totalValue > 0){
+                    totalValue += totalValue * currentGrowthRate.value;
+                }
+            }
+
+            const doFees = function(frequency, indexForYear){
+                // apply fees
+                let etfFeeObject = etfFees[indexForYear];
+                let loanFeeObject = loanFees[indexForYear];
+                let etfFee = 0;
+                let loanFee = 0;
+                if(etfFeeObject.frequency === frequency) {
+                    etfFee = etfFeeObject.value;
+                }
+                if(loanFeeObject.frequency === frequency){
+                    loanFee = loanFeeObject.value;
+                }
+                let etfCostThisApply = totalValue * etfFee;
+                totalValue -= etfCostThisApply;
+                etfCostsThisYear += etfCostThisApply;
+
+                let loanCostThisApply = totalValue * loanFee;
+                totalValue -= loanCostThisApply;
+                loanCostsThisYear += loanCostThisApply;
+
+
+                let fees = etfCostThisApply + loanCostThisApply;
+
+
+                let transForYear = transactions[indexForYear];
+                transForYear.forEach(transaction => {
+                   if(transaction.frequency === frequency && transaction.type === TransactionType.COST){
+                       totalValue -= transaction.amount;
+                       fees += transaction.amount;
+                       userCostsThisYear += transaction.amount;
+                   }
+                });
+
+
+                ignoreGrowthValue -= fees;
+                valueNetPurchasesSalesCosts -= fees;
+            }
+
+
+
+            let resultHTML = "<h3>Results:</h3>";
+            resultHTML += `<table><tr><th>Year</th><th>Value</th><th>Annual Growth Rate</th><th>Purchases</th><th>Sales</th><th>Costs</th></tr>`;
+
+            let totalValue = startingValue;
+            let valueNetPurchasesSalesCosts = startingValue;
+            let ignoreGrowthValue = startingValue; // starting + purchases - sales - costs
+
+            yearEndingValues = [];
+            ignoringGrowthValues = [];
+
+            yearEndingValues.push(startingValue);
+            ignoringGrowthValues.push(startingValue);
+
+            // get the start date -- jan 1st of this year
+            let currentYear = new Date().getFullYear();
+            let startDate = new Date(currentYear, 0, 1);
+            let dayOfTheWeekOfStart = startDate.getDay();
+
+            // get the stop date
+            let stopYear = currentYear + years;
+            let firstDayOfStopYear = new Date(stopYear, 0, 1);
+
+            let dateToEvaluate = new Date(startDate);
+
+
+            let totalPurchasesThisYear = 0;
+            let totalSalesThisYear = 0;
+            let etfCostsThisYear = 0;
+            let loanCostsThisYear = 0;
+            let userCostsThisYear = 0;
+
+            let yearBeginningValue = totalValue;
+
+
+
+            while(dateToEvaluate < firstDayOfStopYear){
+                let evaluatingYear = dateToEvaluate.getFullYear();
+                // finds the transactions that are in effect this year
+                let indexForYear = evaluatingYear - currentYear;
+
+                // can think of it as 12:01am -- we're applying the effects of the prior day
+                dateToEvaluate.setDate(dateToEvaluate.getDate() + 1);
+
+
+                applyEffect(dateToEvaluate, indexForYear, DoPurchasesAndSales);
+                applyEffect(dateToEvaluate, indexForYear, doGrowthRate);
+                applyEffect(dateToEvaluate, indexForYear, doFees);
+
+
+                // note that, somewhat oddly(?), months are zero-indexed while day-of-months aren't
+                if(dateToEvaluate.getMonth() === 0 && dateToEvaluate.getDate() === 1){
+                    // it is Jan 1st of a new year
+
+                    yearEndingValues.push(totalValue);
+                    ignoringGrowthValues.push(ignoreGrowthValue);
+
+                    let {purchaseDetails: purchasesThisYearDetails, salesDetails: salesThisYearDetails, costDetails: costsThisYearDetails} = GetTransactionDetailsForThisYear(indexForYear);
+                    costsThisYearDetails.unshift(`ETF Fee: ${formatNumber(etfCostsThisYear)}, Loan Costs: ${formatNumber(loanCostsThisYear)}`);
+
+
+                    resultHTML += GetRowFormat(yearBeginningValue, indexForYear, purchasesThisYearDetails, salesThisYearDetails, costsThisYearDetails);
+
+
+                    // reset all these for the new year
+                    totalPurchasesThisYear = 0;
+                    totalSalesThisYear = 0;
+                    etfCostsThisYear = 0;
+                    loanCostsThisYear = 0;
+                    userCostsThisYear = 0;
+
+                    yearBeginningValue = totalValue;
+                }
+            }
+
+            resultHTML += GetLastRowFormat(totalValue, firstDayOfStopYear.getFullYear() - startDate.getFullYear());
+
+
+            function GetRowFormat(valueAtBeginningOfYear, indexForYear, purchaseDetailsThisYear, saleDetailsThisYear, costDetailsThisYear){
+
+                let saleDisplayValue = Math.abs(totalSalesThisYear);
+                if(totalSalesThisYear < 0){
+                    saleDisplayValue = -totalSalesThisYear;
+                }
+
+                return `<tr><td class="clickable-index" onclick="showYearSettings(${indexForYear})">${indexForYear}</td><td>${formatNumber(valueAtBeginningOfYear)}</td><td>${(annualGrowthRates[indexForYear].value * 100).toFixed(1)}%</td>
+                               <td title="${purchaseDetailsThisYear.join('\n')}">${formatNumber(Math.round(totalPurchasesThisYear))}</td>
+                               <td title="${saleDetailsThisYear.join('\n')}">${formatNumber(Math.round(saleDisplayValue))}</td>
+                               <td title="${costDetailsThisYear.join('\n')}">${formatNumber(Math.round(etfCostsThisYear + loanCostsThisYear + userCostsThisYear))}</td></tr>`;
+            }
+
+
+            function GetLastRowFormat(valueAtBeginningOfYear, indexForYear){
+                return `<tr><td>${indexForYear}</td><td>${formatNumber(valueAtBeginningOfYear)}</td><td>-</td>
+                               <td>-</td>
+                               <td>-</td>
+                               <td>-</td></tr>`;
+            }
+
+
+
+            // an inner function
+            function applyEffect(dateToEvaluate, indexForYear, functionToApply){
+                // note that, somewhat oddly(?), months are zero-indexed while day-of-months aren't
+                if(dateToEvaluate.getMonth() === 0 && dateToEvaluate.getDate() === 1){
+                    // if is Jan 1st of a new year
+                    functionToApply("one-time", indexForYear);
+                    functionToApply("annually", indexForYear);
+                }
+
+
+                if(dateToEvaluate.getDate() === 1){
+                    // if is the first day of a new month
+                    functionToApply("monthly", indexForYear);
+                }
+
+                if(dateToEvaluate.getDay() === dayOfTheWeekOfStart){
+                    // if it is the first day of a new week (relative to the start)
+                    functionToApply("weekly", indexForYear);
+                }
+
+                // it's a new day
+                functionToApply("daily", indexForYear);
+            }
+
+            resultHTML += `</table><p>Total Value Net Purchases/Sales/Costs: ${formatNumber(totalValue - valueNetPurchasesSalesCosts)}</p>`; // Round to the nearest dollar
+
+            document.getElementById('result').innerHTML = resultHTML;
+
+            if (chart) {
+                chart.destroy();
+            }
+
+
+
+            displayChart(yearEndingValues, ignoringGrowthValues);
+        }
+
+
+        function formatNumber(num) {
+            // Round to the nearest whole number
+            let rounded = Math.round(num);
+            // Format the rounded number with thousands separators
+            return rounded.toLocaleString('en-US');
+        }
+
+
+        function showYearSettings(indexforYear){
+            selectedYear = indexforYear;
+            let modalTitle = document.getElementById("modalTitle");
+            modalTitle.textContent = `Year ${selectedYear} Settings`;
+
+            let transactionList = document.getElementById("transactionList");
+            transactionList.innerHTML = ''; // clear existing content
+
+            if(transactions[selectedYear]){
+                transactions[selectedYear].forEach((transaction, index) => {
+                    const transactionRow = document.createElement('div');
+                    transactionRow.className = 'transaction-row';
+                    transactionRow.innerHTML = `
+                <div class="transaction-details">
+                    <span>${transaction.type}: ${transaction.amount}</span>
+                    <span>Frequency: ${transaction.frequency}</span>
+                </div>
+                <button onclick="confirmDelete(${index})">Delete</button>
+            `;
+                    transactionList.appendChild(transactionRow);
+                });
+            } else {
+                transactionList.innerHTML = '<div>No transactions for this year.</div>';
+            }
+
+
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function confirmDelete(index) {
+            transactionIndexToDelete = index; // Store transaction index globally
+            document.getElementById('confirmModal').style.display = 'block';
+        }
+
+
+        function deleteTransaction(type) {
+            // Implement your delete logic based on the type
+            // type = "current" or "all"
+
+            if (type === "current") {
+                // Delete transaction from the current year only
+                transactions[selectedYear].splice(transactionIndexToDelete, 1);
+            } else if (type === "all") {
+                // Delete transaction from the current year and all later years
+                for (let i = selectedYear; i < transactions.length; i++) {
+                    transactions[i] = transactions[i].filter((_, idx) => idx !== transactionIndexToDelete);
+                }
+            }
+
+
+            updateResultsAndChart();
+
+            document.getElementById('confirmModal').style.display = 'none';
+            showYearSettings(selectedYear); // Refresh the modal
+        }
+
+        function cancelConfirm() {
+            document.getElementById('confirmModal').style.display = 'none';
+        }
+
+
+        function displayChart(yearBeginningValue, ignoringGrowthValues) {
+            const ctx = document.getElementById('growthChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: yearBeginningValue.map((_, index) => `Year ${index}`),
+                    datasets: [{
+                        label: 'Yearly Beginning Value',
+                        data: yearBeginningValue,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 1,
+                        fill: false
+                    }, {
+                        label: 'Total Amount (Starting + Purchases - Sales - Costs)',
+                        data: ignoringGrowthValues,
+                        borderColor: 'rgba(192, 75, 75, 1)',
+                        backgroundColor: 'rgba(192, 75, 75, 0.2)',
+                        borderWidth: 1,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return Math.round(value).toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += Math.round(context.parsed.y).toLocaleString();
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+
+        function GetTransactionDetailsForThisYear(indexForYear){
+            let purchaseDetails = [];
+            let salesDetails = [];
+            let costDetails = [];
+
+            let thisYearTransactions = transactions[indexForYear];
+            thisYearTransactions.forEach(transaction => {
+                if(transaction.type === TransactionType.PURCHASE){
+                    // it's a purchase
+                    purchaseDetails.push(`Purchase: ${formatNumber(Math.round(transaction.amount))}  Frequency: ${transaction.frequency}`);
+                }else if (transaction.type === TransactionType.SALE) {
+                    //it's a sale
+                    salesDetails.push(`Sell: ${formatNumber(Math.round(transaction.amount))}  Frequency: ${transaction.frequency}`);
+                } else if (transaction.type === TransactionType.COST){
+                    //it's a user-entered cost
+                    costDetails.push(`Cost: ${formatNumber(Math.round(transaction.amount))}  Frequency: ${transaction.frequency}`);
+                }
+            });
+
+            if(purchaseDetails.length === 0){
+                purchaseDetails.push("None");
+            }
+            if(salesDetails.length === 0){
+                salesDetails.push("None");
+            }
+
+            return {purchaseDetails, salesDetails, costDetails};
+        }
+
+
+        function handleChoice(type) {
+            currentChoice = type;
+            document.getElementById('modal').style.display = 'none';
+            if (currentChoice === 'adjustGrowthRate') {
+                document.getElementById('growthAffectModal').style.display = 'block';
+            } else {
+                document.getElementById('frequencyModal').style.display = 'block';
+            }
+        }
+
+
+        function setGrowthPeriodAffect(periodToAffect){
+            document.getElementById('growthAffectModal').style.display = 'none';
+
+            if(periodToAffect === "one"){
+                const newGrowthRate = parseFloat(prompt(`Enter new annual growth rate (%) for Year ${selectedYear}:`));
+                annualGrowthRates[selectedYear] = {
+                  value: newGrowthRate / 100,
+                  frequency: "annually"
+                };
+            } else {
+                // affect this and every subsequent year
+                const newGrowthRate = parseFloat(prompt(`Enter new annual growth rate (%) for Year ${selectedYear} onwards:`));
+                if (isNaN(newGrowthRate)) {
+                    return; // Return without showing an alert
+                }
+                for (let i = selectedYear; i < annualGrowthRates.length; i++) {
+                    annualGrowthRates[i] = {
+                        value:  newGrowthRate / 100,
+                        frequency: "annually"
+                    }
+                }
+            }
+
+
+            updateResultsAndChart();
+        }
+
+        function setTransactionFrequency(frequency) {
+            document.getElementById('frequencyModal').style.display = 'none';
+
+            let amount;
+            if(frequency === "one-time"){
+                amount = parseFloat(prompt(`Enter amount for Year ${selectedYear} (${frequency}):`));
+            } else {
+                amount = parseFloat(prompt(`Enter amount for Year ${selectedYear} onwards (${frequency}):`));
+            }
+
+
+            if (isNaN(amount)) {
+                return; // Return without showing an alert
+            }
+
+            if(amount < 0){
+                alert("invalid input: number must be positive");
+                return;
+            }
+
+
+            let transaction = {
+                type: currentChoice,
+                amount: amount,
+                frequency: frequency
+            };
+
+            if(frequency === 'one-time'){
+                transactions[selectedYear].push(transaction);
+            } else {
+                for(let i = selectedYear; i < transactions.length; i++){
+                    transactions[i].push(transaction);
+                }
+            }
+
+            updateResultsAndChart();
+        }
+
+        function cancelModal() {
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('frequencyModal').style.display = 'none';
+            document.getElementById('growthAffectModal').style.display = 'none';
+        }
+
+        function updateResultsAndChart() {
+            const startingValue = parseFloat(document.getElementById('startingValue').value);
+            const years = parseInt(document.getElementById('years').value);
+
+            recalculateValues(startingValue, years);
+        }
+
+        function resetForm() {
+            document.getElementById('startingValue').value = '';
+            document.getElementById('annualGrowthRate').value = '';
+            document.getElementById('years').value = '';
+            document.getElementById('additionalAmount').value = '0';
+            document.getElementById('frequency').value = 'daily';
+            document.getElementById('etfFee').value = '';
+            document.getElementById('loanCosts').value = '';
+            document.getElementById('result').innerHTML = '';
+            if (chart) {
+                chart.destroy();
+            }
+
+            // Re-enable all inputs
+            document.querySelectorAll('input, select').forEach(element => {
+                element.disabled = false;
+            });
+        }
+    </script>
+
+<br>
+Support/Suggestions: <a href="https://simplex.chat/contact#/?v=2-7&smp=smp%3A%2F%2FSkIkI6EPd2D63F4xFKfHk7I1UGZVNn6k1QWZ5rcyr6w%3D%40smp9.simplex.im%2FPPH9dK2J8A5Bnr5qPJzozYCii3uQEbBE%23%2F%3Fv%3D1-3%26dh%3DMCowBQYDK2VuAyEA5cJ4lR06ImlqWi_RUlBnHjW5ZqV8U00yThnqwBpxyQk%253D%26srv%3Djssqzccmrcws6bhmn77vgmhfjmhwlyr3u7puw4erkyoosywgl67slqqd.onion&data=%7B%22type%22%3A%22group%22%2C%22groupLinkId%22%3A%22jPa5KCaxzC4JtD0UGb8lvA%3D%3D%22%7D">SimpleX Group</a>
+<br>
+Donation via Lightning address: aquafalcon1@primal.net
+</body>
+</html>
