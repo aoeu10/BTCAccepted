@@ -100,6 +100,7 @@
 
         <button onclick="calculateGrowth()">Calculate</button>
         <button onclick="resetForm()">Reset</button>
+        <button onclick="copyURLToClipboard()" id="copyURLButton" style="display: none;">Copy URL</button>
         <div class="chart-container">
             <canvas id="growthChart"></canvas>
         </div>
@@ -193,9 +194,149 @@
 
         let transactionIndexToDelete;
 
+        // Load from URL parameters when page loads
+        window.onload = function() {
+            loadFromURLParams();
+        };
 
+        function loadFromURLParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Load basic inputs
+            if (urlParams.has('startingValue')) {
+                document.getElementById('startingValue').value = urlParams.get('startingValue');
+            }
+            if (urlParams.has('annualGrowthRate')) {
+                document.getElementById('annualGrowthRate').value = urlParams.get('annualGrowthRate');
+            }
+            if (urlParams.has('years')) {
+                document.getElementById('years').value = urlParams.get('years');
+            }
+            if (urlParams.has('additionalAmount')) {
+                document.getElementById('additionalAmount').value = urlParams.get('additionalAmount');
+            }
+            if (urlParams.has('frequency')) {
+                document.getElementById('frequency').value = urlParams.get('frequency');
+            }
+            if (urlParams.has('etfFee')) {
+                document.getElementById('etfFee').value = urlParams.get('etfFee');
+            }
+            if (urlParams.has('loanCosts')) {
+                document.getElementById('loanCosts').value = urlParams.get('loanCosts');
+            }
+            
+            // Load transactions if present
+            let hasTransactions = false;
+            if (urlParams.has('transactions')) {
+                try {
+                    transactions = JSON.parse(decodeURIComponent(urlParams.get('transactions')));
+                    hasTransactions = true;
+                } catch (e) {
+                    console.error('Error parsing transactions from URL:', e);
+                }
+            }
+            
+            // Load growth rates if present
+            let hasGrowthRates = false;
+            if (urlParams.has('growthRates')) {
+                try {
+                    annualGrowthRates = JSON.parse(decodeURIComponent(urlParams.get('growthRates')));
+                    hasGrowthRates = true;
+                } catch (e) {
+                    console.error('Error parsing growth rates from URL:', e);
+                }
+            }
+            
+            // Load ETF fees if present
+            let hasEtfFees = false;
+            if (urlParams.has('etfFees')) {
+                try {
+                    etfFees = JSON.parse(decodeURIComponent(urlParams.get('etfFees')));
+                    hasEtfFees = true;
+                } catch (e) {
+                    console.error('Error parsing ETF fees from URL:', e);
+                }
+            }
+            
+            // Load loan fees if present
+            let hasLoanFees = false;
+            if (urlParams.has('loanFees')) {
+                try {
+                    loanFees = JSON.parse(decodeURIComponent(urlParams.get('loanFees')));
+                    hasLoanFees = true;
+                } catch (e) {
+                    console.error('Error parsing loan fees from URL:', e);
+                }
+            }
+            
+            // If we have all required parameters, calculate automatically
+            if (urlParams.has('startingValue') && urlParams.has('annualGrowthRate') && urlParams.has('years')) {
+                calculateGrowth(hasTransactions, hasGrowthRates, hasEtfFees, hasLoanFees);
+            }
+        }
 
-        function calculateGrowth() {
+        function generateURLParams() {
+            const params = new URLSearchParams();
+            
+            // Add basic parameters
+            params.set('startingValue', document.getElementById('startingValue').value);
+            params.set('annualGrowthRate', document.getElementById('annualGrowthRate').value);
+            params.set('years', document.getElementById('years').value);
+            params.set('additionalAmount', document.getElementById('additionalAmount').value);
+            params.set('frequency', document.getElementById('frequency').value);
+            
+            // Add optional parameters if they exist
+            const etfFee = document.getElementById('etfFee').value;
+            if (etfFee) {
+                params.set('etfFee', etfFee);
+            }
+            
+            const loanCosts = document.getElementById('loanCosts').value;
+            if (loanCosts) {
+                params.set('loanCosts', loanCosts);
+            }
+            
+            // Add transactions, growth rates, and fees if they exist
+            if (transactions.length > 0) {
+                params.set('transactions', encodeURIComponent(JSON.stringify(transactions)));
+            }
+            
+            if (annualGrowthRates.length > 0) {
+                params.set('growthRates', encodeURIComponent(JSON.stringify(annualGrowthRates)));
+            }
+            
+            if (etfFees.length > 0) {
+                params.set('etfFees', encodeURIComponent(JSON.stringify(etfFees)));
+            }
+            
+            if (loanFees.length > 0) {
+                params.set('loanFees', encodeURIComponent(JSON.stringify(loanFees)));
+            }
+            
+            return params.toString();
+        }
+
+        function copyURLToClipboard() {
+            const params = generateURLParams();
+            const url = window.location.origin + window.location.pathname + '?' + params;
+            
+            // Create a temporary input element
+            const tempInput = document.createElement('input');
+            tempInput.value = url;
+            document.body.appendChild(tempInput);
+            
+            // Select and copy the URL
+            tempInput.select();
+            document.execCommand('copy');
+            
+            // Remove the temporary input
+            document.body.removeChild(tempInput);
+            
+            // Provide feedback
+            alert('URL copied to clipboard!');
+        }
+
+        function calculateGrowth(preserveTransactions = false, preserveGrowthRates = false, preserveEtfFees = false, preserveLoanFees = false) {
             const startingValue = parseFloat(document.getElementById('startingValue').value);
             const initialGrowthRate = parseFloat(document.getElementById('annualGrowthRate').value) / 100;
             const years = parseInt(document.getElementById('years').value);
@@ -209,33 +350,101 @@
                 return;
             }
 
-            annualGrowthRates = Array.from({length: years}, () => ({
-               value: initialGrowthRate,
-               frequency: "annually"
-            }));
+            // Only initialize growth rates if not preserving them
+            if (!preserveGrowthRates) {
+                annualGrowthRates = Array.from({length: years}, () => ({
+                   value: initialGrowthRate,
+                   frequency: "annually"
+                }));
+            } else {
+                // Make sure we have enough growth rates for the number of years
+                while (annualGrowthRates.length < years) {
+                    annualGrowthRates.push({
+                        value: initialGrowthRate,
+                        frequency: "annually"
+                    });
+                }
+                // If we have too many, trim the array
+                if (annualGrowthRates.length > years) {
+                    annualGrowthRates = annualGrowthRates.slice(0, years);
+                }
+            }
 
-            etfFees = Array.from({length: years}, () => ({
-                value: etfFee,
-                frequency: "annually"
-            }));
+            // Only initialize ETF fees if not preserving them
+            if (!preserveEtfFees) {
+                etfFees = Array.from({length: years}, () => ({
+                    value: etfFee,
+                    frequency: "annually"
+                }));
+            } else {
+                // Make sure we have enough ETF fees for the number of years
+                while (etfFees.length < years) {
+                    etfFees.push({
+                        value: etfFee,
+                        frequency: "annually"
+                    });
+                }
+                // If we have too many, trim the array
+                if (etfFees.length > years) {
+                    etfFees = etfFees.slice(0, years);
+                }
+            }
 
-            loanFees = Array.from({length: years}, () => ({
-                value: loanCosts,
-                frequency: "annually"
-            }));
+            // Only initialize loan fees if not preserving them
+            if (!preserveLoanFees) {
+                loanFees = Array.from({length: years}, () => ({
+                    value: loanCosts,
+                    frequency: "annually"
+                }));
+            } else {
+                // Make sure we have enough loan fees for the number of years
+                while (loanFees.length < years) {
+                    loanFees.push({
+                        value: loanCosts,
+                        frequency: "annually"
+                    });
+                }
+                // If we have too many, trim the array
+                if (loanFees.length > years) {
+                    loanFees = loanFees.slice(0, years);
+                }
+            }
 
+            // Only initialize transactions if not preserving them
+            if (!preserveTransactions) {
+                transactions = Array.from({ length: years }, () => []);
 
-            transactions = Array.from({ length: years }, () => []);
-
-            if(additionalAmount !== 0) {
-                let additionalAmountObject = {
-                    type: TransactionType.PURCHASE,
-                    amount: additionalAmount,
-                    frequency: frequency
-                };
-                transactions.forEach(innerArray => {
-                    innerArray.push(additionalAmountObject);
-                });
+                if(additionalAmount !== 0) {
+                    let additionalAmountObject = {
+                        type: TransactionType.PURCHASE,
+                        amount: additionalAmount,
+                        frequency: frequency
+                    };
+                    transactions.forEach(innerArray => {
+                        innerArray.push(additionalAmountObject);
+                    });
+                }
+            } else {
+                // Make sure we have enough transaction arrays for the number of years
+                while (transactions.length < years) {
+                    transactions.push([]);
+                }
+                // If we have too many, trim the array
+                if (transactions.length > years) {
+                    transactions = transactions.slice(0, years);
+                }
+                
+                // Add the additional amount as a transaction if it exists and we're not preserving transactions
+                if (!preserveTransactions && additionalAmount !== 0) {
+                    let additionalAmountObject = {
+                        type: TransactionType.PURCHASE,
+                        amount: additionalAmount,
+                        frequency: frequency
+                    };
+                    transactions.forEach(innerArray => {
+                        innerArray.push(additionalAmountObject);
+                    });
+                }
             }
 
             recalculateValues(startingValue, years);
@@ -246,6 +455,9 @@
                     element.disabled = true;
                 }
             });
+            
+            // Show the Copy URL button after calculation
+            document.getElementById('copyURLButton').style.display = 'inline-block';
         }
 
         function recalculateValues(startingValue, years) {
@@ -698,6 +910,15 @@
             const years = parseInt(document.getElementById('years').value);
 
             recalculateValues(startingValue, years);
+            
+            // Update URL parameters after any change
+            updateURLParameters();
+        }
+
+        function updateURLParameters() {
+            const params = generateURLParams();
+            // Update the URL without refreshing the page
+            history.replaceState({}, document.title, window.location.pathname + '?' + params);
         }
 
         function resetForm() {
@@ -717,6 +938,12 @@
             document.querySelectorAll('input, select').forEach(element => {
                 element.disabled = false;
             });
+            
+            // Hide the Copy URL button
+            document.getElementById('copyURLButton').style.display = 'none';
+            
+            // Clear the URL parameters
+            history.replaceState({}, document.title, window.location.pathname);
         }
     </script>
 
