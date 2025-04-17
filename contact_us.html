@@ -198,7 +198,9 @@
         <div class="container">
             <div class="d-flex">
                 <div class="d-flex align-items-center">
-                    <img src="images/icons/btcLogo.svg" alt="Bitcoin Logo" class="bitcoin-icon">
+                    <a href="index.html">
+                        <img src="images/icons/btcLogo.svg" alt="Bitcoin Logo" class="bitcoin-icon">
+                    </a>
                 </div>
                 <div>
                     <a href="index.html" class="text-white text-decoration-none">
@@ -552,6 +554,38 @@
                                 </div>
                             </div>
 
+                            <!-- Education category -->
+                            <div class="category-group mb-3">
+                                <div class="main-category-heading">
+                                    <div class="form-check">
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-education" value="Education">
+                                        <label class="form-check-label fw-bold" for="cat-education">Education</label>
+                                    </div>
+                                </div>
+                                <div class="subcategories ps-4 mt-1">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-books" value="Books" data-parent="Education">
+                                                <label class="form-check-label" for="subcat-books">Educational Books</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-economics" value="Economics" data-parent="Education">
+                                                <label class="form-check-label" for="subcat-economics">Economics</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-homeschooling" value="Homeschooling" data-parent="Education">
+                                                <label class="form-check-label" for="subcat-homeschooling">Homeschooling</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Food & Drink category -->
                             <div class="category-group mb-3">
                                 <div class="main-category-heading">
@@ -656,138 +690,106 @@
                                     <div class="row">
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                             <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-breeders" value="Breeders" data-parent="Pet Care">
-                                                <label class="form-check-label" for="subcat-breeders">Breeders</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                            <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-daycare" value="Daycare" data-parent="Pet Care">
-                                                <label class="form-check-label" for="subcat-daycare">Daycare</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                            <div class="form-check">
                                                 <input class="form-check-input subcategory" type="checkbox" id="subcat-pet-store" value="Pet Store" data-parent="Pet Care">
                                                 <label class="form-check-label" for="subcat-pet-store">Pet Store</label>
                                             </div>
                                         </div>
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                             <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-veterinary" value="Veterinary Clinic" data-parent="Pet Care">
-                                                <label class="form-check-label" for="subcat-veterinary">Veterinary Clinic</label>
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-pet-daycare" value="Pet Day Care" data-parent="Pet Care">
+                                                <label class="form-check-label" for="subcat-pet-daycare">Pet Day Care</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-pet-boarding" value="Boarding" data-parent="Pet Care">
+                                                <label class="form-check-label" for="subcat-pet-boarding">Boarding</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-veterinary" value="Veterinary" data-parent="Pet Care">
+                                                <label class="form-check-label" for="subcat-veterinary">Veterinary</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-pet-accessories" value="Pet Accessories" data-parent="Pet Care">
+                                                <label class="form-check-label" for="subcat-pet-accessories">Pet Accessories</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-pet-food" value="Pet Food" data-parent="Pet Care">
+                                                <label class="form-check-label" for="subcat-pet-food">Pet Food</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-pet-grooming" value="Pet Grooming" data-parent="Pet Care">
+                                                <label class="form-check-label" for="subcat-pet-grooming">Pet Grooming</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-pet-health" value="Pet Health" data-parent="Pet Care">
+                                                <label class="form-check-label" for="subcat-pet-health">Pet Health</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-pet-training" value="Pet Training" data-parent="Pet Care">
+                                                <label class="form-check-label" for="subcat-pet-training">Pet Training</label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Health & Fitness category -->
+                            <!-- Sports category -->
                             <div class="category-group mb-3">
                                 <div class="main-category-heading">
                                     <div class="form-check">
-                                        <input class="form-check-input main-category" type="checkbox" id="cat-health" value="Health & Fitness">
-                                        <label class="form-check-label fw-bold" for="cat-health">Health & Fitness</label>
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-sports" value="Sports">
+                                        <label class="form-check-label fw-bold" for="cat-sports">Sports</label>
                                     </div>
                                 </div>
                                 <div class="subcategories ps-4 mt-1">
                                     <div class="row">
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                             <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-acupuncture" value="Acupuncture" data-parent="Health & Fitness">
-                                                <label class="form-check-label" for="subcat-acupuncture">Acupuncture</label>
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-sports-apparel" value="Apparel" data-parent="Sports">
+                                                <label class="form-check-label" for="subcat-sports-apparel">Apparel</label>
                                             </div>
                                         </div>
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                             <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-beauty" value="Beauty/Cosmetic" data-parent="Health & Fitness">
-                                                <label class="form-check-label" for="subcat-beauty">Beauty/Cosmetic</label>
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-sports-equipment" value="Equipment" data-parent="Sports">
+                                                <label class="form-check-label" for="subcat-sports-equipment">Equipment</label>
                                             </div>
                                         </div>
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                             <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-chiropractic" value="Chiropractic" data-parent="Health & Fitness">
-                                                <label class="form-check-label" for="subcat-chiropractic">Chiropractic</label>
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-sports-memorabilia" value="Memorabilia" data-parent="Sports">
+                                                <label class="form-check-label" for="subcat-sports-memorabilia">Memorabilia</label>
                                             </div>
                                         </div>
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                             <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-dental" value="Dental & Orthodontics" data-parent="Health & Fitness">
-                                                <label class="form-check-label" for="subcat-dental">Dental & Orthodontics</label>
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-sports-teams" value="Teams" data-parent="Sports">
+                                                <label class="form-check-label" for="subcat-sports-teams">Teams</label>
                                             </div>
                                         </div>
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                             <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-healthcare" value="Healthcare" data-parent="Health & Fitness">
-                                                <label class="form-check-label" for="subcat-healthcare">Healthcare</label>
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-sports-tickets" value="Tickets" data-parent="Sports">
+                                                <label class="form-check-label" for="subcat-sports-tickets">Tickets</label>
                                             </div>
                                         </div>
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                             <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-massage" value="Massage Therapy" data-parent="Health & Fitness">
-                                                <label class="form-check-label" for="subcat-massage">Massage Therapy</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                            <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-personal-care" value="Personal Care" data-parent="Health & Fitness">
-                                                <label class="form-check-label" for="subcat-personal-care">Personal Care</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                            <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-skin-care" value="Skin Care" data-parent="Health & Fitness">
-                                                <label class="form-check-label" for="subcat-skin-care">Skin Care</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                            <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-health-supplements" value="Supplements" data-parent="Health & Fitness">
-                                                <label class="form-check-label" for="subcat-health-supplements">Supplements</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                            <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-swimming" value="Swimming" data-parent="Health & Fitness">
-                                                <label class="form-check-label" for="subcat-swimming">Swimming</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Finance category -->
-                            <div class="category-group mb-3">
-                                <div class="main-category-heading">
-                                    <div class="form-check">
-                                        <input class="form-check-input main-category" type="checkbox" id="cat-finance" value="Finance">
-                                        <label class="form-check-label fw-bold" for="cat-finance">Finance</label>
-                                    </div>
-                                </div>
-                                <div class="subcategories ps-4 mt-1">
-                                    <div class="row">
-                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                            <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-accounting" value="Accounting" data-parent="Finance">
-                                                <label class="form-check-label" for="subcat-accounting">Accounting</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                            <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-estate-admin" value="Estate and Trust Administration" data-parent="Finance">
-                                                <label class="form-check-label" for="subcat-estate-admin">Estate and Trust Administration</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                            <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-estate-planning" value="Estate, tax and business planning" data-parent="Finance">
-                                                <label class="form-check-label" for="subcat-estate-planning">Estate, tax and business planning</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                            <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-financial-advisors" value="Financial Advisors" data-parent="Finance">
-                                                <label class="form-check-label" for="subcat-financial-advisors">Financial Advisors</label>
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-sports-training" value="Training" data-parent="Sports">
+                                                <label class="form-check-label" for="subcat-sports-training">Training</label>
                                             </div>
                                         </div>
                                     </div>
@@ -806,6 +808,18 @@
                                     <div class="row">
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                             <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-carpentry" value="Carpentry" data-parent="Trades">
+                                                <label class="form-check-label" for="subcat-carpentry">Carpentry</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-cardetailing" value="Car Detailing" data-parent="Trades">
+                                                <label class="form-check-label" for="subcat-cardetailing">Car Detailing</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
                                                 <input class="form-check-input subcategory" type="checkbox" id="subcat-construction" value="Construction" data-parent="Trades">
                                                 <label class="form-check-label" for="subcat-construction">Construction</label>
                                             </div>
@@ -818,8 +832,20 @@
                                         </div>
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                             <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-electrical" value="Electrical" data-parent="Trades">
+                                                <label class="form-check-label" for="subcat-electrical">Electrical</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
                                                 <input class="form-check-input subcategory" type="checkbox" id="subcat-gardening" value="Gardening" data-parent="Trades">
                                                 <label class="form-check-label" for="subcat-gardening">Gardening</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-heating" value="Heating" data-parent="Trades">
+                                                <label class="form-check-label" for="subcat-heating">Heating</label>
                                             </div>
                                         </div>
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
@@ -830,8 +856,14 @@
                                         </div>
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                             <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-plumbing" value="Plumbing & Heating" data-parent="Trades">
-                                                <label class="form-check-label" for="subcat-plumbing">Plumbing & Heating</label>
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-plumbing" value="Plumbing" data-parent="Trades">
+                                                <label class="form-check-label" for="subcat-plumbing">Plumbing</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-roofing" value="Roofing" data-parent="Trades">
+                                                <label class="form-check-label" for="subcat-roofing">Roofing</label>
                                             </div>
                                         </div>
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
@@ -840,80 +872,54 @@
                                                 <label class="form-check-label" for="subcat-treecare">Tree Care</label>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                            <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-cardetailing" value="Car Detailing" data-parent="Trades">
-                                                <label class="form-check-label" for="subcat-cardetailing">Car Detailing</label>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Travel & Tours category -->
+                            <!-- Travel category -->
                             <div class="category-group mb-3">
                                 <div class="main-category-heading">
                                     <div class="form-check">
-                                        <input class="form-check-input main-category" type="checkbox" id="cat-travel" value="Travel & Tours">
-                                        <label class="form-check-label fw-bold" for="cat-travel">Travel & Tours</label>
+                                        <input class="form-check-input main-category" type="checkbox" id="cat-travel" value="Travel">
+                                        <label class="form-check-label fw-bold" for="cat-travel">Travel</label>
                                     </div>
                                 </div>
                                 <div class="subcategories ps-4 mt-1">
                                     <div class="row">
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                             <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-accommodations" value="Accommodations" data-parent="Travel & Tours">
-                                                <label class="form-check-label" for="subcat-accommodations">Accommodations</label>
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-travel-airfare" value="Airfare" data-parent="Travel">
+                                                <label class="form-check-label" for="subcat-travel-airfare">Airfare</label>
                                             </div>
                                         </div>
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                             <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-cruises" value="Cruises" data-parent="Travel & Tours">
-                                                <label class="form-check-label" for="subcat-cruises">Cruises</label>
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-travel-cruises" value="Cruises" data-parent="Travel">
+                                                <label class="form-check-label" for="subcat-travel-cruises">Cruises</label>
                                             </div>
                                         </div>
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                             <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-transportation" value="Transportation" data-parent="Travel & Tours">
-                                                <label class="form-check-label" for="subcat-transportation">Transportation</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Music category -->
-                            <div class="category-group mb-3">
-                                <div class="main-category-heading">
-                                    <div class="form-check">
-                                        <input class="form-check-input main-category" type="checkbox" id="cat-music" value="Music">
-                                        <label class="form-check-label fw-bold" for="cat-music">Music</label>
-                                    </div>
-                                </div>
-                                <div class="subcategories ps-4 mt-1">
-                                    <div class="row">
-                                        <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
-                                            <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-music-equipment" value="Equipment" data-parent="Music">
-                                                <label class="form-check-label" for="subcat-music-equipment">Equipment</label>
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-travel-accommodations" value="Hotels/Accommodations" data-parent="Travel">
+                                                <label class="form-check-label" for="subcat-travel-accommodations">Hotels/Accommodations</label>
                                             </div>
                                         </div>
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                             <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-music-lessons" value="Lessons" data-parent="Music">
-                                                <label class="form-check-label" for="subcat-music-lessons">Lessons</label>
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-travel-tours" value="Tours" data-parent="Travel">
+                                                <label class="form-check-label" for="subcat-travel-tours">Tours</label>
                                             </div>
                                         </div>
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                             <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-recording-studio" value="Recording Studio" data-parent="Music">
-                                                <label class="form-check-label" for="subcat-recording-studio">Recording Studio</label>
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-travel-transportation" value="Transportation" data-parent="Travel">
+                                                <label class="form-check-label" for="subcat-travel-transportation">Transportation</label>
                                             </div>
                                         </div>
                                         <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                             <div class="form-check">
-                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-streaming" value="Streaming" data-parent="Music">
-                                                <label class="form-check-label" for="subcat-streaming">Streaming</label>
+                                                <input class="form-check-input subcategory" type="checkbox" id="subcat-travel-agencies" value="Travel Agencies" data-parent="Travel">
+                                                <label class="form-check-label" for="subcat-travel-agencies">Travel Agencies</label>
                                             </div>
                                         </div>
                                     </div>
