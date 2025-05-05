@@ -385,8 +385,6 @@
         .mode-toggle {
             margin-left: auto;
             margin-right: 10px;
-            display: flex;
-            align-items: center;
         }
         
         .mode-toggle .btn {
@@ -395,9 +393,6 @@
             border: 2px solid white;
             font-weight: 600;
             transition: all 0.3s ease;
-            padding: 8px 16px;
-            white-space: nowrap;
-            font-size: 1rem;
         }
         
         .mode-toggle .active {
@@ -410,35 +405,7 @@
         .mode-toggle .btn:hover:not(.active) {
             background-color: rgba(255, 255, 255, 0.8);
         }
-
-        /* Responsive adjustments for mode toggle */
-        @media (max-width: 576px) {
-            .mode-toggle {
-                margin: 10px 0 0 0;
-                width: 100%;
-            }
-            
-            .mode-toggle .btn-group {
-                width: 100%;
-            }
-            
-            .mode-toggle .btn {
-                flex: 1;
-                padding: 8px 12px;
-                font-size: 0.9rem;
-            }
-
-            /* Adjust header layout for mobile */
-            .header .d-flex.justify-content-between {
-                flex-direction: column;
-                align-items: stretch !important;
-            }
-            
-            .header .d-flex:first-child {
-                margin-bottom: 10px;
-            }
-        }
-
+        
         /* Content sections */
         #directoryContent {
             display: block;
@@ -446,6 +413,107 @@
         
         #mapContent {
             display: none;
+}
+
+        /* Responsive sizing for business logos */
+        @media (max-width: 768px) {
+            .business-logo {
+                width: 120px; /* Larger size on tablets */
+                height: 120px;
+            }
+            .detail-header {
+                padding-right: 130px;
+                padding-bottom: 15px; /* Maintain spacing at tablet size */
+            }
+            .detail-header h2 {
+                padding-right: 0; /* Remove duplicate padding - container padding is enough */
+            }
+            #detailCategories {
+                padding-right: 0; /* Remove duplicate padding */
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .business-logo {
+                width: 100px; /* Larger size on mobile */
+                height: 100px;
+            }
+            .detail-header {
+                padding-right: 110px;
+                padding-bottom: 15px;
+            }
+            .detail-header h2 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .business-logo {
+                width: 90px; /* Larger size on small mobile */
+                height: 90px;
+            }
+            .detail-header {
+                padding-right: 100px;
+                padding-bottom: 15px;
+            }
+            .detail-header h2 {
+                font-size: 1.35rem;
+            }
+        }
+
+        /* New payment badges */
+        .ecash-badge {
+            background-color: #28a745;
+            color: white;
+        }
+        .fedi-badge {
+            background-color: #17a2b8;
+            color: white;
+        }
+        .liquid-badge {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        /* Add this CSS rule for card-title to prevent improper wrapping on mobile devices: */
+        .card-title {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: normal;
+            hyphens: auto;
+            width: 100%;
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        /* Ensure proper display on iOS devices */
+        @media screen and (max-width: 767px) {
+            .card-title {
+                font-size: 1.125rem;
+                line-height: 1.4;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .detail-header h2 {
+                font-size: 1.5rem;
+                padding-right: 80px; /* Reduce padding on small screens */
+            }
+            
+            #detailCategories {
+                padding-right: 80px; /* Reduce padding on small screens */
+            }
+        }
+
+        @media (max-width: 400px) {
+            .detail-header h2 {
+                font-size: 1.35rem;
+                padding-right: 70px; /* Further reduce padding on very small screens */
+            }
+            
+            #detailCategories {
+                padding-right: 70px; /* Further reduce padding on very small screens */
+            }
         }
 
         /* Map styles */
@@ -692,7 +760,7 @@
 <body>
     <div class="header">
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex">
                     <div class="d-flex align-items-center">
                         <a href="index.html">
@@ -706,11 +774,9 @@
                         <p class="mb-0">Help support the Bitcoin circular economy. Find businesses that accept Bitcoin payments.</p>
                     </div>
                 </div>
-                <div class="mode-toggle">
-                    <div class="btn-group w-100" role="group" aria-label="View mode toggle">
-                        <button type="button" class="btn active" id="directoryBtn">Directory</button>
-                        <button type="button" class="btn" id="btcMapBtn">BTCMap</button>
-                    </div>
+                <div class="mode-toggle btn-group" role="group" aria-label="View mode toggle">
+                    <button type="button" class="btn active" id="directoryBtn">Directory</button>
+                    <button type="button" class="btn" id="btcMapBtn">BTCMap</button>
                 </div>
             </div>
         </div>
@@ -1002,7 +1068,185 @@
 
         <!-- BTCMap Content Section -->
         <div id="mapContent">
-        
+            <!-- Filter Section for BTCMap -->
+            <div class="filter-section mb-4">
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <label for="mapSearchInput" class="form-label">Search</label>
+                        <input type="text" class="form-control" id="mapSearchInput" placeholder="Search businesses...">
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label for="mapCategoryFilter" class="form-label">Category</label>
+                        <select class="form-select" id="mapCategoryFilter">
+                            <option value="">All Categories</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label for="mapLocationInput" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="mapLocationInput" placeholder="Filter by location (city, region, country)...">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-2">
+                        <button class="btn btn-outline-secondary" type="button" id="mapClearFilters">Clear Filters</button>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">My Location:</label>
+                        <div class="input-group">
+                            <select id="mapLocationSelect" class="form-select">
+                                <option value="">Select a city</option>
+                                <optgroup label="North America">
+                                    <option value="37.7749,-122.4194">San Francisco</option>
+                                    <option value="40.7128,-74.0060">New York City</option>
+                                    <option value="41.8781,-87.6298">Chicago</option>
+                                    <option value="34.0522,-118.2437">Los Angeles</option>
+                                    <option value="29.7604,-95.3698">Houston</option>
+                                    <option value="43.6532,-79.3832">Toronto</option>
+                                    <option value="19.4326,-99.1332">Mexico City</option>
+                                    <option value="45.5017,-73.5673">Montreal</option>
+                                    <option value="25.7617,-80.1918">Miami</option>
+                                    <option value="49.2827,-123.1207">Vancouver</option>
+                                </optgroup>
+                                <optgroup label="Europe">
+                                    <option value="51.5074,-0.1278">London</option>
+                                    <option value="48.8566,2.3522">Paris</option>
+                                    <option value="52.5200,13.4050">Berlin</option>
+                                    <option value="41.9028,12.4964">Rome</option>
+                                    <option value="52.3676,4.9041">Amsterdam</option>
+                                    <option value="59.3293,18.0686">Stockholm</option>
+                                    <option value="41.3851,2.1734">Barcelona</option>
+                                    <option value="55.6761,12.5683">Copenhagen</option>
+                                    <option value="53.3498,-6.2603">Dublin</option>
+                                    <option value="48.2082,16.3738">Vienna</option>
+                                </optgroup>
+                                <optgroup label="Asia">
+                                    <option value="35.6762,139.6503">Tokyo</option>
+                                    <option value="22.3193,114.1694">Hong Kong</option>
+                                    <option value="1.3521,103.8198">Singapore</option>
+                                    <option value="25.2048,55.2708">Dubai</option>
+                                    <option value="13.7563,100.5018">Bangkok</option>
+                                    <option value="37.5665,126.9780">Seoul</option>
+                                    <option value="31.2304,121.4737">Shanghai</option>
+                                    <option value="19.0760,72.8777">Mumbai</option>
+                                    <option value="28.6139,77.2090">New Delhi</option>
+                                    <option value="3.1390,101.6869">Kuala Lumpur</option>
+                                </optgroup>
+                                <optgroup label="Australia/Oceania">
+                                    <option value="-33.8688,151.2093">Sydney</option>
+                                    <option value="-37.8136,144.9631">Melbourne</option>
+                                    <option value="-36.8485,174.7633">Auckland</option>
+                                    <option value="-41.2865,174.7762">Wellington</option>
+                                    <option value="-27.4698,153.0251">Brisbane</option>
+                                </optgroup>
+                                <optgroup label="South America">
+                                    <option value="-34.6037,-58.3816">Buenos Aires</option>
+                                    <option value="-23.5505,-46.6333">São Paulo</option>
+                                    <option value="-33.4489,-70.6693">Santiago</option>
+                                    <option value="-12.0464,-77.0428">Lima</option>
+                                    <option value="-0.1807,-78.4678">Quito</option>
+                                </optgroup>
+                                <optgroup label="Africa">
+                                    <option value="-33.9249,18.4241">Cape Town</option>
+                                    <option value="30.0444,31.2357">Cairo</option>
+                                    <option value="-1.2921,36.8219">Nairobi</option>
+                                    <option value="6.5244,3.3792">Lagos</option>
+                                    <option value="33.9716,-6.8498">Rabat</option>
+                                </optgroup>
+                            </select>
+                            <div class="location-actions">
+                                <button class="btn btn-outline-primary" id="mapUseCurrentLocation">
+                                    <i class="bi bi-crosshair"></i> Use My Location
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="mapStatusMessage" class="alert alert-info mt-2" style="display: none;"></div>
+                <div id="mapFilterStatus" class="mt-2"></div>
+            </div>
+            
+            <!-- Map and Business List -->
+            <div class="row">
+                <!-- Loading Spinner for BTCMap -->
+                <div class="col-12 loading-spinner" id="mapLoadingSpinner">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                
+                <div class="col-12" id="mapBusinessContent" style="display: none;">
+                    <!-- Map Container -->
+                    <div class="map-container">
+                        <div id="map"></div>
+                    </div>
+                    
+                    <!-- Business List View -->
+                    <div class="map-business-list">
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">Bitcoin-Accepting Businesses</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th class="sortable" data-sort="name">Business Name <i class="bi bi-arrow-down-up"></i></th>
+                                                <th>Categories</th>
+                                                <th class="sortable" data-sort="location">Location <i class="bi bi-arrow-down-up"></i></th>
+                                                <th class="sortable distance-column" data-sort="distance" style="display: none;">Distance <i class="bi bi-arrow-down-up"></i></th>
+                                                <th>Website/Social</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="mapBusinessList">
+                                            <!-- Business items will be populated here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Business Details Section -->
+                    <div class="btcmap-business-details" id="mapBusinessDetail">
+                        <button type="button" class="btn-close float-end" id="closeMapDetail" aria-label="Close"></button>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h3 id="mapDetailName" class="mb-3"></h3>
+                                <div id="mapDetailCategories" class="mb-3"></div>
+                                <div class="mb-3">
+                                    <strong>Location:</strong>
+                                    <div id="mapDetailLocation"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Website:</strong>
+                                    <div id="mapDetailWebsite"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <strong>Description:</strong>
+                                    <div id="mapDetailDescription"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Payment Methods:</strong>
+                                    <div id="mapDetailPaymentMethods"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Social Media:</strong>
+                                    <div id="mapDetailSocial" class="social-links"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- No Results Message -->
+                    <div id="mapNoResults" class="no-results" style="display: none;">
+                        <h4>No businesses found matching your criteria</h4>
+                        <p>Try adjusting your filters or search terms</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1030,7 +1274,7 @@
             integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
             crossorigin=""></script>
 
-    <script src="main.js?v=1208"></script>
+    <script src="main.js"></script>
 
 </body>
 </html>

@@ -1,0 +1,2838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin-Accepting Businesses Directory</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin=""/>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .header {
+            background-color: #f7931a;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            display: inline-block;
+            margin: 0;
+            vertical-align: middle;
+            font-family: 'Roboto Condensed', sans-serif;
+            font-weight: 700;
+        }
+        .header p {
+            font-family: 'Roboto Condensed', sans-serif;
+        }
+        .business-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        .business-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #f7931a;
+        }
+        .business-list-item {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        .business-list-item:hover {
+            background-color: #f8f9fa;
+            border-left: 4px solid #f7931a;
+        }
+        .filter-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+        .bitcoin-icon {
+            height: 80px; /* Increased from 48px */
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        #businessDetail {
+            display: none;
+        }
+        .detail-header {
+            border-bottom: 2px solid #f7931a;
+            padding-bottom: 20px; /* Increase bottom padding to create more space before the border */
+            margin-bottom: 20px;
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: flex-start;
+            padding-top: 35px; /* Increase top padding to make room for larger logo */
+            padding-right: 160px; /* Increase padding to make room for larger logo */
+        }
+        .business-logo {
+            position: absolute;
+            top: 30px; /* Match the padding-top of detail-header */
+            right: 0;
+            width: 150px; /* Increase default logo size */
+            height: 150px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: white;
+            padding: 5px;
+            border: 1px solid #e9ecef; /* Add subtle border */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Add subtle shadow */
+        }
+        .business-logo img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+        .detail-header h2 {
+            margin: 0;
+            flex: 1;
+            min-width: 200px;
+            padding-right: 160px; /* Increase to match .detail-header padding-right */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: normal;
+            hyphens: auto;
+            line-height: 1.3;
+        }
+        .back-button {
+            cursor: pointer;
+            color: #f7931a;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 5px 0; /* Add some padding for better clickable area */
+        }
+        .back-button:hover {
+            text-decoration: underline;
+        }
+        #detailCategories {
+            width: 100%;
+            margin-top: 10px;
+            padding-right: 160px; /* Increase to match .detail-header padding-right */
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .detail-section {
+            margin-bottom: 15px;
+        }
+        .detail-label {
+            font-weight: bold;
+            color: #495057;
+        }
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+        .payment-badge {
+            display: inline-block;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        .onchain-badge {
+            background-color: #f7931a;
+            color: white;
+        }
+        .lightning-badge {
+            background-color: #792ee5;
+            color: white;
+        }
+        .view-toggle {
+            margin-bottom: 15px;
+        }
+        .view-toggle .btn {
+            border-color: #dee2e6;
+        }
+        .view-toggle .active {
+            background-color: #f7931a;
+            color: white;
+            border-color: #f7931a;
+        }
+        .list-view-table {
+            margin-bottom: 0;
+        }
+        .list-view-table th {
+            background-color: #f8f9fa;
+        }
+        .last-verified {
+            font-size: 0.85rem;
+            color: #6c757d;
+            text-align: right;
+            margin-top: 20px;
+            font-style: italic;
+        }
+        .share-link {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        .share-link-input {
+            font-size: 0.9rem;
+            background-color: white;
+            padding: 8px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .copy-button {
+            background-color: #f7931a;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .copy-button:hover {
+            background-color: #e07d16;
+        }
+        .copy-success {
+            color: #28a745;
+            margin-left: 10px;
+            display: none;
+        }
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+        .loading-spinner .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            color: #f7931a;
+        }
+        .data-info {
+            font-size: 0.8rem;
+            color: #6c757d;
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        /* Social media styles */
+        .social-links {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #f1f3f5;
+            color: #495057;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        .social-link:hover {
+            background-color: #f7931a;
+            color: white;
+            transform: translateY(-2px);
+        }
+        .social-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 8px;
+            padding: 4px 8px;
+            background-color: #343a40;
+            color: white;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            white-space: nowrap;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+        .social-link:hover .social-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        /* Filter status styles */
+        .filter-status {
+            display: inline-block;
+            margin-left: 0;
+            font-size: 0.9rem;
+            color: #f7931a;
+            font-weight: bold;
+        }
+        #filterStatus {
+            background-color: #fff8f0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+        }
+        #statusMessage {
+            display: none;
+            margin-bottom: 15px;
+        }
+        
+        /* Distance-based styles */
+        .distance-badge {
+            font-size: 0.8rem;
+            padding: 0.2rem 0.5rem;
+            margin-top: 0.5rem;
+            background-color: #e7f5ff; /* Light blue background */
+            color: #0d6efd; /* Blue text color */
+            border-radius: 0.25rem;
+            display: inline-block;
+            font-weight: 500;
+        }
+        
+        .location-sorting-active {
+            border-left: 4px solid #28a745 !important;
+        }
+        
+        .location-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .location-actions button {
+            white-space: nowrap;
+        }
+
+        /* Category badges */
+        .category-badge {
+            display: inline-block;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background-color: #6c757d;
+            color: white;
+            font-size: 0.8rem;
+            transition: all 0.2s ease; /* Add transition for smooth effect */
+            cursor: pointer; /* Show pointer cursor on hover */
+        }
+        
+        /* Add hover effect for category badges */
+        .category-badge:hover {
+            background-color: #f7931a; /* Change to Bitcoin orange on hover */
+            transform: translateY(-1px); /* Slight lift effect */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Add subtle shadow */
+        }
+
+        .categories-container {
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+			.metadata-info {
+   			text-align: right;
+    			margin-top: 20px;
+    			font-style: italic;
+			}
+
+.last-verified, .submitted-by {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.sortable:hover {
+    background-color: #f0f0f0;
+}
+
+.sortable i {
+    opacity: 0.3;
+    margin-left: 5px;
+}
+
+.sortable.sort-asc i {
+    opacity: 1;
+    transform: rotate(180deg);
+}
+
+.sortable.sort-desc i {
+    opacity: 1;
+}
+
+        /* Responsive sizing for business logos */
+        @media (max-width: 768px) {
+            .business-logo {
+                width: 120px; /* Larger size on tablets */
+                height: 120px;
+            }
+            .detail-header {
+                padding-right: 130px;
+                padding-bottom: 15px; /* Maintain spacing at tablet size */
+            }
+            .detail-header h2 {
+                padding-right: 0; /* Remove duplicate padding - container padding is enough */
+            }
+            #detailCategories {
+                padding-right: 0; /* Remove duplicate padding */
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .business-logo {
+                width: 100px; /* Larger size on mobile */
+                height: 100px;
+            }
+            .detail-header {
+                padding-right: 110px;
+                padding-bottom: 15px;
+            }
+            .detail-header h2 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .business-logo {
+                width: 90px; /* Larger size on small mobile */
+                height: 90px;
+            }
+            .detail-header {
+                padding-right: 100px;
+                padding-bottom: 15px;
+            }
+            .detail-header h2 {
+                font-size: 1.35rem;
+            }
+        }
+
+        /* New payment badges */
+        .ecash-badge {
+            background-color: #28a745;
+            color: white;
+        }
+        .fedi-badge {
+            background-color: #17a2b8;
+            color: white;
+        }
+        .liquid-badge {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        /* Add this CSS rule for card-title to prevent improper wrapping on mobile devices: */
+        .card-title {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: normal;
+            hyphens: auto;
+            width: 100%;
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        /* Ensure proper display on iOS devices */
+        @media screen and (max-width: 767px) {
+            .card-title {
+                font-size: 1.125rem;
+                line-height: 1.4;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .detail-header h2 {
+                font-size: 1.5rem;
+                padding-right: 80px; /* Reduce padding on small screens */
+            }
+            
+            #detailCategories {
+                padding-right: 80px; /* Reduce padding on small screens */
+            }
+        }
+
+        @media (max-width: 400px) {
+            .detail-header h2 {
+                font-size: 1.35rem;
+                padding-right: 70px; /* Further reduce padding on very small screens */
+            }
+            
+            #detailCategories {
+                padding-right: 70px; /* Further reduce padding on very small screens */
+            }
+        }
+
+        /* Map Styles */
+        #btcMap {
+            height: 400px; /* Adjust as needed */
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .btc-map-marker-popup .leaflet-popup-content-wrapper {
+            background-color: #f7931a; /* Bitcoin orange background */
+            color: white; /* White text */
+            border-radius: 6px;
+            padding: 8px 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .btc-map-marker-popup .leaflet-popup-content {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .btc-map-marker-popup .leaflet-popup-tip-container {
+            width: 20px;
+            height: 10px;
+        }
+        .btc-map-marker-popup .leaflet-popup-tip {
+            background: #f7931a; /* Match background */
+            border: none;
+            box-shadow: none;
+        }
+        .btc-map-marker-popup a {
+            color: white;
+            text-decoration: underline;
+        }
+        .btc-map-marker-popup a:hover {
+            color: #fff;
+        }
+        .leaflet-marker-icon.btc-map-icon {
+            background-image: url('images/icons/map-marker-orange.png'); /* Custom marker icon */
+            background-size: contain;
+            width: 25px !important;
+            height: 41px !important;
+            margin-left: -12px !important;
+            margin-top: -41px !important;
+            filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.3));
+        }
+        .leaflet-marker-icon.btc-map-icon-highlight {
+            background-image: url('images/icons/map-marker-blue.png'); /* Highlighted marker */
+            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.4));
+            z-index: 1000 !important; /* Ensure highlighted marker is on top */
+        }
+        #btcMapLocationPrompt {
+            background-color: #fff8f0; /* Light orange */
+            border: 1px solid #f7931a;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #btcMapLocationPrompt p {
+            margin-bottom: 15px;
+        }
+        #btcMapLocationPrompt .input-group {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        #detailMap {
+            height: 250px; /* Smaller map for detail view */
+            margin-top: 15px;
+            border-radius: 6px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="d-flex">
+                <div class="d-flex align-items-center">
+                    <a href="index.html">
+                        <img src="images/icons/btcLogo.svg" alt="Bitcoin Logo" class="bitcoin-icon">
+                    </a>
+                </div>
+                <div>
+                    <a href="index.html" class="text-white text-decoration-none">
+                        <h1>BTCAccepted</h1>
+                    </a>
+                    <p class="mb-0">Help support the Bitcoin circular economy. Find businesses that accept Bitcoin payments.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- View Selection Tabs -->
+        <ul class="nav nav-tabs mb-3" id="viewTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="directory-tab" data-bs-toggle="tab" data-bs-target="#directoryView" type="button" role="tab" aria-controls="directoryView" aria-selected="true">
+                    <i class="bi bi-list-ul me-1"></i> Directory
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="btcmap-tab" data-bs-toggle="tab" data-bs-target="#btcMapView" type="button" role="tab" aria-controls="btcMapView" aria-selected="false">
+                    <i class="bi bi-map-fill me-1"></i> BTCMap
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="viewTabContent">
+
+            <!-- Directory View (Existing Content) -->
+            <div class="tab-pane fade show active" id="directoryView" role="tabpanel" aria-labelledby="directory-tab">
+                <!-- Filter Section - Common to both views initially, may need adjustment -->
+                <div class="filter-section mb-4">
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <label for="searchInput" class="form-label">Search</label>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search businesses...">
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="categoryFilter" class="form-label">Category</label>
+                            <select class="form-select" id="categoryFilter">
+                                <option value="">All Categories</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="locationInput" class="form-label">Location</label>
+                            <input type="text" class="form-control" id="locationInput" placeholder="Filter by location (city, region, country)...">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6 mb-2">
+                            <button class="btn btn-outline-secondary" type="button" id="clearFilters">Clear Filters</button>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">My Location:</label>
+                            <div class="input-group">
+                                <select id="myLocationSelect" class="form-select">
+                                    <option value="">Select a city</option>
+                                    <optgroup label="North America">
+                                        <option value="37.7749,-122.4194">San Francisco</option>
+                                        <option value="40.7128,-74.0060">New York City</option>
+                                        <option value="41.8781,-87.6298">Chicago</option>
+                                        <option value="34.0522,-118.2437">Los Angeles</option>
+                                        <option value="29.7604,-95.3698">Houston</option>
+                                        <option value="43.6532,-79.3832">Toronto</option>
+                                        <option value="19.4326,-99.1332">Mexico City</option>
+                                        <option value="45.5017,-73.5673">Montreal</option>
+                                        <option value="25.7617,-80.1918">Miami</option>
+                                        <option value="49.2827,-123.1207">Vancouver</option>
+                                    </optgroup>
+                                    <optgroup label="Europe">
+                                        <option value="51.5074,-0.1278">London</option>
+                                        <option value="48.8566,2.3522">Paris</option>
+                                        <option value="52.5200,13.4050">Berlin</option>
+                                        <option value="41.9028,12.4964">Rome</option>
+                                        <option value="52.3676,4.9041">Amsterdam</option>
+                                        <option value="59.3293,18.0686">Stockholm</option>
+                                        <option value="41.3851,2.1734">Barcelona</option>
+                                        <option value="55.6761,12.5683">Copenhagen</option>
+                                        <option value="53.3498,-6.2603">Dublin</option>
+                                        <option value="48.2082,16.3738">Vienna</option>
+                                    </optgroup>
+                                    <optgroup label="Asia">
+                                        <option value="35.6762,139.6503">Tokyo</option>
+                                        <option value="22.3193,114.1694">Hong Kong</option>
+                                        <option value="1.3521,103.8198">Singapore</option>
+                                        <option value="25.2048,55.2708">Dubai</option>
+                                        <option value="13.7563,100.5018">Bangkok</option>
+                                        <option value="37.5665,126.9780">Seoul</option>
+                                        <option value="31.2304,121.4737">Shanghai</option>
+                                        <option value="19.0760,72.8777">Mumbai</option>
+                                        <option value="28.6139,77.2090">New Delhi</option>
+                                        <option value="3.1390,101.6869">Kuala Lumpur</option>
+                                    </optgroup>
+                                    <optgroup label="Australia/Oceania">
+                                        <option value="-33.8688,151.2093">Sydney</option>
+                                        <option value="-37.8136,144.9631">Melbourne</option>
+                                        <option value="-36.8485,174.7633">Auckland</option>
+                                        <option value="-41.2865,174.7762">Wellington</option>
+                                        <option value="-27.4698,153.0251">Brisbane</option>
+                                    </optgroup>
+                                    <optgroup label="South America">
+                                        <option value="-34.6037,-58.3816">Buenos Aires</option>
+                                        <option value="-23.5505,-46.6333">São Paulo</option>
+                                        <option value="-33.4489,-70.6693">Santiago</option>
+                                        <option value="-12.0464,-77.0428">Lima</option>
+                                        <option value="-0.1807,-78.4678">Quito</option>
+                                    </optgroup>
+                                    <optgroup label="Africa">
+                                        <option value="-33.9249,18.4241">Cape Town</option>
+                                        <option value="30.0444,31.2357">Cairo</option>
+                                        <option value="-1.2921,36.8219">Nairobi</option>
+                                        <option value="6.5244,3.3792">Lagos</option>
+                                        <option value="33.9716,-6.8498">Rabat</option>
+                                    </optgroup>
+                                </select>
+                                <div class="location-actions">
+                                    <button class="btn btn-primary" id="sortByDistance" style="background-color: #f7931a; border-color: #f7931a;">
+                                        <i class="bi bi-geo-alt"></i> Sort
+                                    </button>
+                                    <button class="btn btn-outline-primary" id="useCurrentLocation">
+                                        <i class="bi bi-crosshair"></i> Use My Location
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="statusMessage" class="alert alert-info mt-2" style="display: none;"></div>
+                    <div id="filterStatus" class="mt-2"></div>
+                </div>
+
+                <div class="row">
+                    <!-- Loading Spinner for Directory -->
+                    <div class="col-12 loading-spinner" id="directoryLoadingSpinner">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+
+                    <!-- Business Listing Section for Directory -->
+                    <div class="col-12" id="businessListing" style="display: none;">
+                        <!-- View Toggle -->
+                        <div class="d-flex justify-content-end view-toggle">
+                            <div class="btn-group" role="group" aria-label="View toggle">
+                                <button type="button" class="btn active" id="directoryCardViewBtn">
+                                    <i class="bi bi-grid-3x3-gap-fill"></i> Card View
+                                </button>
+                                <button type="button" class="btn" id="directoryListViewBtn">
+                                    <i class="bi bi-list-ul"></i> List View
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Card View -->
+                        <div id="directoryCardView">
+                            <div class="row" id="businessList">
+                                <!-- Directory business cards will be populated here -->
+                            </div>
+                        </div>
+
+                        <!-- List View -->
+                        <div id="directoryListView" style="display: none;">
+                            <div class="table-responsive">
+                                <table class="table table-hover list-view-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="sortable" data-sort="name">
+                                                Business Name <i class="bi bi-arrow-down-up"></i>
+                                            </th>
+                                            <th>
+                                                Categories
+                                            </th>
+                                            <th class="sortable" data-sort="location">
+                                                Location <i class="bi bi-arrow-down-up"></i>
+                                            </th>
+                                            <th class="sortable distance-column" data-sort="distance" style="display: none;">
+                                                Distance <i class="bi bi-arrow-down-up"></i>
+                                            </th>
+                                            <th>
+                                                Website/Social
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="businessListTable">
+                                        <!-- Directory business list items will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div id="noResults" class="no-results" style="display: none;">
+                            <h4>No businesses found matching your criteria</h4>
+                            <p>Try adjusting your filters or search terms</p>
+                        </div>
+
+                        <div class="data-info" id="dataInfo"></div>
+                    </div>
+
+                    <!-- Business Detail Section (Shared conceptually, might need adjustments) -->
+                    <div class="col-12" id="businessDetail">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="detail-header">
+                                    <span class="back-button" onclick="showListView()">&larr; Back to list</span>
+                                    <div class="business-logo" id="businessLogo" style="display: none;"></div>
+                                    <h2 id="detailName" class="mt-2"></h2>
+                                    <div id="detailCategories" class="mt-2"></div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="detail-section">
+                                            <div class="detail-label">Location</div>
+                                            <div id="detailLocation"></div>
+                                            <!-- Detail Map Placeholder -->
+                                            <div id="detailMap" style="display: none;"></div>
+                                        </div>
+                                        <div class="detail-section">
+                                            <div class="detail-label">Website</div>
+                                            <div id="detailWebsite"></div>
+                                        </div>
+                                        <div class="detail-section">
+                                            <div class="detail-label">Phone</div>
+                                            <div id="detailPhone"></div>
+                                        </div>
+                                        <div class="detail-section">
+                                            <div class="detail-label">Bitcoin Payment Methods</div>
+                                            <div id="detailPaymentMethods"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="detail-section">
+                                            <div class="detail-label">Description</div>
+                                            <div id="detailDescription"></div>
+                                        </div>
+                                        <div class="detail-section">
+                                            <div class="detail-label">Business Owner</div>
+                                            <div id="detailOwner"></div>
+                                        </div>
+                                        <div class="detail-section">
+                                            <div class="detail-label">Email</div>
+                                            <div id="detailEmail"></div>
+                                        </div>
+                                        
+                                        <div class="detail-section">
+                                            <div class="detail-label">Social Media</div>
+                                            <div class="social-links" id="socialLinks"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="metadata-info">
+                                    <div class="last-verified" id="detailLastVerified"></div>
+                                    <div class="submitted-by" id="detailSubmittedBy"></div>
+                                </div>
+
+                                <!-- Share Link Section -->
+                                <div class="share-link mt-4">
+                                    <h5>Share this business</h5>
+                                    <p class="small text-muted">Copy this link to share this business listing directly:</p>
+                                    <input type="text" class="share-link-input" id="shareLink" readonly>
+                                    <button class="copy-button" onclick="copyShareLink()">
+                                        <i class="bi bi-clipboard"></i> Copy Link
+                                    </button>
+                                    <span class="copy-success" id="copySuccess">Copied!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- End col-12 for Business Listing or Detail -->
+                </div> <!-- End row -->
+            </div> <!-- End #directoryView -->
+
+            <!-- BTCMap View -->
+            <div class="tab-pane fade" id="btcMapView" role="tabpanel" aria-labelledby="btcmap-tab">
+                <!-- Filter Section (Could be shared or separate, TBD) -->
+                <!-- Placeholder: We might reuse/adapt the filter section above or create a new one -->
+                <div class="filter-section mb-4">
+                   <!-- Reusing filter section structure for consistency -->
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <label for="btcMapSearchInput" class="form-label">Search</label>
+                            <input type="text" class="form-control" id="btcMapSearchInput" placeholder="Search BTCMap locations...">
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="btcMapCategoryFilter" class="form-label">Category</label>
+                            <select class="form-select" id="btcMapCategoryFilter">
+                                <option value="">All Categories</option>
+                                <!-- BTCMap categories will be populated dynamically -->
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                             <label for="btcMapLocationInput" class="form-label">Location</label>
+                             <input type="text" class="form-control" id="btcMapLocationInput" placeholder="Filter by location (city, region, country)...">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                         <div class="col-md-6 mb-2">
+                            <button class="btn btn-outline-secondary" type="button" id="btcMapClearFilters">Clear Filters</button>
+                         </div>
+                         <!-- We can reuse the 'My Location' section if needed for distance sorting on BTCMap -->
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">Sort By Distance From:</label>
+                            <div class="input-group">
+                                <select id="btcMapMyLocationSelect" class="form-select">
+                                    <option value="">Select a city or use current location</option>
+                                    <!-- Options can be copied or dynamically loaded -->
+                                     <optgroup label="North America">
+                                        <option value="37.7749,-122.4194">San Francisco</option>
+                                        <option value="40.7128,-74.0060">New York City</option>
+                                        <!-- Add other cities as needed -->
+                                    </optgroup>
+                                    <!-- Add other regions -->
+                                </select>
+                                <div class="location-actions">
+                                    <button class="btn btn-primary" id="btcMapSortByDistance" style="background-color: #f7931a; border-color: #f7931a;">
+                                        <i class="bi bi-geo-alt"></i> Sort
+                                    </button>
+                                    <button class="btn btn-outline-primary" id="btcMapUseCurrentLocation">
+                                        <i class="bi bi-crosshair"></i> Use My Location
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="btcMapStatusMessage" class="alert alert-info mt-2" style="display: none;"></div>
+                    <div id="btcMapFilterStatus" class="mt-2"></div>
+                </div>
+
+
+                <!-- Location Prompt for BTCMap -->
+                <div id="btcMapLocationPrompt">
+                    <h5>Explore Businesses on BTCMap</h5>
+                    <p>Please select a starting area or allow location access to load businesses from BTCMap.</p>
+                    <div class="input-group">
+                        <select id="btcMapInitialLocationSelect" class="form-select">
+                             <option value="">Select a Country/Region</option>
+                             <!-- Add options for countries or major regions -->
+                             <option value="US">United States</option>
+                             <option value="CA">Canada</option>
+                             <option value="EU">Europe</option>
+                             <option value="GB">United Kingdom</option>
+                             <option value="DE">Germany</option>
+                             <option value="ASIA">Asia</option>
+                             <option value="AU">Australia</option>
+                             <option value="SA">South America</option>
+                             <!-- Add more as needed -->
+                        </select>
+                        <button class="btn btn-primary" id="loadFromSelection" style="background-color: #f7931a; border-color: #f7931a;">Load Area</button>
+                        <span class="input-group-text">or</span>
+                        <button class="btn btn-outline-primary" id="loadFromGeolocation">
+                            <i class="bi bi-crosshair"></i> Use My Location
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Map and Listing Container -->
+                <div id="btcMapContent" style="display: none;"> <!-- Initially hidden until location is provided -->
+                    <div class="row">
+                        <!-- Map Column -->
+                        <div class="col-lg-5 mb-3">
+                            <div id="btcMap"></div>
+                        </div>
+
+                        <!-- Listing Column -->
+                        <div class="col-lg-7">
+                             <!-- Loading Spinner for BTCMap -->
+                            <div class="loading-spinner" id="btcMapLoadingSpinner" style="display: none;">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading BTCMap data...</span>
+                                </div>
+                            </div>
+
+                            <!-- BTCMap Listing Section -->
+                            <div id="btcMapListing" style="display: none;">
+                                <!-- View Toggle for BTCMap -->
+                                <div class="d-flex justify-content-end view-toggle">
+                                    <div class="btn-group" role="group" aria-label="BTCMap View toggle">
+                                        <button type="button" class="btn active" id="btcMapCardViewBtn">
+                                            <i class="bi bi-grid-3x3-gap-fill"></i> Card View
+                                        </button>
+                                        <button type="button" class="btn" id="btcMapListViewBtn">
+                                            <i class="bi bi-list-ul"></i> List View
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Card View for BTCMap -->
+                                <div id="btcMapCardView">
+                                    <div class="row" id="btcMapBusinessList">
+                                        <!-- BTCMap business cards will be populated here -->
+                                    </div>
+                                </div>
+
+                                <!-- List View for BTCMap -->
+                                <div id="btcMapListView" style="display: none;">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover list-view-table">
+                                            <thead>
+                                                <tr>
+                                                    <!-- Similar headers, maybe adjust for BTCMap data -->
+                                                    <th class="sortable" data-sort="name">
+                                                        Business Name <i class="bi bi-arrow-down-up"></i>
+                                                    </th>
+                                                    <th>Categories</th>
+                                                    <th class="sortable" data-sort="location">
+                                                        Location <i class="bi bi-arrow-down-up"></i>
+                                                    </th>
+                                                    <th class="sortable btcmap-distance-column" data-sort="distance" style="display: none;">
+                                                        Distance <i class="bi bi-arrow-down-up"></i>
+                                                    </th>
+                                                     <th>Tags</th> <!-- BTCMap uses tags -->
+                                                </tr>
+                                            </thead>
+                                            <tbody id="btcMapBusinessListTable">
+                                                <!-- BTCMap business list items will be populated here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div id="btcMapNoResults" class="no-results" style="display: none;">
+                                    <h4>No BTCMap locations found matching your criteria in this area</h4>
+                                    <p>Try adjusting filters, search terms, or moving the map.</p>
+                                </div>
+
+                                <div class="data-info" id="btcMapDataInfo"></div>
+                            </div> <!-- End #btcMapListing -->
+                        </div> <!-- End Listing Column -->
+                    </div> <!-- End Row for Map/List -->
+                </div> <!-- End #btcMapContent -->
+
+                 <!-- BTCMap Detail Section (Placeholder, will be integrated/reused with #businessDetail) -->
+                 <!-- We will likely reuse the #businessDetail div and populate it dynamically -->
+
+            </div> <!-- End #btcMapView -->
+
+        </div> <!-- End #viewTabContent -->
+
+    </div> <!-- End container -->
+
+    <footer class="mt-5 py-3 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <h5>About</h5>
+                    <p class="mb-0">This directory lists businesses that accept Bitcoin as payment.</p>
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <h5>Contact</h5>
+                    <p class="mb-0">Have questions or want to add your business? Contact us.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Follow Us</h5>
+                    <div class="social-icons">
+                        <a href="#" target="_blank" rel="noopener noreferrer"><i class="bi bi-twitter"></i></a>
+                        <a href="#" target="_blank" rel="noopener noreferrer"><i class="bi bi-telegram"></i></a>
+                        <a href="#" target="_blank" rel="noopener noreferrer"><i class="bi bi-github"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Store all businesses and current state
+        let allBusinesses = [];
+        let filteredBusinesses = [];
+        let currentBusinessSlug = null;
+        let mostRecentVerification = null;
+        let inDetailView = false;
+        let currentSortColumn = 'name';
+        let currentSortDirection = 'asc';
+
+        // New state variables for BTCMap integration
+        let btcMapLocations = []; // Data from BTCMap API
+        let filteredBtcMapLocations = []; // Currently displayed BTCMap locations
+        let currentView = 'directory'; // 'directory' or 'btcmap'
+
+        // Location-based variables
+        let userLocation = null; // Common for both views
+        let businessesWithDistance = []; // For directory view
+        let btcMapLocationsWithDistance = []; // For BTCMap view
+
+        // Map variables
+        let btcMap = null;
+        let btcMapMarkers = null;
+        let detailMap = null;
+        let detailMapMarker = null;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ensure Leaflet is loaded before initializing layer group
+            if (typeof L !== 'undefined') {
+                btcMapMarkers = L.layerGroup();
+            }
+
+            // Set up event listeners for filters
+            document.getElementById('searchInput').addEventListener('input', handleFilterChange);
+            document.getElementById('locationInput').addEventListener('input', handleFilterChange);
+            document.getElementById('categoryFilter').addEventListener('change', handleFilterChange);
+            document.getElementById('clearFilters').addEventListener('click', clearFilters);
+
+            // View toggle buttons (Directory View)
+            document.getElementById('directoryCardViewBtn').addEventListener('click', () => setViewMode('card', 'directory'));
+            document.getElementById('directoryListViewBtn').addEventListener('click', () => setViewMode('list', 'directory'));
+
+            // Location sorting
+            document.getElementById('myLocationSelect').addEventListener('change', updateUserLocation);
+            document.getElementById('sortByDistance').addEventListener('click', sortByDistanceHandler);
+            document.getElementById('useCurrentLocation').addEventListener('click', getCurrentLocation);
+
+            // BTCMap View UI event listeners
+            document.getElementById('btcMapSearchInput').addEventListener('input', handleFilterChange);
+            document.getElementById('btcMapLocationInput').addEventListener('input', handleFilterChange);
+            document.getElementById('btcMapCategoryFilter').addEventListener('change', handleFilterChange);
+            document.getElementById('btcMapClearFilters').addEventListener('click', clearFilters);
+            document.getElementById('btcMapCardViewBtn').addEventListener('click', () => setViewMode('card', 'btcmap'));
+            document.getElementById('btcMapListViewBtn').addEventListener('click', () => setViewMode('list', 'btcmap'));
+            document.getElementById('btcMapMyLocationSelect').addEventListener('change', updateUserLocation);
+            document.getElementById('btcMapSortByDistance').addEventListener('click', sortByDistanceHandler);
+            document.getElementById('btcMapUseCurrentLocation').addEventListener('click', getCurrentLocation);
+
+            // Initial BTCMap Location Prompt listeners
+            document.getElementById('loadFromSelection').addEventListener('click', loadBtcMapFromSelection);
+            document.getElementById('loadFromGeolocation').addEventListener('click', loadBtcMapFromGeolocation);
+
+            // Tab switching listeners (Bootstrap 5)
+            document.getElementById('directory-tab').addEventListener('shown.bs.tab', () => switchView('directory'));
+            document.getElementById('btcmap-tab').addEventListener('shown.bs.tab', () => switchView('btcmap'));
+
+            // Load businesses from JSON (Directory View)
+            loadBusinessesFromJSON();
+
+            // Add click handlers for sortable columns
+            document.querySelectorAll('#directoryListView .sortable').forEach(header => {
+                header.addEventListener('click', () => {
+                    const column = header.dataset.sort;
+                    handleSort(column);
+                });
+            });
+            
+            document.querySelectorAll('#btcMapListView .sortable').forEach(header => {
+                header.addEventListener('click', () => {
+                    const column = header.dataset.sort;
+                    handleSort(column);
+                });
+            });
+
+            // Force alphabetical sort on directory load
+            setTimeout(() => {
+                if (currentView === 'directory') {
+                    currentSortColumn = null;
+                    currentSortDirection = 'asc';
+                    handleSort('name');
+                }
+            }, 1000);
+
+            // Check URL parameters on load
+            checkUrlForParams();
+        });
+
+        // --- View Switching Logic ---
+        function switchView(view) {
+            if (view === currentView) return; // No change
+
+            currentView = view;
+            console.log(`Switched view to: ${currentView}`);
+
+            // Update UI based on view
+            if (currentView === 'directory') {
+                document.getElementById('businessListing').style.display = 'block';
+                document.getElementById('businessDetail').style.display = inDetailView ? 'block' : 'none';
+                // If switching back to directory and detail was open, ensure listing is hidden
+                if (inDetailView) {
+                    document.getElementById('businessListing').style.display = 'none';
+                }
+            } else { // btcmap view
+                // Show location prompt if no data loaded yet, otherwise show content
+                if (btcMapLocations.length === 0 && !btcMap) { // Check if map is also not initialized
+                    document.getElementById('btcMapLocationPrompt').style.display = 'block';
+                    document.getElementById('btcMapContent').style.display = 'none';
+                } else {
+                    document.getElementById('btcMapLocationPrompt').style.display = 'none';
+                    document.getElementById('btcMapContent').style.display = 'block';
+                    // Also ensure the map resizes correctly if it was hidden
+                    if (btcMap) {
+                        setTimeout(() => btcMap.invalidateSize(), 10);
+                    }
+                }
+                // Hide directory detail view when switching to map
+                document.getElementById('businessDetail').style.display = 'none';
+            }
+
+            // If we are in detail view, switching tabs should take us back to the list view of the NEW tab
+            if (inDetailView) {
+                showListView(); // This function will need updating to handle both views
+            }
+
+            // Update filters or state as needed based on the new view
+            handleFilterChange();
+        }
+
+        // --- BTCMap Initialization and Location Selection ---
+        function loadBtcMapFromSelection() {
+            const selectedRegion = document.getElementById('btcMapInitialLocationSelect').value;
+            if (!selectedRegion) {
+                alert('Please select a region.');
+                return;
+            }
+            console.log(`Loading BTCMap data for region: ${selectedRegion}`);
+            const initialCoords = getCoordsForRegion(selectedRegion);
+            if (initialCoords) {
+                initializeBtcMap(initialCoords.lat, initialCoords.lng, initialCoords.zoom);
+                fetchBtcMapData(); // Fetch initial data based on map bounds
+                showMapContent();
+            } else {
+                alert('Could not determine coordinates for the selected region.');
+            }
+        }
+
+        function loadBtcMapFromGeolocation() {
+            console.log('Requesting geolocation for BTCMap...');
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser');
+                return;
+            }
+            document.getElementById('btcMapStatusMessage').textContent = 'Getting your location...';
+            document.getElementById('btcMapStatusMessage').style.display = 'block';
+            
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    console.log(`Geolocation acquired: ${lat}, ${lng}`);
+                    initializeBtcMap(lat, lng, 13); // Zoom level 13 for city view
+                    fetchBtcMapData(); // Fetch initial data
+                    showMapContent();
+                    document.getElementById('btcMapStatusMessage').style.display = 'none';
+                },
+                (error) => {
+                    console.error('Geolocation error:', error);
+                    alert(`Could not get location: ${error.message}`);
+                    document.getElementById('btcMapStatusMessage').style.display = 'none';
+                },
+                { timeout: 10000 } // 10 second timeout
+            );
+        }
+
+        function showMapContent() {
+            document.getElementById('btcMapLocationPrompt').style.display = 'none';
+            document.getElementById('btcMapContent').style.display = 'block';
+            if (btcMap) {
+                setTimeout(() => btcMap.invalidateSize(), 10); // Ensure map renders correctly
+            }
+        }
+
+        // Helper to get initial coordinates for selected regions
+        function getCoordsForRegion(regionCode) {
+            const regions = {
+                'US': { lat: 39.8283, lng: -98.5795, zoom: 4 },
+                'CA': { lat: 56.1304, lng: -106.3468, zoom: 4 },
+                'EU': { lat: 54.5260, lng: 15.2551, zoom: 4 },
+                'GB': { lat: 55.3781, lng: -3.4360, zoom: 5 },
+                'DE': { lat: 51.1657, lng: 10.4515, zoom: 5 },
+                'ASIA': { lat: 34.0479, lng: 100.6197, zoom: 3 },
+                'AU': { lat: -25.2744, lng: 133.7751, zoom: 4 },
+                'SA': { lat: -8.7832, lng: -55.4915, zoom: 3 }
+            };
+            return regions[regionCode] || null;
+        }
+        
+        // Check URL for parameters (business slug or btcmap id)
+        function checkUrlForParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const businessSlug = urlParams.get('business');
+            const btcMapId = urlParams.get('btcmapid');
+            
+            if (businessSlug) {
+                showBusinessDetail(businessSlug);
+            } else if (btcMapId && btcMapLocations.length > 0) {
+                showBtcMapDetail(btcMapId);
+            } else if (btcMapId) {
+                // If btcmap ID exists but data not loaded, schedule a check after BTCMap data loads
+                const btcmapTabEl = document.getElementById('btcmap-tab');
+                const tab = new bootstrap.Tab(btcmapTabEl);
+                tab.show(); // Switch to BTCMap tab
+            }
+        }
+
+        // Generate a slug from a string (for URL-friendly identifiers)
+        function generateSlug(text) {
+            return text
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/(^-|-$)/g, '');
+        }
+
+        // Ensure all businesses have slugs
+        function ensureBusinessSlugs(businesses) {
+            // First pass: generate slugs for businesses without them
+            businesses.forEach(business => {
+                if (!business.slug) {
+                    business.slug = generateSlug(business.name);
+                }
+            });
+
+            // Second pass: handle duplicate slugs by adding a suffix
+            const slugCounts = {};
+            businesses.forEach(business => {
+                if (!slugCounts[business.slug]) {
+                    slugCounts[business.slug] = 1;
+                } else {
+                    // Duplicate slug found, append a number
+                    const originalSlug = business.slug;
+                    slugCounts[originalSlug]++;
+                    business.slug = `${originalSlug}-${slugCounts[originalSlug]}`;
+                }
+            });
+
+            return businesses;
+        }
+
+        // Normalize category data structure for each business
+        function normalizeCategoryData(businesses) {
+            return businesses.map(business => {
+                // Create a copy of the business object
+                const normalizedBusiness = {...business};
+                
+                // Handle different category formats and ensure a consistent array structure
+                if (business.categories && Array.isArray(business.categories)) {
+                    // Already in the right format
+                    normalizedBusiness.categories = business.categories;
+                } else if (business.category) {
+                    // Convert single category string to array
+                    normalizedBusiness.categories = [business.category];
+                    // Keep the original category field for backward compatibility
+                    normalizedBusiness.category = business.category;
+                } else {
+                    // No category information found
+                    normalizedBusiness.categories = ['Uncategorized'];
+                    normalizedBusiness.category = 'Uncategorized';
+                }
+                
+                return normalizedBusiness;
+            });
+        }
+
+        // Load businesses from JSON file
+        async function loadBusinessesFromJSON() {
+            // Show loading spinner
+            document.getElementById('loadingSpinner').style.display = 'flex';
+            document.getElementById('businessListing').style.display = 'none';
+
+            // Define fallback demo data in case JSON loading fails
+            const demoBusinesses = [
+                {
+                    id: 1,
+                    name: "Dirtmoving and landscaping",
+                    slug: "dirtmoving-and-landscaping",
+                    logoUrl: "",
+                    categories: ["Services", "Landscaping", "Construction"],
+                    category: "Services", // For backward compatibility
+                    country: "US",
+                    region: "MN",
+                    city: "Minneapolis",
+                    owner: "John Smith",
+                    website: "dirtmovers.com",
+                    phone: "",
+                    email: "",
+                    description: "Dirt moving and landscaping services that accept Bitcoin payments.",
+                    socialMedia: {
+                        twitter: "dirtmoversBTC",
+                        telegram: "dirtmovers",
+                        signal: "+1-555-123-4567",
+                        nostr: "npub1abcdef123456789abcdef123456789abcdef123456789abcdef123456789"
+                    },
+                    paymentMethods: {
+                        onchain: true,
+                        lightning: false
+                    },
+                    lastVerified: "2025-02-15T14:30:00"
+                },
+                {
+                    id: 2,
+                    name: "Ethical tree care",
+                    slug: "ethical-tree-care",
+                    logoUrl: "",
+                    categories: ["Services", "Landscaping", "Arborist"],
+                    category: "Services", // For backward compatibility
+                    country: "US",
+                    region: "MN",
+                    city: "Cloquet",
+                    owner: "Kyle",
+                    website: "",
+                    phone: "3201234567",
+                    email: "",
+                    description: "Tree care services accepting Bitcoin as payment.",
+                    socialMedia: {
+                        twitter: "ethicaltreecare",
+                        mastodon: "@ethicaltreecare@bitcoiner.social",
+                        discord: "ethicaltreecare#1234",
+                        telegram: "ethicaltreecare"
+                    },
+                    paymentMethods: {
+                        onchain: true,
+                        lightning: true
+                    },
+                    lastVerified: "2025-03-05T09:45:00"
+                },
+                {
+                    id: 3,
+                    categories: ["Food & Dining", "Restaurant", "Coffee Shop"],
+                    category: "Restaurant", // For backward compatibility
+                    city: "",
+                    country: "Global",
+                    description: "Online coffee subscription service with global shipping.",
+                    email: "hello@coffeehouse.com",
+                    lastVerified: "",
+                    logoUrl: "",
+                    name: "Coffee house and breakfast",
+                    owner: "",
+                    paymentMethods: {
+                        onchain: false,
+                        lightning: true
+                    },
+                    phone: "",
+                    region: "",
+                    slug: "coffee-house-and-breakfast",
+                    socialMedia: {},
+                    website: "coffeehouse.com"
+                }
+            ];
+
+            try {
+                // Add cache-busting parameter to prevent caching
+                const cacheBuster = '?v=' + new Date().getTime();
+
+                // Load businesses data
+                const response = await fetch('businessData.json' + cacheBuster);
+                if (!response.ok) {
+                    throw new Error('Failed to load businesses data');
+                }
+                
+                const businesses = await response.json();
+                console.log("Successfully loaded", businesses.length, "businesses from JSON");
+                
+                // Normalize category data
+                let normalizedBusinesses = normalizeCategoryData(businesses);
+                
+                // Ensure all businesses have slugs
+                normalizedBusinesses = ensureBusinessSlugs(normalizedBusinesses);
+                
+                // Assign coordinates based on locationData.json
+                allBusinesses = await assignCoordinates(normalizedBusinesses);
+                
+                filteredBusinesses = [...allBusinesses];
+
+                // Find the most recent verification date
+                findMostRecentVerification();
+
+                // Populate filter options
+                populateFilterOptions();
+
+                // Sort businesses alphabetically by name
+                sortBusinesses('name', 'asc');
+
+                // Display all businesses
+                displayBusinesses(filteredBusinesses);
+
+                // Update data info
+                updateDataInfo();
+
+                // Hide loading spinner, show business listing
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('businessListing').style.display = 'block';
+
+                // Check URL for business slug parameter
+                checkUrlForBusinessSlug();
+            } catch (error) {
+                console.error('Error loading businesses:', error);
+                
+                // Use demo data if JSON fetch fails
+                console.log("Using demo data instead");
+                
+                // Normalize and process demo data
+                let normalizedDemoBusinesses = normalizeCategoryData(demoBusinesses);
+                normalizedDemoBusinesses = ensureBusinessSlugs(normalizedDemoBusinesses);
+                allBusinesses = await assignCoordinates(normalizedDemoBusinesses);
+                
+                filteredBusinesses = [...allBusinesses];
+                
+                // Find the most recent verification date
+                findMostRecentVerification();
+
+                // Populate filter options
+                populateFilterOptions();
+
+                // Display all businesses
+                displayBusinesses(filteredBusinesses);
+                
+                // Update data info
+                updateDataInfo();
+
+                // Hide loading spinner, show business listing
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('businessListing').style.display = 'block';
+                
+                // Show message about using demo data
+                updateStatusMessage('Using demo data - JSON file could not be loaded.', 'warning');
+            }
+        }
+
+        // Check if business is global/online
+        function isGlobalOrOnline(business) {
+            // Add debugging for a small number of businesses to avoid flooding the console
+            if (Math.random() < 0.05) { // Only log ~5% of calls to avoid console spam
+                const isGlobal = business.isGlobalOrOnline || false;
+                const hasGlobalCategory = business.categories && business.categories.includes('Global/Online');
+                console.log(`isGlobalOrOnline check for ${business.name}:`);
+                console.log(`  business.isGlobalOrOnline: ${isGlobal}`);
+                console.log(`  Has 'Global/Online' category: ${hasGlobalCategory}`);
+                console.log(`  Result: ${isGlobal || hasGlobalCategory}`);
+            }
+            
+            return business.isGlobalOrOnline || 
+                   (business.categories && business.categories.includes('Global/Online'));
+        }
+
+        // Helper function to normalize location strings
+        function normalizeLocationString(str) {
+            if (!str) return '';
+            // First, convert to lowercase and handle special cases
+            str = str.toLowerCase()
+                .replace(/\./g, '') // Remove periods
+                .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+                .trim();
+            
+            // Special handling for "st." prefix (both with and without period)
+            if (str.startsWith('st ')) {
+                str = 'st ' + str.substring(3);
+            }
+            
+            return str;
+        }
+
+        // Function to assign coordinates to businesses
+        async function assignCoordinates(businesses) {
+            try {
+                // Add cache-busting parameter to prevent caching
+                const cacheBuster = '?v=' + new Date().getTime();
+                
+                // Load location data
+                const response = await fetch('locationData.json' + cacheBuster);
+                const locationData = await response.json();
+                
+                return businesses.map(business => {
+                    // Create a copy of the business object
+                    const businessWithCoords = {...business};
+                    
+                    // If business already has coordinates, use them
+                    if (businessWithCoords.coordinates) {
+                        return businessWithCoords;
+                    }
+                    
+                    // Check if business is global/online (but don't exit early)
+                    if (isGlobalOrOnline(business)) {
+                        businessWithCoords.isGlobalOrOnline = true;
+                        // Continue processing to assign coordinates if location info is available
+                    }
+                    
+                    // Check if business has location information
+                    if (!hasLocationInfo(business)) {
+                        businessWithCoords.hasNoLocationInfo = true;
+                        return businessWithCoords;
+                    }
+                    
+                    let coordinates = null;
+                    let locationType = null;
+                    let locationKey = null;
+
+                    // Find all matching locations
+                    const matchingLocations = locationData.locations.filter(loc => {
+                        // Try to match city + region + country first
+                        if (business.city && business.region && business.country &&
+                            normalizeLocationString(loc.city) === normalizeLocationString(business.city) &&
+                            normalizeLocationString(loc.region) === normalizeLocationString(business.region) &&
+                            normalizeLocationString(loc.country) === normalizeLocationString(business.country)) {
+                            return true;
+                        }
+                        // Try to match city + region
+                        if (business.city && business.region &&
+                            normalizeLocationString(loc.city) === normalizeLocationString(business.city) &&
+                            normalizeLocationString(loc.region) === normalizeLocationString(business.region)) {
+                            return true;
+                        }
+                        // Try to match region + country
+                        if (business.region && business.country &&
+                            normalizeLocationString(loc.region) === normalizeLocationString(business.region) &&
+                            normalizeLocationString(loc.country) === normalizeLocationString(business.country)) {
+                            return true;
+                        }
+                        // Try to match region only
+                        if (business.region && normalizeLocationString(loc.region) === normalizeLocationString(business.region)) {
+                            return true;
+                        }
+                        // Try to match country only
+                        if (business.country && normalizeLocationString(loc.country) === normalizeLocationString(business.country)) {
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    // Select the most specific match
+                    let location = null;
+                    if (matchingLocations.length > 0) {
+                        // Sort matches by specificity (city > region > country)
+                        matchingLocations.sort((a, b) => {
+                            // First, check if we have an exact city match
+                            if (business.city) {
+                                const aCityMatch = normalizeLocationString(a.city) === normalizeLocationString(business.city);
+                                const bCityMatch = normalizeLocationString(b.city) === normalizeLocationString(business.city);
+                                if (aCityMatch && !bCityMatch) return -1;
+                                if (!aCityMatch && bCityMatch) return 1;
+                            }
+                            
+                            // Then check for region match
+                            if (business.region) {
+                                const aRegionMatch = normalizeLocationString(a.region) === normalizeLocationString(business.region);
+                                const bRegionMatch = normalizeLocationString(b.region) === normalizeLocationString(business.region);
+                                if (aRegionMatch && !bRegionMatch) return -1;
+                                if (!aRegionMatch && bRegionMatch) return 1;
+                            }
+                            
+                            // Finally, check for country match
+                            if (business.country) {
+                                const aCountryMatch = normalizeLocationString(a.country) === normalizeLocationString(business.country);
+                                const bCountryMatch = normalizeLocationString(b.country) === normalizeLocationString(business.country);
+                                if (aCountryMatch && !bCountryMatch) return -1;
+                                if (!aCountryMatch && bCountryMatch) return 1;
+                            }
+                            
+                            // If all else is equal, prefer entries with more specific information
+                            // For region-level matches, prefer entries without a city field
+                            if (!business.city) {
+                                if (!a.city && b.city) return -1;
+                                if (a.city && !b.city) return 1;
+                            }
+                            
+                            const aSpecificity = (a.city ? 3 : 0) + (a.region ? 2 : 0) + (a.country ? 1 : 0);
+                            const bSpecificity = (b.city ? 3 : 0) + (b.region ? 2 : 0) + (b.country ? 1 : 0);
+                            return bSpecificity - aSpecificity;
+                        });
+                        
+                        location = matchingLocations[0];
+                        locationType = location.city ? 'city' : (location.region ? 'region' : 'country');
+                    }
+
+                    if (location) {
+                        coordinates = {
+                            lat: location.lat,
+                            lng: location.lng
+                        };
+                        locationKey = `${location.city || ''}${location.city ? ', ' : ''}${location.region || ''}${location.region ? ', ' : ''}${location.country || ''}`;
+                    }
+
+                    // If coordinates found, assign them
+                    if (coordinates) {
+                        businessWithCoords.coordinates = coordinates;
+                        businessWithCoords.locationType = locationType;
+                        businessWithCoords.locationKey = locationKey;
+                        // Mark as approximate if not city-level
+                        if (locationType !== 'city') {
+                            businessWithCoords.hasApproximateLocation = true;
+                        }
+                    } else {
+                        businessWithCoords.locationNotFound = true;
+                    }
+
+                    return businessWithCoords;
+                });
+            } catch (error) {
+                console.error('Error assigning coordinates:', error);
+                return businesses;
+            }
+        }
+
+        // Find the most recent verification date among all businesses
+        function findMostRecentVerification() {
+            mostRecentVerification = null;
+
+            allBusinesses.forEach(business => {
+                if (business.lastVerified) {
+                    const verificationDate = new Date(business.lastVerified);
+
+                    if (!isNaN(verificationDate)) {
+                        if (!mostRecentVerification || verificationDate > mostRecentVerification) {
+                            mostRecentVerification = verificationDate;
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update data info text
+        function updateDataInfo() {
+            const dataInfoEl = document.getElementById('dataInfo');
+            const totalBusinesses = allBusinesses.length;
+            
+            if (mostRecentVerification) {
+                dataInfoEl.textContent = `Directory last updated: ${formatDate(mostRecentVerification)} • ${totalBusinesses} businesses`;
+            } else {
+                dataInfoEl.textContent = `${totalBusinesses} businesses`;
+            }
+        }
+
+        // Check URL for business slug parameter
+        function checkUrlForBusinessSlug() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const businessSlug = urlParams.get('business');
+
+            if (businessSlug) {
+                // Try to find the business with this slug
+                const business = allBusinesses.find(b => b.slug === businessSlug);
+                if (business) {
+                    showBusinessDetail(business.slug);
+                }
+            }
+        }
+
+        // Populate filter options with category counts
+        function populateFilterOptions() {
+            // Extract all unique categories and count occurrences
+            const categoryCounts = {};
+            const allCategories = new Set();
+            
+            allBusinesses.forEach(business => {
+                if (business.categories && Array.isArray(business.categories)) {
+                    business.categories.forEach(category => {
+                        if (category) {
+                            categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+                            allCategories.add(category);
+                        }
+                    });
+                } else if (business.category) {
+                    categoryCounts[business.category] = (categoryCounts[business.category] || 0) + 1;
+                    allCategories.add(business.category);
+                } else {
+                    categoryCounts["Uncategorized"] = (categoryCounts["Uncategorized"] || 0) + 1;
+                    allCategories.add("Uncategorized");
+                }
+            });
+            
+            // Calculate total number of businesses (for "All Categories" option)
+            const totalBusinesses = allBusinesses.length;
+            
+            // Populate the category filter dropdown
+            const categoryFilter = document.getElementById('categoryFilter');
+            
+            // Clear existing options except the first one
+            while (categoryFilter.options.length > 1) {
+                categoryFilter.remove(1);
+            }
+            
+            // Update "All Categories" option with count
+            categoryFilter.options[0].textContent = `All Categories (${totalBusinesses})`;
+
+            // Sort all categories alphabetically
+            Array.from(allCategories).sort().forEach(category => {
+                const count = categoryCounts[category];
+                const optElement = document.createElement('option');
+                optElement.value = category;
+                optElement.textContent = `${category} (${count})`;
+                categoryFilter.appendChild(optElement);
+            });
+        }
+
+        // Apply search and filter criteria to businesses
+        function applyFilters() {
+            const searchText = document.getElementById(currentView === 'directory' ? 'searchInput' : 'btcMapSearchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById(currentView === 'directory' ? 'categoryFilter' : 'btcMapCategoryFilter').value;
+            const locationFilter = document.getElementById(currentView === 'directory' ? 'locationInput' : 'btcMapLocationInput').value.toLowerCase();
+
+            // Get message status element and filter status element based on current view
+            const statusMessage = currentView === 'directory' ? 
+                document.getElementById('statusMessage') : 
+                document.getElementById('btcMapStatusMessage');
+                
+            const filterStatus = currentView === 'directory' ? 
+                document.getElementById('filterStatus') : 
+                document.getElementById('btcMapFilterStatus');
+
+            let statusTextParts = [];
+            
+            if (currentView === 'directory') {
+                // Apply filters to directory data
+                filteredBusinesses = allBusinesses.filter(business => {
+                    // 1. Check search text against name, description
+                    const matchesSearch = !searchText || 
+                        business.name.toLowerCase().includes(searchText) || 
+                        (business.description && business.description.toLowerCase().includes(searchText));
+
+                    // 2. Check category filter
+                    const matchesCategory = !categoryFilter || 
+                        (business.categories && business.categories.includes(categoryFilter)) || 
+                        business.category === categoryFilter;
+
+                    // 3. Check location filter
+                    const matchesLocation = !locationFilter || 
+                        (business.location && business.location.toLowerCase().includes(locationFilter));
+
+                    return matchesSearch && matchesCategory && matchesLocation;
+                });
+
+                // Sort by distance if user location is available and sorting mode is active
+                if (userLocation && businessesWithDistance.length > 0) {
+                    filteredBusinesses = filteredBusinesses.map(b => {
+                        const businessWithDistance = businessesWithDistance.find(bwd => bwd.id === b.id);
+                        return businessWithDistance || b;
+                    });
+                }
+
+                // Update the business display
+                displayBusinesses(filteredBusinesses);
+            } else {
+                // Apply filters to BTCMap data
+                filteredBtcMapLocations = btcMapLocations.filter(location => {
+                    // Search by name, description, address, etc.
+                    const matchesSearch = !searchText || 
+                        (location.name && location.name.toLowerCase().includes(searchText)) || 
+                        (location.description && location.description.toLowerCase().includes(searchText)) ||
+                        (location.address && location.address.toLowerCase().includes(searchText)) ||
+                        // Check tags if available
+                        (location.tags && location.tags.some(tag => tag.toLowerCase().includes(searchText)));
+
+                    // Category filtering
+                    const matchesCategory = !categoryFilter || 
+                        location.category === categoryFilter ||
+                        // Optionally check tags for category match
+                        (location.tags && location.tags.includes(categoryFilter));
+
+                    // Location filtering
+                    const locationString = [
+                        location.address,
+                        location.city,
+                        location.region,
+                        location.country
+                    ].filter(Boolean).join(' ').toLowerCase();
+                    
+                    const matchesLocation = !locationFilter || locationString.includes(locationFilter);
+
+                    return matchesSearch && matchesCategory && matchesLocation;
+                });
+
+                // Add distances if user location exists
+                if (userLocation && btcMapLocationsWithDistance.length > 0) {
+                    filteredBtcMapLocations = filteredBtcMapLocations.map(loc => {
+                        const locationWithDistance = btcMapLocationsWithDistance.find(lwd => lwd.id === loc.id);
+                        return locationWithDistance || loc;
+                    });
+                }
+
+                // Display the filtered BTCMap locations
+                displayBtcMapLocations(filteredBtcMapLocations);
+            }
+
+            // Build filter status message
+            if (searchText) {
+                statusTextParts.push(`"${searchText}"`);
+            }
+            if (categoryFilter) {
+                statusTextParts.push(`Category: ${categoryFilter}`);
+            }
+            if (locationFilter) {
+                statusTextParts.push(`Location: ${locationFilter}`);
+            }
+
+            // Update filter status text
+            if (statusTextParts.length > 0) {
+                filterStatus.textContent = `Filtered by ${statusTextParts.join(' | ')}`;
+                filterStatus.style.display = 'block';
+            } else {
+                filterStatus.textContent = '';
+                filterStatus.style.display = 'none';
+            }
+
+            // Show filter alerts if needed
+            let alertMessage = null;
+            
+            if (currentView === 'directory') {
+                // Show message if directory filters remove all businesses
+                if (filteredBusinesses.length === 0 && allBusinesses.length > 0) {
+                    alertMessage = 'No businesses match your filters. Try adjusting your search criteria.';
+                }
+            } else {
+                // Show message if BTCMap filters remove all locations
+                if (filteredBtcMapLocations.length === 0 && btcMapLocations.length > 0) {
+                    alertMessage = 'No BTCMap locations match your filters. Try adjusting your search criteria or moving the map.';
+                }
+            }
+            
+            if (alertMessage) {
+                statusMessage.textContent = alertMessage;
+                statusMessage.className = 'alert alert-warning mt-2';
+                statusMessage.style.display = 'block';
+            } else if (statusMessage.style.display === 'block') {
+                // Only hide the message if it's showing something not related to sorting
+                if (!statusMessage.textContent.includes('sorted by distance from') &&
+                    !statusMessage.textContent.includes('Location set to')) {
+                    statusMessage.style.display = 'none';
+                }
+            }
+        }
+
+        // Handle filter changes
+        function handleFilterChange() {
+            // Get search text, category filter, and location filter based on current view
+            const searchText = document.getElementById(currentView === 'directory' ? 'searchInput' : 'btcMapSearchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById(currentView === 'directory' ? 'categoryFilter' : 'btcMapCategoryFilter').value;
+            const locationFilter = document.getElementById(currentView === 'directory' ? 'locationInput' : 'btcMapLocationInput').value.toLowerCase();
+            
+            if (currentView === 'directory') {
+                // Apply filters to directory businesses
+                filteredBusinesses = allBusinesses.filter(business => {
+                    // Check search text
+                    const matchesSearch = !searchText || 
+                        business.name.toLowerCase().includes(searchText) || 
+                        (business.description && business.description.toLowerCase().includes(searchText));
+                    
+                    // Check categories
+                    const matchesCategory = !categoryFilter || 
+                        (business.categories && business.categories.includes(categoryFilter)) || 
+                        business.category === categoryFilter;
+                    
+                    // Check location
+                    const matchesLocation = !locationFilter || 
+                        (business.location && business.location.toLowerCase().includes(locationFilter));
+                    
+                    return matchesSearch && matchesCategory && matchesLocation;
+                });
+                
+                // Update displayed businesses
+                displayBusinesses(filteredBusinesses);
+                
+                // Update no results message visibility
+                document.getElementById('noResults').style.display = 
+                    filteredBusinesses.length === 0 ? 'block' : 'none';
+                    
+                // Update data info
+                updateDataInfo();
+            } else {
+                // Apply filters to BTCMap locations
+                filteredBtcMapLocations = btcMapLocations.filter(location => {
+                    // Check search text
+                    const matchesSearch = !searchText || 
+                        (location.name && location.name.toLowerCase().includes(searchText)) || 
+                        (location.description && location.description.toLowerCase().includes(searchText)) ||
+                        (location.address && location.address.toLowerCase().includes(searchText)) ||
+                        (location.tags && location.tags.some(tag => tag.toLowerCase().includes(searchText)));
+                    
+                    // Check category
+                    const matchesCategory = !categoryFilter || 
+                        location.category === categoryFilter ||
+                        (location.tags && location.tags.includes(categoryFilter));
+                    
+                    // Check location
+                    const locationString = [
+                        location.address,
+                        location.city,
+                        location.region,
+                        location.country
+                    ].filter(Boolean).join(' ').toLowerCase();
+                    
+                    const matchesLocation = !locationFilter || locationString.includes(locationFilter);
+                    
+                    return matchesSearch && matchesCategory && matchesLocation;
+                });
+                
+                // Display the filtered BTCMap locations
+                displayBtcMapLocations(filteredBtcMapLocations);
+                
+                // Update no results message visibility
+                document.getElementById('btcMapNoResults').style.display = 
+                    filteredBtcMapLocations.length === 0 ? 'block' : 'none';
+                    
+                // Update BTCMap data info
+                updateBtcMapDataInfo();
+            }
+            
+            // Update filter status text
+            const filterStatusEl = document.getElementById(
+                currentView === 'directory' ? 'filterStatus' : 'btcMapFilterStatus'
+            );
+            
+            let filterTextParts = [];
+            if (searchText) filterTextParts.push(`"${searchText}"`);
+            if (categoryFilter) filterTextParts.push(`Category: ${categoryFilter}`);
+            if (locationFilter) filterTextParts.push(`Location: ${locationFilter}`);
+            
+            if (filterTextParts.length > 0) {
+                filterStatusEl.textContent = `Filtered by ${filterTextParts.join(' | ')}`;
+                filterStatusEl.style.display = 'block';
+            } else {
+                filterStatusEl.textContent = '';
+                filterStatusEl.style.display = 'none';
+            }
+        }
+
+        // Clear all filters
+        function clearFilters() {
+            if (currentView === 'directory') {
+                document.getElementById('searchInput').value = '';
+                document.getElementById('categoryFilter').value = '';
+                document.getElementById('locationInput').value = '';
+                document.getElementById('filterStatus').style.display = 'none';
+            } else {
+                document.getElementById('btcMapSearchInput').value = '';
+                document.getElementById('btcMapCategoryFilter').value = '';
+                document.getElementById('btcMapLocationInput').value = '';
+                document.getElementById('btcMapFilterStatus').style.display = 'none';
+            }
+            
+            handleFilterChange();
+        }
+
+        // Set view mode (card or list)
+        function setViewMode(mode, viewType = currentView) {
+            const cardViewBtn = document.getElementById(viewType === 'directory' ? 'directoryCardViewBtn' : 'btcMapCardViewBtn');
+            const listViewBtn = document.getElementById(viewType === 'directory' ? 'directoryListViewBtn' : 'btcMapListViewBtn');
+            const cardView = document.getElementById(viewType === 'directory' ? 'directoryCardView' : 'btcMapCardView');
+            const listView = document.getElementById(viewType === 'directory' ? 'directoryListView' : 'btcMapListView');
+
+            if (mode === 'card') {
+                cardViewBtn.classList.add('active');
+                listViewBtn.classList.remove('active');
+                cardView.style.display = 'block';
+                listView.style.display = 'none';
+            } else {
+                listViewBtn.classList.add('active');
+                cardViewBtn.classList.remove('active');
+                cardView.style.display = 'none';
+                listView.style.display = 'block';
+            }
+        }
+
+        // Show list view (when going back from detail view)
+        function showListView() {
+            inDetailView = false;
+            
+            // Hide detail view
+            document.getElementById('businessDetail').style.display = 'none';
+            
+            // Clear URL parameters
+            const url = new URL(window.location.href);
+            url.searchParams.delete('business');
+            url.searchParams.delete('btcmapid');
+            window.history.pushState({}, '', url);
+            
+            // Show the appropriate view content
+            if (currentView === 'directory') {
+                document.getElementById('businessListing').style.display = 'block';
+                
+                // Because we're using tabs now, ensure directory content is visible
+                document.getElementById('directoryView').classList.add('show', 'active');
+                document.getElementById('btcMapView').classList.remove('show', 'active');
+                
+                // Ensure directory tab is active
+                document.getElementById('directory-tab').classList.add('active');
+                document.getElementById('directory-tab').setAttribute('aria-selected', 'true');
+                document.getElementById('btcmap-tab').classList.remove('active');
+                document.getElementById('btcmap-tab').setAttribute('aria-selected', 'false');
+            } else {
+                // Show BTCMap content
+                document.getElementById('btcMapContent').style.display = 'block';
+                
+                // Ensure BTCMap tab content is visible and active
+                document.getElementById('btcMapView').classList.add('show', 'active');
+                document.getElementById('directoryView').classList.remove('show', 'active');
+                
+                // Ensure BTCMap tab is active
+                document.getElementById('btcmap-tab').classList.add('active');
+                document.getElementById('btcmap-tab').setAttribute('aria-selected', 'true');
+                document.getElementById('directory-tab').classList.remove('active');
+                document.getElementById('directory-tab').setAttribute('aria-selected', 'false');
+                
+                // Ensure map resizes correctly after being hidden
+                if (btcMap) {
+                    setTimeout(() => btcMap.invalidateSize(), 10);
+                }
+            }
+        }
+
+        // Sort functions
+        function handleSort(column) {
+            if (column === currentSortColumn) {
+                // Toggle sort direction if same column is clicked
+                currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSortColumn = column;
+                currentSortDirection = 'asc';
+            }
+
+            // Update the arrow direction in the UI
+            document.querySelectorAll('.sortable').forEach(header => {
+                const indicator = header.querySelector('i');
+                if (header.dataset.sort === currentSortColumn) {
+                    indicator.className = currentSortDirection === 'asc' ? 'bi bi-arrow-up' : 'bi bi-arrow-down';
+                } else {
+                    indicator.className = 'bi bi-arrow-down-up';
+                }
+            });
+
+            // Apply the sort
+            if (currentView === 'directory') {
+                sortBusinesses(column, currentSortDirection);
+            } else {
+                sortBtcMapLocations(column, currentSortDirection);
+            }
+        }
+
+        // Sort directory businesses
+        function sortBusinesses(column, direction) {
+            if (filteredBusinesses.length === 0) return;
+
+            filteredBusinesses.sort((a, b) => {
+                let valueA, valueB;
+
+                // Sort by the right property based on column
+                if (column === 'name') {
+                    valueA = a.name.toLowerCase();
+                    valueB = b.name.toLowerCase();
+                } else if (column === 'location') {
+                    valueA = (a.location || '').toLowerCase();
+                    valueB = (b.location || '').toLowerCase();
+                } else if (column === 'distance' && userLocation) {
+                    // Handle distance sorting for directory businesses
+                    valueA = a.distance !== undefined ? a.distance : Number.MAX_VALUE;
+                    valueB = b.distance !== undefined ? b.distance : Number.MAX_VALUE;
+                }
+
+                // Compare values based on direction
+                if (valueA < valueB) return direction === 'asc' ? -1 : 1;
+                if (valueA > valueB) return direction === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            // Update the display with newly sorted list
+            displayBusinesses(filteredBusinesses);
+        }
+
+        // Sort BTCMap locations
+        function sortBtcMapLocations(column, direction) {
+            if (filteredBtcMapLocations.length === 0) return;
+
+            filteredBtcMapLocations.sort((a, b) => {
+                let valueA, valueB;
+
+                // Sort by the right property based on column
+                if (column === 'name') {
+                    valueA = (a.name || '').toLowerCase();
+                    valueB = (b.name || '').toLowerCase();
+                } else if (column === 'location') {
+                    // Create location string for sorting
+                    valueA = [a.city, a.region, a.country].filter(Boolean).join(', ').toLowerCase();
+                    valueB = [b.city, b.region, b.country].filter(Boolean).join(', ').toLowerCase();
+                } else if (column === 'distance' && userLocation) {
+                    // Handle distance sorting for BTCMap locations
+                    valueA = a.distance !== undefined ? a.distance : Number.MAX_VALUE;
+                    valueB = b.distance !== undefined ? b.distance : Number.MAX_VALUE;
+                }
+
+                // Compare values based on direction
+                if (valueA < valueB) return direction === 'asc' ? -1 : 1;
+                if (valueA > valueB) return direction === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            // Update the display with newly sorted list
+            displayBtcMapLocations(filteredBtcMapLocations);
+        }
+
+        // Calculate and sort by distance
+        function sortByDistanceHandler() {
+            if (!userLocation) {
+                alert('Please select a location or use your current location first.');
+                return;
+            }
+
+            currentSortColumn = 'distance';
+            currentSortDirection = 'asc';
+
+            // Update UI indicators
+            document.querySelectorAll('.sortable').forEach(header => {
+                const indicator = header.querySelector('i');
+                if (header.dataset.sort === 'distance') {
+                    indicator.className = 'bi bi-arrow-up';
+                } else {
+                    indicator.className = 'bi bi-arrow-down-up';
+                }
+            });
+
+            if (currentView === 'directory') {
+                // Show distance column in directory view
+                document.querySelector('#directoryListView .distance-column').style.display = 'table-cell';
+                sortBusinesses('distance', 'asc');
+                
+                // Update status message
+                const locationText = userLocation.address ? 
+                    userLocation.address : 
+                    `${userLocation.lat.toFixed(5)}, ${userLocation.lng.toFixed(5)}`;
+                updateStatusMessage(`Results sorted by distance from ${locationText}`, 'info', 'directory');
+            } else {
+                // Show distance column in BTCMap view
+                document.querySelector('#btcMapListView .btcmap-distance-column').style.display = 'table-cell';
+                sortBtcMapLocations('distance', 'asc');
+                
+                // Update status message
+                const locationText = userLocation.address ? 
+                    userLocation.address : 
+                    `${userLocation.lat.toFixed(5)}, ${userLocation.lng.toFixed(5)}`;
+                updateStatusMessage(`Results sorted by distance from ${locationText}`, 'info', 'btcmap');
+            }
+        }
+
+        // Update user location from dropdown
+        function updateUserLocation() {
+            const locationSelect = document.getElementById(
+                currentView === 'directory' ? 'myLocationSelect' : 'btcMapMyLocationSelect'
+            );
+            
+            if (!locationSelect.value) return;
+
+            const [lat, lng] = locationSelect.value.split(',').map(coord => parseFloat(coord));
+            const address = locationSelect.options[locationSelect.selectedIndex].text;
+
+            userLocation = {
+                lat,
+                lng,
+                address
+            };
+
+            // Calculate distances for businesses or BTCMap locations based on current view
+            if (currentView === 'directory') {
+                calculateDistancesForBusinesses();
+            } else {
+                calculateDistancesForBtcMapLocations();
+            }
+        }
+        
+        // Calculate distances for each business
+        function calculateDistancesForBusinesses() {
+            if (!userLocation) return;
+
+            businessesWithDistance = allBusinesses.map(business => {
+                // Skip businesses without coordinates
+                if (!business.coordinates || !business.coordinates.lat || !business.coordinates.lng) {
+                    return { ...business };
+                }
+
+                const distance = calculateDistance(
+                    userLocation.lat, 
+                    userLocation.lng,
+                    business.coordinates.lat,
+                    business.coordinates.lng
+                );
+
+                return {
+                    ...business,
+                    distance
+                };
+            });
+
+            // Apply filters (which will sort if sorting is active)
+            handleFilterChange();
+        }
+        
+        // Calculate distances for each BTCMap location
+        function calculateDistancesForBtcMapLocations() {
+            if (!userLocation) return;
+
+            btcMapLocationsWithDistance = btcMapLocations.map(location => {
+                // Skip locations without coordinates
+                if (!location.coordinates || !location.coordinates.lat || !location.coordinates.lng) {
+                    return { ...location };
+                }
+
+                const distance = calculateDistance(
+                    userLocation.lat, 
+                    userLocation.lng,
+                    location.coordinates.lat,
+                    location.coordinates.lng
+                );
+
+                return {
+                    ...location,
+                    distance
+                };
+            });
+
+            // Apply filters (which will sort if sorting is active)
+            handleFilterChange();
+        }
+
+        // Get user's current geolocation
+        function getCurrentLocation() {
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser');
+                return;
+            }
+
+            const statusMessageId = currentView === 'directory' ? 'statusMessage' : 'btcMapStatusMessage';
+            document.getElementById(statusMessageId).textContent = 'Getting your location...';
+            document.getElementById(statusMessageId).style.display = 'block';
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    userLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                        address: 'Your Location'
+                    };
+
+                    if (currentView === 'directory') {
+                        calculateDistancesForBusinesses();
+                    } else {
+                        calculateDistancesForBtcMapLocations();
+                    }
+
+                    // Update status message
+                    updateStatusMessage(
+                        `Location set to: ${userLocation.lat.toFixed(5)}, ${userLocation.lng.toFixed(5)}`,
+                        'success',
+                        currentView
+                    );
+                },
+                (error) => {
+                    updateStatusMessage(
+                        `Error getting your location: ${error.message}`,
+                        'danger',
+                        currentView
+                    );
+                }
+            );
+        }
+
+        // --- BTCMap Core Functions ---
+        
+        function initializeBtcMap(lat, lng, zoom) {
+            if (btcMap) { // If map already exists, just set the view
+                btcMap.setView([lat, lng], zoom);
+                return;
+            }
+            console.log(`Initializing BTCMap at ${lat}, ${lng}, zoom ${zoom}`);
+            btcMap = L.map('btcMap').setView([lat, lng], zoom);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Locations from <a href="https://btcmap.org">BTCMap.org</a>',
+                maxZoom: 19,
+            }).addTo(btcMap);
+
+            // Add marker layer group
+            btcMapMarkers.addTo(btcMap);
+
+            // Event listener for when the map move ends (to fetch new data)
+            btcMap.on('moveend', function() {
+                console.log('Map move ended, fetching new data...');
+                fetchBtcMapData();
+            });
+        }
+
+        async function fetchBtcMapData() {
+            if (!btcMap) return; // Don't fetch if map isn't ready
+
+            const bounds = btcMap.getBounds();
+            const sw = bounds.getSouthWest();
+            const ne = bounds.getNorthEast();
+
+            const apiUrl = `https://api.btcmap.org/v2/locations?swLat=${sw.lat}&swLng=${sw.lng}&neLat=${ne.lat}&neLng=${ne.lng}`;
+
+            console.log(`Fetching BTCMap data from: ${apiUrl}`);
+            document.getElementById('btcMapLoadingSpinner').style.display = 'flex';
+            document.getElementById('btcMapListing').style.display = 'none';
+
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`BTCMap API request failed: ${response.statusText}`);
+                }
+                const data = await response.json();
+                console.log(`Received ${data.length} locations from BTCMap`);
+                
+                // Add unique IDs if not present (just to be safe)
+                data.forEach((location, index) => {
+                    if (!location.id) {
+                        location.id = `btcmap-${index}-${Date.now()}`;
+                    }
+                });
+                
+                btcMapLocations = data;
+
+                // Populate BTCMap category filter based on received data
+                populateBtcMapCategories(btcMapLocations);
+
+                // Apply filters immediately after fetching
+                handleFilterChange(); // This will filter and display
+
+            } catch (error) {
+                console.error('Error fetching BTCMap data:', error);
+                updateStatusMessage('Failed to load data from BTCMap.', 'danger', 'btcmap');
+                // Clear existing map data or show error state
+                btcMapLocations = [];
+                handleFilterChange(); // Display no results
+            } finally {
+                document.getElementById('btcMapLoadingSpinner').style.display = 'none';
+                document.getElementById('btcMapListing').style.display = 'block';
+            }
+        }
+
+        function populateBtcMapCategories(locations) {
+            const categoryFilter = document.getElementById('btcMapCategoryFilter');
+            const existingSelection = categoryFilter.value;
+            const categories = new Set();
+            const categoryCounts = {};
+
+            locations.forEach(loc => {
+                if (loc.category) {
+                    categories.add(loc.category);
+                    categoryCounts[loc.category] = (categoryCounts[loc.category] || 0) + 1;
+                }
+                // Also check tags for categories
+                if (loc.tags && Array.isArray(loc.tags)) {
+                    // Optionally include specific tags as categories
+                    /*
+                    loc.tags.forEach(tag => {
+                        if (tag !== 'onchain' && tag !== 'lightning') { // Skip payment methods
+                            categories.add(tag);
+                            categoryCounts[tag] = (categoryCounts[tag] || 0) + 1;
+                        }
+                    });
+                    */
+                }
+            });
+
+            // Clear existing options (except 'All')
+            while (categoryFilter.options.length > 1) {
+                categoryFilter.remove(1);
+            }
+
+            // Update 'All Categories' count
+            categoryFilter.options[0].textContent = `All Categories (${locations.length})`;
+
+            // Add new options sorted alphabetically
+            Array.from(categories).sort().forEach(category => {
+                const count = categoryCounts[category] || 0;
+                const optElement = document.createElement('option');
+                optElement.value = category;
+                optElement.textContent = `${category} (${count})`;
+                categoryFilter.appendChild(optElement);
+            });
+
+            // Restore previous selection if possible
+            categoryFilter.value = existingSelection;
+        }
+
+        // --- BTCMap Display Functions ---
+        
+        function displayBtcMapLocations(locations) {
+            if (currentView !== 'btcmap') return;
+
+            const cardList = document.getElementById('btcMapBusinessList');
+            const tableBody = document.getElementById('btcMapBusinessListTable');
+            const noResultsEl = document.getElementById('btcMapNoResults');
+            const distanceColumn = document.querySelector('#btcMapListView .btcmap-distance-column');
+
+            // Clear previous content
+            cardList.innerHTML = '';
+            tableBody.innerHTML = '';
+            btcMapMarkers.clearLayers(); // Clear existing map markers
+
+            // Show/hide distance column
+            if (distanceColumn) {
+                distanceColumn.style.display = userLocation ? 'table-cell' : 'none';
+            }
+
+            if (locations.length === 0) {
+                noResultsEl.style.display = 'block';
+                updateBtcMapDataInfo(); // Update data info even with 0 results
+                return;
+            }
+            noResultsEl.style.display = 'none';
+
+            // Process and display each location
+            locations.forEach(loc => {
+                // Check if location has valid coordinates
+                const hasCoords = loc.coordinates && 
+                                typeof loc.coordinates.lat === 'number' && 
+                                typeof loc.coordinates.lng === 'number';
+
+                // Generate location display string
+                const locationDisplay = [
+                    loc.address, 
+                    loc.city, 
+                    loc.region,
+                    loc.country
+                ].filter(Boolean).join(', ');
+                
+                // Prepare categories display
+                const categories = loc.category ? [loc.category] : [];
+                if (categories.length === 0 && loc.tags && loc.tags.length > 0) {
+                    // Add tags that might be categories (filter out payment methods)
+                    loc.tags.forEach(tag => {
+                        if (!['onchain', 'lightning', 'accepts bitcoin'].includes(tag.toLowerCase())) {
+                            categories.push(tag);
+                        }
+                    });
+                }
+                if (categories.length === 0) categories.push('Uncategorized');
+                
+                const categoriesHTML = `<div class="categories-container">${getCategoryBadgesHTML(categories)}</div>`;
+
+                // Distance badge if available
+                let distanceBadgeHtml = '';
+                if (loc.distance !== undefined) {
+                    distanceBadgeHtml = `<div class="distance-badge">
+                            <i class="bi bi-geo-alt me-1"></i>${formatDistance(loc.distance)}
+                        </div>`;
+                }
+
+                // Ensure location has an ID
+                const locationId = loc.id;
+
+                // Add to card view
+                const card = document.createElement('div');
+                card.className = 'col-md-6 col-lg-4 mb-4';
+                card.innerHTML = `
+                    <div class="card business-card h-100 ${loc.distance !== undefined ? 'location-sorting-active' : ''}" 
+                         data-location-id="${locationId}">
+                        <div class="card-body">
+                            <h5 class="card-title">${loc.name || 'Unnamed Location'}</h5>
+                            <p class="card-text text-muted">${locationDisplay || 'Location unknown'}</p>
+                            ${categoriesHTML}
+                            ${distanceBadgeHtml}
+                        </div>
+                    </div>
+                `;
+                card.querySelector('.card').addEventListener('click', () => showBtcMapDetail(locationId));
+                cardList.appendChild(card);
+
+                // Add to list view
+                const row = document.createElement('tr');
+                row.className = `business-list-item ${loc.distance !== undefined ? 'location-sorting-active' : ''}`;
+                row.dataset.locationId = locationId;
+                row.addEventListener('click', () => showBtcMapDetail(locationId));
+
+                // Prepare tags display
+                const tagsHtml = loc.tags && loc.tags.length > 0 ? 
+                    loc.tags.map(tag => `<span class="badge bg-secondary me-1">${tag}</span>`).join(' ') : 
+                    '<em>None</em>';
+
+                row.innerHTML = `
+                    <td>${loc.name || 'Unnamed Location'}</td>
+                    <td>${categoriesHTML}</td>
+                    <td>${locationDisplay || 'Location unknown'}</td>
+                    ${userLocation ? `<td>${distanceBadgeHtml}</td>` : ''}
+                    <td>${tagsHtml}</td>
+                `;
+                tableBody.appendChild(row);
+
+                // Add marker to map if coordinates exist
+                if (hasCoords) {
+                    const marker = L.marker([loc.coordinates.lat, loc.coordinates.lng], {
+                        icon: L.divIcon({ 
+                            className: 'leaflet-marker-icon btc-map-icon', 
+                            iconSize: [25, 41], 
+                            iconAnchor: [12, 41] 
+                        }),
+                        title: loc.name || 'Unnamed Location'
+                    })
+                    .bindPopup(`
+                        <b>${loc.name || 'Unnamed Location'}</b><br>
+                        ${categories.length > 0 ? categories[0] : ''}<br>
+                        <a href="#" onclick="showBtcMapDetail('${locationId}'); return false;">View Details</a>
+                    `, { className: 'btc-map-marker-popup' })
+                    .on('click', function() {
+                        // Highlight corresponding card/row when marker is clicked
+                        document.querySelectorAll(`[data-location-id="${locationId}"]`).forEach(el => {
+                            el.classList.add('highlight');
+                            // Remove highlight after a delay
+                            setTimeout(() => el.classList.remove('highlight'), 2000);
+                        });
+                    });
+                    
+                    // Store the locationId with the marker for reference
+                    marker.locationId = locationId;
+                    btcMapMarkers.addLayer(marker);
+                }
+            });
+
+            // Update data info for BTCMap
+            updateBtcMapDataInfo();
+        }
+
+        // Update BTCMap info text showing result counts
+        function updateBtcMapDataInfo() {
+            const dataInfoEl = document.getElementById('btcMapDataInfo');
+            const totalLocations = btcMapLocations.length;
+            const filteredCount = filteredBtcMapLocations.length;
+            
+            if (totalLocations === 0) {
+                dataInfoEl.textContent = 'No locations loaded from BTCMap.';
+            } else if (filteredCount === totalLocations) {
+                dataInfoEl.textContent = `Showing all ${totalLocations} locations in this map area.`;
+            } else {
+                dataInfoEl.textContent = `Showing ${filteredCount} of ${totalLocations} locations in this map area.`;
+            }
+        }
+
+        // Initialize or update the small map in the detail view
+        function initializeDetailMap(lat, lng, title) {
+            const mapContainer = document.getElementById('detailMap');
+            if (!mapContainer) return;
+
+            if (detailMap) { // Update existing map
+                detailMap.setView([lat, lng], 15);
+                if (detailMapMarker) {
+                    detailMapMarker.setLatLng([lat, lng])
+                               .bindPopup(`<b>${title}</b>`).openPopup();
+                } else {
+                    detailMapMarker = L.marker([lat, lng], {
+                        icon: L.divIcon({ 
+                            className: 'leaflet-marker-icon btc-map-icon', 
+                            iconSize: [25, 41], 
+                            iconAnchor: [12, 41] 
+                        })
+                    }).addTo(detailMap).bindPopup(`<b>${title}</b>`).openPopup();
+                }
+            } else { // Create new map
+                detailMap = L.map('detailMap').setView([lat, lng], 15);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    maxZoom: 19,
+                }).addTo(detailMap);
+
+                detailMapMarker = L.marker([lat, lng], {
+                    icon: L.divIcon({ 
+                        className: 'leaflet-marker-icon btc-map-icon', 
+                        iconSize: [25, 41], 
+                        iconAnchor: [12, 41] 
+                    })
+                }).addTo(detailMap).bindPopup(`<b>${title}</b>`).openPopup();
+
+                // Ensure map size is correct after container becomes visible
+                setTimeout(() => detailMap.invalidateSize(), 100);
+            }
+        }
+
+        // Show detail for a BTCMap location
+        function showBtcMapDetail(locationId) {
+            console.log(`Showing detail for BTCMap location ID: ${locationId}`);
+            const location = btcMapLocations.find(loc => loc.id === locationId);
+            if (!location) {
+                console.error(`Location with ID ${locationId} not found in current data.`);
+                return;
+            }
+
+            // Reuse the existing detail section for consistency
+            currentBusinessSlug = null; // Clear directory slug
+            inDetailView = true;
+            currentView = 'btcmap'; // Ensure view context is correct
+
+            // --- Populate #businessDetail section with BTCMap data ---
+
+            // Logo (BTCMap doesn't reliably provide logos)
+            document.getElementById('businessLogo').style.display = 'none';
+            document.getElementById('businessLogo').innerHTML = '';
+
+            // Name
+            document.getElementById('detailName').textContent = location.name || 'Unnamed Location';
+
+            // Categories/Tags
+            const categories = location.category ? [location.category] : [];
+            if (categories.length === 0 && location.tags && location.tags.length > 0) {
+                // Add some tags as categories
+                location.tags.forEach(tag => {
+                    if (!['onchain', 'lightning', 'accepts bitcoin'].includes(tag.toLowerCase())) {
+                        categories.push(tag);
+                    }
+                });
+            }
+            if (categories.length === 0) categories.push('Uncategorized');
+            document.getElementById('detailCategories').innerHTML = getCategoryBadgesHTML(categories);
+
+            // Location
+            const locationParts = [
+                location.address,
+                location.city, 
+                location.region,
+                location.zipcode,
+                location.country
+            ].filter(Boolean);
+            
+            let locationHtml = locationParts.length > 0 ? 
+                locationParts.join(', ') : 
+                '<em>Location details unavailable</em>';
+                
+            // Add distance badge if available
+            if (location.distance !== undefined) {
+                locationHtml += ` <span class="distance-badge ms-2">
+                    <i class="bi bi-geo-alt-fill me-1"></i>${formatDistance(location.distance)} from you
+                </span>`;
+            }
+            document.getElementById('detailLocation').innerHTML = locationHtml;
+
+            // Initialize or update Detail Map
+            if (location.coordinates && 
+                typeof location.coordinates.lat === 'number' && 
+                typeof location.coordinates.lng === 'number') {
+                document.getElementById('detailMap').style.display = 'block';
+                initializeDetailMap(
+                    location.coordinates.lat, 
+                    location.coordinates.lng, 
+                    location.name || 'Location'
+                );
+            } else {
+                document.getElementById('detailMap').style.display = 'none';
+                if (detailMap) {
+                    detailMap.remove();
+                    detailMap = null;
+                }
+            }
+
+            // Website (use 'website' or 'contact.website')
+            const website = location.website || (location.contact && location.contact.website);
+            if (website) {
+                const websiteUrl = website.startsWith('http') ? website : `https://${website}`;
+                document.getElementById('detailWebsite').innerHTML = `<a href="${websiteUrl}" target="_blank" rel="noopener noreferrer">${website}</a>`;
+            } else {
+                document.getElementById('detailWebsite').innerHTML = '<em>Not available</em>';
+            }
+
+            // Phone (use 'phone' or 'contact.phone')
+            const phone = location.phone || (location.contact && location.contact.phone);
+            document.getElementById('detailPhone').innerHTML = phone ? phone : '<em>Not available</em>';
+
+            // Owner (Not directly available in BTCMap standard)
+            document.getElementById('detailOwner').innerHTML = '<em>Not specified in BTCMap data</em>';
+
+            // Email (use 'email' or 'contact.email')
+            const email = location.email || (location.contact && location.contact.email);
+            document.getElementById('detailEmail').innerHTML = email ? 
+                `<a href="mailto:${email}">${email}</a>` : 
+                '<em>Not available</em>';
+
+            // Description (use 'description' or 'about')
+            document.getElementById('detailDescription').innerHTML = 
+                location.description || location.about || '<em>No description available</em>';
+
+            // Payment Methods (BTCMap uses 'tags' like 'onchain', 'lightning')
+            const paymentMethodsEl = document.getElementById('detailPaymentMethods');
+            paymentMethodsEl.innerHTML = '';
+            let methodsFound = false;
+            const tags = location.tags || [];
+            
+            if (tags.includes('onchain') || tags.includes('accepts bitcoin')) {
+                paymentMethodsEl.innerHTML += '<span class="payment-badge onchain-badge">Bitcoin Onchain</span> ';
+                methodsFound = true;
+            }
+            if (tags.includes('lightning')) {
+                paymentMethodsEl.innerHTML += '<span class="payment-badge lightning-badge">Lightning Network</span> ';
+                methodsFound = true;
+            }
+            if (tags.includes('ecash')) {
+                paymentMethodsEl.innerHTML += '<span class="payment-badge ecash-badge">eCash</span> ';
+                methodsFound = true;
+            }
+            if (tags.includes('liquid')) {
+                paymentMethodsEl.innerHTML += '<span class="payment-badge liquid-badge">Liquid BTC</span> ';
+                methodsFound = true;
+            }
+            if (!methodsFound) {
+                paymentMethodsEl.innerHTML = '<em>Payment methods not specified in tags</em>';
+            }
+
+            // Social Media (BTCMap uses 'contact.twitter', 'contact.telegram', etc.)
+            const socialLinksEl = document.getElementById('socialLinks');
+            socialLinksEl.innerHTML = '';
+            let socialFound = false;
+            
+            if (location.contact) {
+                const socialPlatforms = {
+                    'twitter': 'twitter', 'telegram': 'telegram', 'facebook': 'facebook',
+                    'instagram': 'instagram', 'signal': 'signal', 'whatsapp': 'whatsapp',
+                    'discord': 'discord', 'reddit': 'reddit', 'github': 'github',
+                    'mastodon': 'mastodon', 'nostr': 'nostr', 'matrix': 'matrix', 'keet': 'keet'
+                };
+                
+                Object.entries(socialPlatforms).forEach(([key, platform]) => {
+                    if (location.contact[key]) {
+                        const value = location.contact[key];
+                        const link = document.createElement('a');
+                        link.href = getSocialUrl(platform, value);
+                        link.className = 'social-link';
+                        
+                        if (platform !== 'signal' && platform !== 'nostr') {
+                            link.target = '_blank';
+                            link.rel = 'noopener noreferrer';
+                        }
+                        
+                        const platformName = getPlatformName(platform);
+                        const icon = getSocialMediaIcon(platform);
+                        
+                        if (platform === 'nostr') {
+                            link.innerHTML = `<img src="images/icons/nostr_logo_blk.svg" alt="Nostr" style="width: 16px; height: 16px;">
+                                <div class="social-tooltip">${platformName}: ${value}</div>`;
+                        } else if (platform === 'matrix') {
+                            link.innerHTML = `<img src="images/icons/matrixIcon.svg" alt="Matrix" style="width: 16px; height: 16px;">
+                                <div class="social-tooltip">${platformName}: ${value}</div>`;
+                        } else {
+                            link.innerHTML = `<i class="bi ${icon}"></i>
+                                <div class="social-tooltip">${platformName}: ${value}</div>`;
+                        }
+                        
+                        socialLinksEl.appendChild(link);
+                        socialFound = true;
+                    }
+                });
+            }
+            
+            if (socialFound) {
+                socialLinksEl.style.display = 'flex';
+            } else {
+                socialLinksEl.innerHTML = '<p class="text-muted fst-italic">No social media accounts found</p>';
+                socialLinksEl.style.display = 'block';
+            }
+
+            // Metadata (BTCMap doesn't have 'lastVerified' or 'submittedBy' in the same way)
+            document.getElementById('detailLastVerified').textContent = `BTCMap Data ID: ${location.id}`;
+            document.getElementById('detailSubmittedBy').textContent = '';
+
+            // Share Link (Link to BTCMap.org)
+            const shareUrl = `https://btcmap.org/map#${location.id}`;
+            document.getElementById('shareLink').value = shareUrl;
+            document.querySelector('.share-link p.small').textContent = 'Copy this link to view this location on BTCMap.org:';
+
+            // --- End Population ---
+
+            // Switch views
+            document.getElementById('btcMapContent').style.display = 'none';
+            document.getElementById('businessDetail').style.display = 'block';
+
+            // Update URL
+            const url = new URL(window.location.href);
+            url.searchParams.delete('business');
+            url.searchParams.set('btcmapid', location.id);
+            window.history.pushState({}, '', url);
+
+            // Scroll to detail view
+            window.scrollTo({ 
+                top: document.querySelector('#businessDetail').offsetTop - 20, 
+                behavior: 'smooth' 
+            });
+        }
+
+        // --- END BTCMap Functions ---
+
+    </script>    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+
+</body>
+</html>

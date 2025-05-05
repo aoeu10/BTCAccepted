@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growth vs Dividend Stock Comparison</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            padding-bottom: 40px;
+        }
+        .header {
+            background-color: #2b3852;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-weight: 700;
+        }
+        .content-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 20px;
+        }
+        .stock-card {
+            border-left: 5px solid;
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .growth-stock {
+            border-left-color: #4c72b0;
+        }
+        .dividend-stock {
+            border-left-color: #55a868;
+        }
+        .strategy-card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            transition: transform 0.2s ease;
+        }
+        .strategy-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .strategy-header {
+            font-weight: 600;
+            color: #2b3852;
+            margin-bottom: 10px;
+        }
+        .results-table {
+            font-size: 0.9rem;
+        }
+        .tooltip-icon {
+            cursor: help;
+            color: #6c757d;
+        }
+        .scenario-badge {
+            font-size: 0.8rem;
+            padding: 0.35em 0.65em;
+            margin-left: 5px;
+        }
+        .scenario-description {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .growth-text {
+            color: #4c72b0;
+        }
+        .dividend-text {
+            color: #55a868;
+        }
+        .hybrid-text {
+            color: #c44e52;
+        }
+        #resultsSection {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="bi bi-graph-up-arrow me-2"></i>Growth vs Dividend Stocks</h1>
+                    <p class="lead mb-0">Compare different investment strategies and see how they perform over time</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container" id="mainContent">
+        <!-- Parameters Input Section -->
+        <div class="content-section">
+            <h2 class="mb-4">Investment Parameters</h2>
+            <form id="stockComparisonForm">
+                <div class="row g-3">
+                    <!-- Initial Investment -->
+                    <div class="col-md-6">
+                        <label for="initialInvestment" class="form-label">
+                            Initial Investment Amount ($)
+                            <i class="bi bi-info-circle tooltip-icon" title="The starting amount to invest in both stocks"></i>
+                        </label>
+                        <input type="number" class="form-control" id="initialInvestment" min="1" step="1" value="10000" required>
+                    </div>
+                    
+                    <!-- Investment Period -->
+                    <div class="col-md-6">
+                        <label for="investmentPeriod" class="form-label">
+                            Investment Period (Years)
+                            <i class="bi bi-info-circle tooltip-icon" title="How long you plan to hold the investments"></i>
+                        </label>
+                        <input type="number" class="form-control" id="investmentPeriod" min="1" max="50" value="10" required>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="stock-card growth-stock">
+                            <h3>Growth Stock</h3>
+                            <div class="mb-3">
+                                <label for="growthStockName" class="form-label">Stock Name (Optional)</label>
+                                <input type="text" class="form-control" id="growthStockName" placeholder="e.g., AAPL">
+                            </div>
+                            <div class="mb-3">
+                                <label for="annualGrowthRate" class="form-label">
+                                    Expected Annual Growth Rate (%)
+                                    <i class="bi bi-info-circle tooltip-icon" title="The expected yearly stock price appreciation"></i>
+                                </label>
+                                <input type="number" class="form-control" id="annualGrowthRate" min="0" step="0.1" value="10" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="stock-card dividend-stock">
+                            <h3>Dividend Stock</h3>
+                            <div class="mb-3">
+                                <label for="dividendStockName" class="form-label">Stock Name (Optional)</label>
+                                <input type="text" class="form-control" id="dividendStockName" placeholder="e.g., VZ">
+                            </div>
+                            <div class="mb-3">
+                                <label for="baseGrowthRate" class="form-label">
+                                    Base Growth Rate (%)
+                                    <i class="bi bi-info-circle tooltip-icon" title="Expected annual stock price appreciation without dividends"></i>
+                                </label>
+                                <input type="number" class="form-control" id="baseGrowthRate" min="0" step="0.1" value="5" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dividendYield" class="form-label">
+                                    Dividend Yield (%)
+                                    <i class="bi bi-info-circle tooltip-icon" title="Annual dividend as a percentage of stock price"></i>
+                                </label>
+                                <input type="number" class="form-control" id="dividendYield" min="0" step="0.1" value="4" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dividendGrowthRate" class="form-label">
+                                    Dividend Growth Rate (%)
+                                    <i class="bi bi-info-circle tooltip-icon" title="Expected annual increase in dividend amount"></i>
+                                </label>
+                                <input type="number" class="form-control" id="dividendGrowthRate" min="0" step="0.1" value="3" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-calculate me-2"></i>Calculate Results
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Results Section -->
+        <div class="content-section" id="resultsSection">
+            <h2 class="mb-4">Comparison Results</h2>
+            
+            <!-- Overview Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <h5 class="card-title text-muted">Initial Investment</h5>
+                            <p class="card-text result-value" id="initialInvestmentDisplay">$10,000</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <h5 class="card-title text-muted">Growth Stock Final Value</h5>
+                            <p class="card-text result-value growth-text" id="growthStockFinalValue">$25,937</p>
+                            <p class="card-text"><span class="badge bg-success" id="growthStockReturn">+159.37%</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <h5 class="card-title text-muted">Dividend Stock (with Reinvestment)</h5>
+                            <p class="card-text result-value dividend-text" id="dividendStockReinvestValue">$23,219</p>
+                            <p class="card-text"><span class="badge bg-success" id="dividendReinvestReturn">+132.19%</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chart -->
+            <div class="chart-container mb-4">
+                <canvas id="portfolioChart"></canvas>
+            </div>
+            
+            <!-- Scenarios -->
+            <h3 class="mt-5 mb-4">Detailed Scenarios</h3>
+            
+            <div class="row g-4">
+                <!-- Scenario 1: Dividend Reinvestment vs No Reinvestment -->
+                <div class="col-md-6">
+                    <div class="strategy-card">
+                        <h4 class="strategy-header">
+                            <i class="bi bi-arrow-repeat me-2"></i>
+                            Scenario 1
+                            <span class="badge bg-primary scenario-badge">Dividend Strategies</span>
+                        </h4>
+                        <p class="scenario-description">Comparing dividend stock performance with and without dividend reinvestment</p>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-bordered results-table">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Strategy</th>
+                                        <th>Final Value</th>
+                                        <th>Total Return</th>
+                                        <th>Dividend Income</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>With Reinvestment</strong></td>
+                                        <td id="scenario1ReinvestValue">$23,219</td>
+                                        <td id="scenario1ReinvestReturn">+132.19%</td>
+                                        <td id="scenario1ReinvestDividends">$5,603</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Without Reinvestment</strong></td>
+                                        <td id="scenario1NoReinvestValue">$16,289</td>
+                                        <td id="scenario1NoReinvestReturn">+62.89%</td>
+                                        <td id="scenario1NoReinvestDividends">$6,289</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="alert alert-info mt-3" role="alert">
+                            <i class="bi bi-lightbulb me-2"></i>
+                            <span id="scenario1Insight">Reinvesting dividends yields 42.5% more value than collecting them as income.</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Scenario 2: Growth Stock vs Dividend Stock -->
+                <div class="col-md-6">
+                    <div class="strategy-card">
+                        <h4 class="strategy-header">
+                            <i class="bi bi-graph-up-arrow me-2"></i>
+                            Scenario 2
+                            <span class="badge bg-success scenario-badge">Direct Comparison</span>
+                        </h4>
+                        <p class="scenario-description">Comparing growth stock performance against dividend stock strategies</p>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-bordered results-table">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Strategy</th>
+                                        <th>Final Value</th>
+                                        <th>Total Return</th>
+                                        <th>Income Generated</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Growth Stock</strong></td>
+                                        <td id="scenario2GrowthValue">$25,937</td>
+                                        <td id="scenario2GrowthReturn">+159.37%</td>
+                                        <td>$0</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Dividend (Reinvested)</strong></td>
+                                        <td id="scenario2DividendValue">$23,219</td>
+                                        <td id="scenario2DividendReturn">+132.19%</td>
+                                        <td id="scenario2DividendIncome">$5,603 (reinvested)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="alert alert-info mt-3" role="alert">
+                            <i class="bi bi-lightbulb me-2"></i>
+                            <span id="scenario2Insight">The growth stock outperforms the dividend stock by 11.7% over the investment period.</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Scenario 3: Equivalent Withdrawal -->
+                <div class="col-md-6">
+                    <div class="strategy-card">
+                        <h4 class="strategy-header">
+                            <i class="bi bi-cash-coin me-2"></i>
+                            Scenario 3
+                            <span class="badge bg-warning scenario-badge">Equivalent Withdrawal</span>
+                        </h4>
+                        <p class="scenario-description">Comparing growth stock with equivalent withdrawals to match dividend income</p>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-bordered results-table">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Strategy</th>
+                                        <th>Final Value</th>
+                                        <th>Total Return</th>
+                                        <th>Income Generated</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Growth Stock with Withdrawals</strong></td>
+                                        <td id="scenario3GrowthValue">$19,648</td>
+                                        <td id="scenario3GrowthReturn">+96.48%</td>
+                                        <td id="scenario3WithdrawalAmount">$6,289</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Dividend (No Reinvestment)</strong></td>
+                                        <td id="scenario3DividendValue">$16,289</td>
+                                        <td id="scenario3DividendReturn">+62.89%</td>
+                                        <td id="scenario3DividendIncome">$6,289</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="alert alert-info mt-3" role="alert">
+                            <i class="bi bi-lightbulb me-2"></i>
+                            <span id="scenario3Insight">With equal income taken out, the growth stock still outperforms by 20.6%.</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Scenario 4: Hybrid Approach -->
+                <div class="col-md-6">
+                    <div class="strategy-card">
+                        <h4 class="strategy-header">
+                            <i class="bi bi-shuffle me-2"></i>
+                            Scenario 4
+                            <span class="badge bg-danger scenario-badge">Hybrid Strategy</span>
+                        </h4>
+                        <p class="scenario-description">Using dividends to buy growth stock shares instead of reinvesting in dividend stock</p>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-bordered results-table">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Strategy</th>
+                                        <th>Dividend Stock</th>
+                                        <th>Growth Stock</th>
+                                        <th>Combined Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Hybrid Approach</strong></td>
+                                        <td id="scenario4DividendValue">$16,289</td>
+                                        <td id="scenario4GrowthValue">$13,267</td>
+                                        <td id="scenario4TotalValue">$29,556</td>
+                                    </tr>
+                                    <tr class="table-light">
+                                        <td><strong>Comparison Return</strong></td>
+                                        <td>+62.89%</td>
+                                        <td colspan="2"><span id="scenario4TotalReturn">+195.56%</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="alert alert-info mt-3" role="alert">
+                            <i class="bi bi-lightbulb me-2"></i>
+                            <span id="scenario4Insight">The hybrid strategy outperforms all other approaches by 13.95% over the investment period.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Summary Section -->
+            <div class="mt-5">
+                <h3 class="mb-3">Summary</h3>
+                <div class="card">
+                    <div class="card-body">
+                        <p id="summaryText">Based on the provided parameters, the hybrid strategy of holding dividend stocks and using the dividends to purchase growth stocks provides the highest total return over the 10-year period. This approach combines the steady income of dividend stocks with the higher growth potential of growth stocks.</p>
+                        
+                        <div class="table-responsive mt-4">
+                            <table class="table table-bordered table-striped">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Strategy</th>
+                                        <th>Final Value</th>
+                                        <th>Total Return</th>
+                                        <th>Rank</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Hybrid (Dividend + Growth)</strong></td>
+                                        <td id="summaryHybridValue">$29,556</td>
+                                        <td id="summaryHybridReturn">+195.56%</td>
+                                        <td><span class="badge bg-success">1</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Growth Stock Only</strong></td>
+                                        <td id="summaryGrowthValue">$25,937</td>
+                                        <td id="summaryGrowthReturn">+159.37%</td>
+                                        <td><span class="badge bg-success">2</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Dividend with Reinvestment</strong></td>
+                                        <td id="summaryDividendReinvestValue">$23,219</td>
+                                        <td id="summaryDividendReinvestReturn">+132.19%</td>
+                                        <td><span class="badge bg-success">3</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Growth with Withdrawals</strong></td>
+                                        <td id="summaryGrowthWithdrawalValue">$19,648</td>
+                                        <td id="summaryGrowthWithdrawalReturn">+96.48%</td>
+                                        <td><span class="badge bg-warning">4</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Dividend without Reinvestment</strong></td>
+                                        <td id="summaryDividendNoReinvestValue">$16,289</td>
+                                        <td id="summaryDividendNoReinvestReturn">+62.89%</td>
+                                        <td><span class="badge bg-warning">5</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <button type="button" class="btn btn-outline-primary" id="recalculateButton">
+                    <i class="bi bi-arrow-counterclockwise me-2"></i>Adjust Parameters
+                </button>
+                <button type="button" class="btn btn-success" id="printResultsButton">
+                    <i class="bi bi-printer me-2"></i>Print Results
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Main JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initial setup
+            const form = document.getElementById('stockComparisonForm');
+            const resultsSection = document.getElementById('resultsSection');
+            const recalculateButton = document.getElementById('recalculateButton');
+            const printResultsButton = document.getElementById('printResultsButton');
+            let portfolioChart = null;
+            
+            // Event listeners
+            form.addEventListener('submit', handleFormSubmit);
+            recalculateButton.addEventListener('click', showForm);
+            printResultsButton.addEventListener('click', printResults);
+            
+            // Initialize tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+            tooltipTriggerList.forEach(tooltipTriggerEl => {
+                new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+            
+            // Form submission handler
+            function handleFormSubmit(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const initialInvestment = parseFloat(document.getElementById('initialInvestment').value);
+                const investmentPeriod = parseInt(document.getElementById('investmentPeriod').value);
+                const growthStockName = document.getElementById('growthStockName').value || 'Growth Stock';
+                const annualGrowthRate = parseFloat(document.getElementById('annualGrowthRate').value) / 100;
+                const dividendStockName = document.getElementById('dividendStockName').value || 'Dividend Stock';
+                const baseGrowthRate = parseFloat(document.getElementById('baseGrowthRate').value) / 100;
+                const dividendYield = parseFloat(document.getElementById('dividendYield').value) / 100;
+                const dividendGrowthRate = parseFloat(document.getElementById('dividendGrowthRate').value) / 100;
+                
+                // Calculate scenarios
+                const results = calculateScenarios(
+                    initialInvestment,
+                    investmentPeriod,
+                    annualGrowthRate,
+                    baseGrowthRate,
+                    dividendYield,
+                    dividendGrowthRate
+                );
+                
+                // Update UI with results
+                updateResultsUI(results, growthStockName, dividendStockName, initialInvestment, investmentPeriod);
+                
+                // Create chart
+                createChart(results, growthStockName, dividendStockName, investmentPeriod);
+                
+                // Show results section
+                form.style.display = 'none';
+                resultsSection.style.display = 'block';
+                
+                // Scroll to results
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // Function to calculate all scenarios
+            function calculateScenarios(initialInvestment, years, growthRate, baseGrowthRate, dividendYield, dividendGrowthRate) {
+                const results = {
+                    years: Array.from({ length: years + 1 }, (_, i) => i),
+                    growthStock: [initialInvestment],
+                    dividendReinvest: [initialInvestment],
+                    dividendNoReinvest: [initialInvestment],
+                    growthWithWithdrawal: [initialInvestment],
+                    hybrid: {
+                        dividendStock: [initialInvestment],
+                        growthStock: [0],
+                        total: [initialInvestment]
+                    },
+                    totalDividends: 0,
+                    totalWithdrawals: 0
+                };
+                
+                let growthStockValue = initialInvestment;
+                let dividendReinvestValue = initialInvestment;
+                let dividendNoReinvestValue = initialInvestment;
+                let growthWithdrawalValue = initialInvestment;
+                let hybridDividendValue = initialInvestment;
+                let hybridGrowthValue = 0;
+                let totalDividends = 0;
+                let currentDividendYield = dividendYield;
+                
+                for (let year = 1; year <= years; year++) {
+                    // Calculate growth stock
+                    growthStockValue *= (1 + growthRate);
+                    results.growthStock.push(growthStockValue);
+                    
+                    // Calculate dividend stock with reinvestment
+                    const dividendAmount = dividendReinvestValue * currentDividendYield;
+                    dividendReinvestValue = (dividendReinvestValue * (1 + baseGrowthRate)) + dividendAmount;
+                    results.dividendReinvest.push(dividendReinvestValue);
+                    
+                    // Calculate dividend stock without reinvestment
+                    const noReinvestDividend = dividendNoReinvestValue * currentDividendYield;
+                    dividendNoReinvestValue *= (1 + baseGrowthRate);
+                    totalDividends += noReinvestDividend;
+                    results.dividendNoReinvest.push(dividendNoReinvestValue);
+                    
+                    // Calculate growth stock with equivalent withdrawal
+                    const equivalentWithdrawal = growthWithdrawalValue * (growthRate / (1 + growthRate)) * (dividendYield / (baseGrowthRate + dividendYield));
+                    growthWithdrawalValue = (growthWithdrawalValue * (1 + growthRate)) - equivalentWithdrawal;
+                    results.totalWithdrawals += equivalentWithdrawal;
+                    results.growthWithWithdrawal.push(growthWithdrawalValue);
+                    
+                    // Calculate hybrid approach (dividends used to buy growth stock)
+                    const hybridDividend = hybridDividendValue * currentDividendYield;
+                    hybridDividendValue *= (1 + baseGrowthRate);
+                    
+                    // Use dividend to buy growth stock
+                    hybridGrowthValue = (hybridGrowthValue * (1 + growthRate)) + hybridDividend;
+                    
+                    results.hybrid.dividendStock.push(hybridDividendValue);
+                    results.hybrid.growthStock.push(hybridGrowthValue);
+                    results.hybrid.total.push(hybridDividendValue + hybridGrowthValue);
+                    
+                    // Increase dividend yield for next year (dividend growth)
+                    currentDividendYield *= (1 + dividendGrowthRate);
+                }
+                
+                results.totalDividends = totalDividends;
+                
+                return results;
+            }
+            
+            // Function to update UI with calculated results
+            function updateResultsUI(results, growthStockName, dividendStockName, initialInvestment, years) {
+                // Format numbers
+                const formatCurrency = num => '$' + num.toLocaleString('en-US', { 
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                });
+                
+                const formatPercent = num => '+' + num.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }) + '%';
+                
+                // Overview cards
+                document.getElementById('initialInvestmentDisplay').textContent = formatCurrency(initialInvestment);
+                document.getElementById('growthStockFinalValue').textContent = formatCurrency(results.growthStock[years]);
+                document.getElementById('growthStockReturn').textContent = formatPercent((results.growthStock[years] / initialInvestment - 1) * 100);
+                document.getElementById('dividendStockReinvestValue').textContent = formatCurrency(results.dividendReinvest[years]);
+                document.getElementById('dividendReinvestReturn').textContent = formatPercent((results.dividendReinvest[years] / initialInvestment - 1) * 100);
+                
+                // Scenario 1: Dividend Reinvestment vs No Reinvestment
+                document.getElementById('scenario1ReinvestValue').textContent = formatCurrency(results.dividendReinvest[years]);
+                document.getElementById('scenario1ReinvestReturn').textContent = formatPercent((results.dividendReinvest[years] / initialInvestment - 1) * 100);
+                document.getElementById('scenario1ReinvestDividends').textContent = formatCurrency(results.dividendReinvest[years] - initialInvestment * Math.pow(1 + results.dividendReinvest[years] / initialInvestment, 1/years) * years);
+                document.getElementById('scenario1NoReinvestValue').textContent = formatCurrency(results.dividendNoReinvest[years]);
+                document.getElementById('scenario1NoReinvestReturn').textContent = formatPercent((results.dividendNoReinvest[years] / initialInvestment - 1) * 100);
+                document.getElementById('scenario1NoReinvestDividends').textContent = formatCurrency(results.totalDividends);
+                
+                const reinvestmentBenefit = ((results.dividendReinvest[years] / results.dividendNoReinvest[years]) - 1) * 100;
+                document.getElementById('scenario1Insight').textContent = `Reinvesting dividends yields ${reinvestmentBenefit.toFixed(1)}% more value than collecting them as income.`;
+                
+                // Scenario 2: Growth Stock vs Dividend Stock
+                document.getElementById('scenario2GrowthValue').textContent = formatCurrency(results.growthStock[years]);
+                document.getElementById('scenario2GrowthReturn').textContent = formatPercent((results.growthStock[years] / initialInvestment - 1) * 100);
+                document.getElementById('scenario2DividendValue').textContent = formatCurrency(results.dividendReinvest[years]);
+                document.getElementById('scenario2DividendReturn').textContent = formatPercent((results.dividendReinvest[years] / initialInvestment - 1) * 100);
+                document.getElementById('scenario2DividendIncome').textContent = formatCurrency(results.dividendReinvest[years] - initialInvestment * Math.pow(1 + results.dividendReinvest[years] / initialInvestment, 1/years) * years) + " (reinvested)";
+                
+                const growthOutperformance = ((results.growthStock[years] / results.dividendReinvest[years]) - 1) * 100;
+                document.getElementById('scenario2Insight').textContent = `The growth stock outperforms the dividend stock by ${growthOutperformance.toFixed(1)}% over the investment period.`;
+                
+                // Scenario 3: Equivalent Withdrawal
+                document.getElementById('scenario3GrowthValue').textContent = formatCurrency(results.growthWithWithdrawal[years]);
+                document.getElementById('scenario3GrowthReturn').textContent = formatPercent((results.growthWithWithdrawal[years] / initialInvestment - 1) * 100);
+                document.getElementById('scenario3WithdrawalAmount').textContent = formatCurrency(results.totalWithdrawals);
+                document.getElementById('scenario3DividendValue').textContent = formatCurrency(results.dividendNoReinvest[years]);
+                document.getElementById('scenario3DividendReturn').textContent = formatPercent((results.dividendNoReinvest[years] / initialInvestment - 1) * 100);
+                document.getElementById('scenario3DividendIncome').textContent = formatCurrency(results.totalDividends);
+                
+                const withdrawalOutperformance = ((results.growthWithWithdrawal[years] / results.dividendNoReinvest[years]) - 1) * 100;
+                document.getElementById('scenario3Insight').textContent = `With equal income taken out, the growth stock still outperforms by ${withdrawalOutperformance.toFixed(1)}%.`;
+                
+                // Scenario 4: Hybrid Approach
+                document.getElementById('scenario4DividendValue').textContent = formatCurrency(results.hybrid.dividendStock[years]);
+                document.getElementById('scenario4GrowthValue').textContent = formatCurrency(results.hybrid.growthStock[years]);
+                document.getElementById('scenario4TotalValue').textContent = formatCurrency(results.hybrid.total[years]);
+                document.getElementById('scenario4TotalReturn').textContent = formatPercent((results.hybrid.total[years] / initialInvestment - 1) * 100);
+                
+                const hybridOutperformance = ((results.hybrid.total[years] / Math.max(results.growthStock[years], results.dividendReinvest[years])) - 1) * 100;
+                document.getElementById('scenario4Insight').textContent = `The hybrid strategy outperforms all other approaches by ${hybridOutperformance.toFixed(2)}% over the investment period.`;
+                
+                // Summary table
+                document.getElementById('summaryHybridValue').textContent = formatCurrency(results.hybrid.total[years]);
+                document.getElementById('summaryHybridReturn').textContent = formatPercent((results.hybrid.total[years] / initialInvestment - 1) * 100);
+                document.getElementById('summaryGrowthValue').textContent = formatCurrency(results.growthStock[years]);
+                document.getElementById('summaryGrowthReturn').textContent = formatPercent((results.growthStock[years] / initialInvestment - 1) * 100);
+                document.getElementById('summaryDividendReinvestValue').textContent = formatCurrency(results.dividendReinvest[years]);
+                document.getElementById('summaryDividendReinvestReturn').textContent = formatPercent((results.dividendReinvest[years] / initialInvestment - 1) * 100);
+                document.getElementById('summaryGrowthWithdrawalValue').textContent = formatCurrency(results.growthWithWithdrawal[years]);
+                document.getElementById('summaryGrowthWithdrawalReturn').textContent = formatPercent((results.growthWithWithdrawal[years] / initialInvestment - 1) * 100);
+                document.getElementById('summaryDividendNoReinvestValue').textContent = formatCurrency(results.dividendNoReinvest[years]);
+                document.getElementById('summaryDividendNoReinvestReturn').textContent = formatPercent((results.dividendNoReinvest[years] / initialInvestment - 1) * 100);
+                
+                // Summary text
+                document.getElementById('summaryText').textContent = `Based on the provided parameters, the hybrid strategy of holding dividend stocks and using the dividends to purchase growth stocks provides the highest total return over the ${years}-year period, yielding a total of ${formatCurrency(results.hybrid.total[years])} (${formatPercent((results.hybrid.total[years] / initialInvestment - 1) * 100)} return). This approach combines the steady income of dividend stocks with the higher growth potential of growth stocks.`;
+            }
+            
+            // Function to create the chart
+            function createChart(results, growthStockName, dividendStockName, years) {
+                const ctx = document.getElementById('portfolioChart').getContext('2d');
+                
+                // If chart already exists, destroy it
+                if (portfolioChart) {
+                    portfolioChart.destroy();
+                }
+                
+                portfolioChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: results.years,
+                        datasets: [
+                            {
+                                label: `${growthStockName} (Growth Only)`,
+                                data: results.growthStock,
+                                borderColor: '#4c72b0',
+                                backgroundColor: 'rgba(76, 114, 176, 0.1)',
+                                borderWidth: 2,
+                                tension: 0.1
+                            },
+                            {
+                                label: `${dividendStockName} (With Reinvestment)`,
+                                data: results.dividendReinvest,
+                                borderColor: '#55a868',
+                                backgroundColor: 'rgba(85, 168, 104, 0.1)',
+                                borderWidth: 2,
+                                tension: 0.1
+                            },
+                            {
+                                label: `${dividendStockName} (No Reinvestment)`,
+                                data: results.dividendNoReinvest,
+                                borderColor: '#64b5cd',
+                                backgroundColor: 'rgba(100, 181, 205, 0.1)',
+                                borderWidth: 2,
+                                tension: 0.1,
+                                borderDash: [5, 5]
+                            },
+                            {
+                                label: `${growthStockName} (With Withdrawals)`,
+                                data: results.growthWithWithdrawal,
+                                borderColor: '#8172b3',
+                                backgroundColor: 'rgba(129, 114, 179, 0.1)',
+                                borderWidth: 2,
+                                tension: 0.1,
+                                borderDash: [5, 5]
+                            },
+                            {
+                                label: 'Hybrid Strategy',
+                                data: results.hybrid.total,
+                                borderColor: '#c44e52',
+                                backgroundColor: 'rgba(196, 78, 82, 0.1)',
+                                borderWidth: 3,
+                                tension: 0.1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Investment Growth Comparison Over Time',
+                                font: {
+                                    size: 16
+                                }
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += new Intl.NumberFormat('en-US', {
+                                                style: 'currency',
+                                                currency: 'USD',
+                                                minimumFractionDigits: 0
+                                            }).format(context.parsed.y);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            },
+                            legend: {
+                                position: 'top',
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Years'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Portfolio Value ($)'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value.toLocaleString();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Function to show the form again
+            function showForm() {
+                resultsSection.style.display = 'none';
+                form.style.display = 'block';
+                form.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // Function to print results
+            function printResults() {
+                window.print();
+            }
+        });
+    </script>
+</body>
+</html> 
