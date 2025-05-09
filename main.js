@@ -1714,7 +1714,8 @@ function showBusinessDetail(businessSlug) {
     document.getElementById('detailOwner').textContent = business.owner || 'Not specified';
     document.getElementById('detailEmail').innerHTML = business.email ? 
         `<a href="mailto:${business.email}">${business.email}</a>` : 'Not available';
-    document.getElementById('detailDescription').textContent = business.description || 'No description available';
+    document.getElementById('detailDescription').innerHTML = business.description ? 
+        marked.parse(business.description) : 'No description available';
 
     // Payment methods
     const paymentMethodsEl = document.getElementById('detailPaymentMethods');
@@ -2036,7 +2037,7 @@ function showDirectoryMapBusinessDetail(businessId) {
     // Description
     const descriptionContainer = document.getElementById('directoryMapDetailDescription');
     if (business.description) {
-        descriptionContainer.textContent = business.description;
+        descriptionContainer.innerHTML = marked.parse(business.description);
     } else {
         descriptionContainer.innerHTML = '<em>No description available</em>';
     }

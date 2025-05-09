@@ -650,42 +650,72 @@
         .map-popup-businesses {
             padding: 5px;
         }
-        .map-popup-businesses h5 {
+
+        /* Markdown content styles */
+        .detail-section .detail-label + div {
+            line-height: 1.6;
+        }
+        
+        #detailDescription {
+            overflow-wrap: break-word;
+        }
+        
+        #detailDescription ul, 
+        #detailDescription ol {
+            padding-left: 20px;
+            margin-bottom: 1rem;
+        }
+        
+        #detailDescription p {
+            margin-bottom: 1rem;
+        }
+        
+        #detailDescription h1,
+        #detailDescription h2,
+        #detailDescription h3,
+        #detailDescription h4,
+        #detailDescription h5,
+        #detailDescription h6 {
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        #detailDescription blockquote {
+            border-left: 3px solid #f7931a;
+            padding-left: 1rem;
+            margin-left: 0;
+            color: #666;
+        }
+        
+        #detailDescription code {
+            background-color: #f8f9fa;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-size: 85%;
+        }
+        
+        #detailDescription pre {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        #detailDescription a {
             color: #f7931a;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-        .map-popup-business-list {
-            list-style-type: none;
-            padding-left: 0;
-            margin-bottom: 0;
-        }
-        .map-popup-business-list li {
-            margin-bottom: 5px;
-        }
-        .map-popup-business-list a {
-            color: #333;
             text-decoration: none;
-            display: block;
-            padding: 5px;
-            border-radius: 4px;
         }
-        .map-popup-business-list a:hover {
-            background-color: rgba(247, 147, 26, 0.1);
-            color: #f7931a;
+        
+        #detailDescription a:hover {
+            text-decoration: underline;
         }
-        .map-marker {
-            width: 30px;
-            height: 30px;
-            background-color: #f7931a;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
-            box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+        
+        #detailDescription img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin: 1rem 0;
         }
     </style>
 </head>

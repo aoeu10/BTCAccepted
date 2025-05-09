@@ -1282,7 +1282,11 @@
                             </div>
                             <div class="col-md-12 mb-3">
                                 <label for="businessDescription" class="form-label">Description</label>
-                                <textarea class="form-control" id="businessDescription" rows="3"></textarea>
+                                <textarea class="form-control" id="businessDescription" rows="5" placeholder="Describe the business. Markdown formatting is supported:&#10;&#10;**bold text**&#10;*italic text*&#10;- bullet points&#10;[link text](https://example.com)&#10;&#10;Use Markdown to make your description more readable!"></textarea>
+                                <div class="form-text">
+                                    <i class="bi bi-markdown"></i> Markdown formatting is supported. 
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#markdownHelpModal">View formatting guide</a>
+                                </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="businessLogoUrl" class="form-label">Logo URL</label>
@@ -1370,6 +1374,10 @@
                                 <label for="keetInput" class="form-label">Keet</label>
                                 <input type="text" class="form-control" id="keetInput">
                             </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="simplexInput" class="form-label">SimpleX</label>
+                                <input type="text" class="form-control" id="simplexInput">
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -1430,6 +1438,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         // Global variables
         let businesses = [];
@@ -2581,6 +2590,7 @@
                 document.getElementById('matrixInput').value = business.socialMedia.matrix || '';
                 document.getElementById('discordInput').value = business.socialMedia.discord || '';
                 document.getElementById('keetInput').value = business.socialMedia.keet || '';
+                document.getElementById('simplexInput').value = business.socialMedia.simplex || '';
             }
             
             // Reset category checkboxes first
@@ -2665,7 +2675,8 @@
                     mastodon: document.getElementById('mastodonInput').value || null,
                     matrix: document.getElementById('matrixInput').value || null,
                     discord: document.getElementById('discordInput').value || null,
-                    keet: document.getElementById('keetInput').value || null
+                    keet: document.getElementById('keetInput').value || null,
+                    simplex: document.getElementById('simplexInput').value || null
                 },
                 lastVerified: document.getElementById('businessLastVerified').value || new Date().toISOString().split('T')[0]
             };
@@ -2968,7 +2979,8 @@
                     mastodon: document.getElementById('mastodonInput').value || null,
                     matrix: document.getElementById('matrixInput').value || null,
                     discord: document.getElementById('discordInput').value || null,
-                    keet: document.getElementById('keetInput').value || null
+                    keet: document.getElementById('keetInput').value || null,
+                    simplex: document.getElementById('simplexInput').value || null
                 },
                 paymentMethods: {
                     onchain: onchain,
@@ -3057,5 +3069,50 @@
             return logoWrapper;
         }
     </script>
+
+    <!-- Markdown Help Modal -->
+    <div class="modal fade" id="markdownHelpModal" tabindex="-1" aria-labelledby="markdownHelpModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="markdownHelpModalLabel">Markdown Formatting Guide</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Basic Formatting</h6>
+                    <pre class="bg-light p-2 rounded">
+**bold text**
+*italic text*
+[link text](https://example.com)
+</pre>
+
+                    <h6>Lists</h6>
+                    <pre class="bg-light p-2 rounded">
+- Bullet point 1
+- Bullet point 2
+  - Nested bullet point
+
+1. Numbered item 1
+2. Numbered item 2</pre>
+
+                    <h6>Headers</h6>
+                    <pre class="bg-light p-2 rounded">
+# Large header
+## Medium header
+### Small header</pre>
+
+                    <h6>Quotes</h6>
+                    <pre class="bg-light p-2 rounded">
+> This is a quote
+> It can span multiple lines</pre>
+
+                    <p class="mt-3 text-muted small">Use Markdown to make your business description more readable and professional.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
