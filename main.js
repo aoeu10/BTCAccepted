@@ -1,10 +1,44 @@
-// version 1208
+// version 20250509
+
+// Wait for DOM and scripts to load
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if marked.js is loaded
+    if (typeof marked === 'undefined') {
+        console.error('marked.js is not loaded!');
+        return;
+    }
+    console.log('marked.js is loaded successfully');
+
+    // Configure marked.js
+    console.log('Configuring marked.js...');
+    try {
+        // Create a test parser instance
+        const parser = new marked.Marked({
+            breaks: true,        // Enable line breaks
+            gfm: true,          // Enable GitHub Flavored Markdown
+            headerIds: false,    // Disable automatic header IDs
+            mangle: false,      // Disable mangling of header IDs
+            sanitize: false     // Allow HTML in the input
+        });
+
+        // Test the parser
+        const testMarkdown = "**bold** and *italic*";
+        const testResult = parser.parse(testMarkdown);
+        console.log('Test parse result:', testResult);
+        
+        // Set as default parser
+        marked.setOptions(parser.options);
+        console.log('marked.js configured successfully');
+    } catch (error) {
+        console.error('Error configuring marked.js:', error);
+    }
+});
 
 // Global variables
 let allBusinesses = [];
 let filteredBusinesses = [];
 let businessesWithDistance = [];
-let currentSortColumn = null;
+let currentSortColumn = 'name';
 let currentSortDirection = 'asc';
 let userLocation = null;
 let inDetailView = false;
@@ -18,6 +52,44 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('searchInput').addEventListener('input', handleFilterChange);
     document.getElementById('locationInput').addEventListener('input', handleFilterChange);
     document.getElementById('categoryFilter').addEventListener('change', handleFilterChange);
+    
+    // Add multiple event types for better mobile compatibility
+    const bitcoinToggle = document.getElementById('bitcoinOnlyToggle');
+    const nostrToggle = document.getElementById('nostrToggle');
+    
+    // Enhanced event handling for toggles that works better on mobile
+    function setupToggle(element) {
+        // Create a function that forces refresh to ensure UI updates
+        const toggleHandler = function() {
+            // Small delay to ensure the checked state is updated
+            setTimeout(() => handleFilterChange(true), 10);
+        };
+        
+        // Standard change event (works on most browsers)
+        element.addEventListener('change', toggleHandler);
+        
+        // Click event (better for iOS Safari)
+        element.parentElement.addEventListener('click', function(e) {
+            // Don't prevent default - let the browser handle the checkbox toggle
+            // But force a refresh afterward to ensure filters are applied
+            setTimeout(() => handleFilterChange(true), 50);
+        });
+        
+        // Label click for better mobile support
+        const label = element.nextElementSibling;
+        if (label) {
+            label.addEventListener('click', function(e) {
+                // Don't prevent normal label behavior
+                // Just ensure filter is reapplied
+                setTimeout(() => handleFilterChange(true), 50);
+            });
+        }
+    }
+    
+    // Setup both toggles
+    setupToggle(bitcoinToggle);
+    setupToggle(nostrToggle);
+    
     document.getElementById('clearFilters').addEventListener('click', clearFilters);
 
     // View toggle buttons
@@ -196,86 +268,6 @@ async function loadBusinessesFromJSON() {
     document.getElementById('loadingSpinner').style.display = 'flex';
     document.getElementById('businessListing').style.display = 'none';
 
-    // Define fallback demo data in case JSON loading fails
-    const demoBusinesses = [
-        {
-            id: 1,
-            name: "Dirtmoving and landscaping",
-            slug: "dirtmoving-and-landscaping",
-            logoUrl: "",
-            categories: ["Services", "Landscaping", "Construction"],
-            category: "Services", // For backward compatibility
-            country: "US",
-            region: "MN",
-            city: "Minneapolis",
-            owner: "John Smith",
-            website: "dirtmovers.com",
-            phone: "",
-            email: "",
-            description: "Dirt moving and landscaping services that accept Bitcoin payments.",
-            socialMedia: {
-                twitter: "dirtmoversBTC",
-                telegram: "dirtmovers",
-                signal: "+1-555-123-4567",
-                nostr: "npub1abcdef123456789abcdef123456789abcdef123456789abcdef123456789"
-            },
-            paymentMethods: {
-                onchain: true,
-                lightning: false
-            },
-            lastVerified: "2025-02-15T14:30:00"
-        },
-        {
-            id: 2,
-            name: "Ethical tree care",
-            slug: "ethical-tree-care",
-            logoUrl: "",
-            categories: ["Services", "Landscaping", "Arborist"],
-            category: "Services", // For backward compatibility
-            country: "US",
-            region: "MN",
-            city: "Cloquet",
-            owner: "Kyle",
-            website: "",
-            phone: "3201234567",
-            email: "",
-            description: "Tree care services accepting Bitcoin as payment.",
-            socialMedia: {
-                twitter: "ethicaltreecare",
-                mastodon: "@ethicaltreecare@bitcoiner.social",
-                discord: "ethicaltreecare#1234",
-                telegram: "ethicaltreecare"
-            },
-            paymentMethods: {
-                onchain: true,
-                lightning: true
-            },
-            lastVerified: "2025-03-05T09:45:00"
-        },
-        {
-            id: 3,
-            categories: ["Food & Dining", "Restaurant", "Coffee Shop"],
-            category: "Restaurant", // For backward compatibility
-            city: "",
-            country: "Global",
-            description: "Online coffee subscription service with global shipping.",
-            email: "hello@coffeehouse.com",
-            lastVerified: "",
-            logoUrl: "",
-            name: "Coffee house and breakfast",
-            owner: "",
-            paymentMethods: {
-                onchain: false,
-                lightning: true
-            },
-            phone: "",
-            region: "",
-            slug: "coffee-house-and-breakfast",
-            socialMedia: {},
-            website: "coffeehouse.com"
-        }
-    ];
-
     try {
         // Add cache-busting parameter to prevent caching
         const cacheBuster = '?v=' + new Date().getTime();
@@ -286,6 +278,7 @@ async function loadBusinessesFromJSON() {
             throw new Error('Failed to load businesses data');
         }
         
+        // Parse JSON data directly
         const businesses = await response.json();
         console.log("Successfully loaded", businesses.length, "businesses from JSON");
         
@@ -631,13 +624,23 @@ function populateFilterOptions() {
 }
 
 // Handle filter changes
-function handleFilterChange() {
+function handleFilterChange(forceRefresh = false) {
     // Save current location state before applying filters
     const hadUserLocation = userLocation !== null;
     
     // Apply filters to get updated list
     const newFilteredBusinesses = applyFilters();
     filteredBusinesses = newFilteredBusinesses;
+    
+    // Force a complete refresh of the display on toggle events
+    if (forceRefresh) {
+        console.log("Forcing complete UI refresh");
+        
+        // For debugging
+        const bitcoinOnly = document.getElementById('bitcoinOnlyToggle').checked;
+        const nostr = document.getElementById('nostrToggle').checked;
+        console.log("Bitcoin Only:", bitcoinOnly, "Nostr:", nostr);
+    }
     
     // Update the displayed businesses in list view
     displayBusinesses(filteredBusinesses);
@@ -670,8 +673,15 @@ function updateFilterStatus() {
     const category = document.getElementById('categoryFilter').value;
     const hasLocationSort = userLocation !== null;
     
+    // Check for Bitcoin Only and Nostr filters - ensure we get the actual current state
+    const bitcoinOnlyFilter = document.getElementById('bitcoinOnlyToggle').checked || false;
+    const nostrFilter = document.getElementById('nostrToggle').checked || false;
+    
+    // Debug log to help troubleshoot mobile issues
+    console.log("Active filters - Bitcoin Only:", bitcoinOnlyFilter, "Nostr:", nostrFilter);
+    
     // Check if any filter is active
-    const hasActiveFilter = searchTerm || locationTerm || category || hasLocationSort;
+    const hasActiveFilter = searchTerm || locationTerm || category || hasLocationSort || bitcoinOnlyFilter || nostrFilter;
     
     // Only show status if filters are being used
     if (!hasActiveFilter) {
@@ -692,6 +702,8 @@ function updateFilterStatus() {
     if (searchTerm) activeFilters.push(`Search: "${searchTerm}"`);
     if (locationTerm) activeFilters.push(`Location: "${locationTerm}"`);
     if (category) activeFilters.push(`Category: <strong style="color: #f7931a;">${category}</strong>`);
+    if (bitcoinOnlyFilter) activeFilters.push(`<img src="images/icons/btcLogo.svg" alt="Bitcoin" height="12" class="me-1">Bitcoin Only businesses`);
+    if (nostrFilter) activeFilters.push(`<img src="images/icons/nostr_logo_blk.svg" alt="Nostr" height="12" class="me-1">Nostr businesses`);
     
     if (hasLocationSort) {
         const locationName = document.getElementById('myLocationSelect').value ? 
@@ -712,6 +724,8 @@ function applyFilters() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     const locationTerms = document.getElementById('locationInput').value.toLowerCase().split(/[\s,]+/).filter(term => term.length > 0);
     const categoryFilter = document.getElementById('categoryFilter').value;
+    const bitcoinOnlyFilter = document.getElementById('bitcoinOnlyToggle').checked;
+    const nostrFilter = document.getElementById('nostrToggle').checked;
 
     return allBusinesses.filter(business => {
         // Check if category filter matches any of the business's categories
@@ -724,6 +738,14 @@ function applyFilters() {
             // Fall back to single category field for backward compatibility
             matchesCategory = business.category === categoryFilter;
         }
+
+        // Check if business matches Bitcoin Only filter
+        let matchesBitcoinOnly = !bitcoinOnlyFilter || 
+            (business.paymentMethods && business.paymentMethods.bitcoinOnly === true);
+            
+        // Check if business matches Nostr filter
+        let matchesNostr = !nostrFilter || 
+            (business.socialMedia && business.socialMedia.nostr);
 
         // Check if search term appears in any business field
         const matchesSearch = !searchTerm || 
@@ -750,7 +772,7 @@ function applyFilters() {
             matchesLocation = locationTerms.every(term => locationString.includes(term));
         }
 
-        return matchesCategory && matchesSearch && matchesLocation;
+        return matchesCategory && matchesSearch && matchesLocation && matchesBitcoinOnly && matchesNostr;
     });
 }
 
@@ -760,6 +782,8 @@ function clearFilters() {
     document.getElementById('locationInput').value = '';
     document.getElementById('categoryFilter').value = '';
     document.getElementById('myLocationSelect').value = '';
+    document.getElementById('bitcoinOnlyToggle').checked = false;
+    document.getElementById('nostrToggle').checked = false;
     
     // Reset location data
     userLocation = null;
@@ -1411,7 +1435,7 @@ function displayBusinesses(businesses) {
         if (business.website) {
             const websiteUrl = business.website.startsWith('http') ? business.website : `https://${business.website}`;
             websiteSocialContent += `<a href="${websiteUrl}" target="_blank" rel="noopener noreferrer" class="social-link" title="Website: ${business.website}">
-                <img src="images/icons/websiteIcon.svg" alt="Website" style="width: 16px; height: 16px;">
+                <img src="images/icons/websiteIcon.svg" alt="Website">
             </a>`;
         }
         
@@ -1423,13 +1447,13 @@ function displayBusinesses(businesses) {
                     if (platform.toLowerCase() === 'nostr') {
                         websiteSocialContent += `
                             <a href="${getSocialUrl(platform, value)}" target="_blank" rel="noopener noreferrer" class="social-link" title="${platformName}: ${value}">
-                                <img src="images/icons/nostr_logo_blk.svg" alt="Nostr" style="width: 16px; height: 16px;">
+                                <img src="images/icons/nostr_logo_blk.svg" alt="Nostr">
                             </a>
                         `;
                     } else if (platform.toLowerCase() === 'matrix') {
                         websiteSocialContent += `
                             <a href="${getSocialUrl(platform, value)}" target="_blank" rel="noopener noreferrer" class="social-link" title="${platformName}: ${value}">
-                                <img src="images/icons/matrixIcon.svg" alt="Matrix" style="width: 16px; height: 16px;">
+                                <img src="images/icons/matrixIcon.svg" alt="Matrix">
                             </a>
                         `;
                     } else {
@@ -1449,7 +1473,13 @@ function displayBusinesses(businesses) {
             <td>${categoriesHTML}</td>
             <td class="${isGlobalOrOnline(business) ? 'text-dark' : ''}">${locationWithDistance}</td>
             ${userLocation ? `<td class="distance-column">${distanceBadgeHtml || ''}</td>` : ''}
-            <td class="text-start ps-0" style="white-space: nowrap;">${websiteSocialContent || '<em>Not available</em>'}</td>
+            <td class="text-start ps-0 social-media-cell">
+                ${websiteSocialContent ? 
+                    `<div class="social-link-container">
+                        ${websiteSocialContent}
+                    </div>` : 
+                    '<em>Not available</em>'}
+            </td>
         `;
 
         row.innerHTML = rowHTML;
@@ -1714,8 +1744,46 @@ function showBusinessDetail(businessSlug) {
     document.getElementById('detailOwner').textContent = business.owner || 'Not specified';
     document.getElementById('detailEmail').innerHTML = business.email ? 
         `<a href="mailto:${business.email}">${business.email}</a>` : 'Not available';
-    document.getElementById('detailDescription').innerHTML = business.description ? 
-        marked.parse(business.description) : 'No description available';
+    
+    // Handle description with Markdown
+    try {
+        const description = business.description || 'No description available';
+        console.log('Raw description:', description);
+        
+        if (typeof marked === 'undefined') {
+            console.error('marked.js is not available for parsing description');
+            throw new Error('marked.js not loaded');
+        }
+
+        // Try to parse with the new Marked instance
+        try {
+            const parser = new marked.Marked({
+                breaks: true,
+                gfm: true,
+                headerIds: false,
+                mangle: false,
+                sanitize: false
+            });
+            const parsedDescription = parser.parse(description);
+            console.log('Parsed with new Marked instance:', parsedDescription);
+            document.getElementById('detailDescription').innerHTML = parsedDescription;
+        } catch (parseError) {
+            console.error('Error using new Marked instance:', parseError);
+            
+            // Fallback to legacy marked function
+            try {
+                const parsedDescription = marked(description);
+                console.log('Parsed with legacy marked function:', parsedDescription);
+                document.getElementById('detailDescription').innerHTML = parsedDescription;
+            } catch (markedError) {
+                console.error('Error using legacy marked function:', markedError);
+                throw markedError;
+            }
+        }
+    } catch (error) {
+        console.error('Error handling description:', error);
+        document.getElementById('detailDescription').textContent = business.description || 'No description available';
+    }
 
     // Payment methods
     const paymentMethodsEl = document.getElementById('detailPaymentMethods');

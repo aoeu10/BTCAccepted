@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Bitcoin-Accepting Businesses Directory</title>
+    <!-- Roboto Condensed font -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" 
           integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" 
@@ -68,21 +69,21 @@
         }
         .detail-header {
             border-bottom: 2px solid #f7931a;
-            padding-bottom: 20px; /* Increase bottom padding to create more space before the border */
+            padding-bottom: 20px;
             margin-bottom: 20px;
             position: relative;
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
             align-items: flex-start;
-            padding-top: 35px; /* Increase top padding to make room for larger logo */
-            padding-right: 160px; /* Increase padding to make room for larger logo */
+            padding-top: 35px;
+            padding-right: 160px;
         }
         .business-logo {
             position: absolute;
-            top: 30px; /* Match the padding-top of detail-header */
+            top: 30px;
             right: 0;
-            width: 150px; /* Increase default logo size */
+            width: 150px;
             height: 150px;
             border-radius: 8px;
             display: flex;
@@ -91,8 +92,8 @@
             overflow: hidden;
             background-color: white;
             padding: 5px;
-            border: 1px solid #e9ecef; /* Add subtle border */
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Add subtle shadow */
+            border: 1px solid #e9ecef;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         .business-logo img {
             max-width: 100%;
@@ -105,11 +106,11 @@
             margin: 0;
             flex: 1;
             min-width: 200px;
-            padding-right: 160px; /* Increase to match .detail-header padding-right */
+            padding-right: 160px;
             word-wrap: break-word;
             overflow-wrap: break-word;
             word-break: normal;
-            hyphens: auto;
+            hyphens: none;
             line-height: 1.3;
         }
         .back-button {
@@ -118,7 +119,7 @@
             position: absolute;
             top: 0;
             left: 0;
-            padding: 5px 0; /* Add some padding for better clickable area */
+            padding: 5px 0;
         }
         .back-button:hover {
             text-decoration: underline;
@@ -126,17 +127,64 @@
         #detailCategories {
             width: 100%;
             margin-top: 10px;
-            padding-right: 160px; /* Increase to match .detail-header padding-right */
+            padding-right: 160px;
             display: flex;
             flex-wrap: wrap;
             gap: 5px;
         }
+
+        /* Add responsive adjustments for mobile */
+        @media (max-width: 768px) {
+            .detail-header {
+                padding-right: 20px;
+                padding-top: 45px;
+            }
+            
+            .detail-header h2 {
+                padding-right: 0;
+                font-size: 1.5rem;
+                width: 100%;
+            }
+            
+            .business-logo {
+                position: relative;
+                top: 0;
+                right: auto;
+                width: 100px;
+                height: 100px;
+                margin-bottom: 15px;
+            }
+            
+            #detailCategories {
+                padding-right: 0;
+                margin-top: 5px;
+                gap: 8px;
+            }
+            
+            .category-badge {
+                margin: 0;
+                white-space: nowrap;
+                font-size: 0.85rem;
+                padding: 4px 8px;
+            }
+        }
+
         .detail-section {
-            margin-bottom: 15px;
+            margin-bottom: 1.5rem;
         }
         .detail-label {
-            font-weight: bold;
-            color: #495057;
+            font-family: 'Roboto Condensed', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.01em;
+        }
+        .detail-section > div:not(.detail-label) {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #4a5568;
         }
         .no-results {
             text-align: center;
@@ -652,22 +700,11 @@
         }
 
         /* Markdown content styles */
-        .detail-section .detail-label + div {
-            line-height: 1.6;
-        }
-        
         #detailDescription {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
             overflow-wrap: break-word;
-        }
-        
-        #detailDescription ul, 
-        #detailDescription ol {
-            padding-left: 20px;
-            margin-bottom: 1rem;
-        }
-        
-        #detailDescription p {
-            margin-bottom: 1rem;
+            padding: 0.5rem 0;
         }
         
         #detailDescription h1,
@@ -679,31 +716,47 @@
             margin-top: 1.5rem;
             margin-bottom: 1rem;
             font-weight: 600;
+            line-height: 1.25;
+        }
+        
+        #detailDescription p {
+            margin-bottom: 1rem;
+        }
+        
+        #detailDescription ul,
+        #detailDescription ol {
+            padding-left: 2rem;
+            margin-bottom: 1rem;
         }
         
         #detailDescription blockquote {
-            border-left: 3px solid #f7931a;
-            padding-left: 1rem;
-            margin-left: 0;
-            color: #666;
+            padding: 0.5rem 1rem;
+            margin: 0 0 1rem;
+            border-left: 0.25rem solid #e9ecef;
+            color: #6c757d;
         }
         
         #detailDescription code {
-            background-color: #f8f9fa;
             padding: 0.2em 0.4em;
-            border-radius: 3px;
+            margin: 0;
             font-size: 85%;
+            background-color: rgba(27,31,35,0.05);
+            border-radius: 3px;
+            font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
         }
         
         #detailDescription pre {
-            background-color: #f8f9fa;
             padding: 1rem;
-            border-radius: 5px;
-            overflow-x: auto;
+            margin-bottom: 1rem;
+            overflow: auto;
+            font-size: 85%;
+            line-height: 1.45;
+            background-color: #f6f8fa;
+            border-radius: 3px;
         }
         
         #detailDescription a {
-            color: #f7931a;
+            color: #0366d6;
             text-decoration: none;
         }
         
@@ -714,8 +767,70 @@
         #detailDescription img {
             max-width: 100%;
             height: auto;
-            border-radius: 5px;
             margin: 1rem 0;
+        }
+
+        /* Mobile-friendly toggle fixes */
+        .mobile-toggle {
+            /* Removed size overrides to keep original toggle size */
+            cursor: pointer !important;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .mobile-toggle-label {
+            cursor: pointer !important;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        /* Add tap highlight fixes for iOS */
+        input[type="checkbox"].mobile-toggle + label {
+            pointer-events: auto !important;
+        }
+        
+        @media (max-width: 768px) {
+            .form-check-input.mobile-toggle:before {
+                content: '';
+                position: absolute;
+                top: -10px;
+                right: -10px;
+                bottom: -10px;
+                left: -10px;
+                z-index: -1;
+            }
+        }
+
+        /* Fix for table columns to maintain consistent width */
+        .list-view-table {
+            table-layout: fixed;
+            width: 100%;
+        }
+        
+        .list-view-table th:nth-child(1) {
+            width: 25%;
+        }
+        
+        .list-view-table th:nth-child(2) {
+            width: 25%;
+        }
+        
+        .list-view-table th:nth-child(3) {
+            width: 25%;
+        }
+        
+        .list-view-table th.distance-column {
+            width: 12%;
+        }
+        
+        .list-view-table th:last-child {
+            width: 13%;
+        }
+        
+        /* Ensure content doesn't overflow and break layout */
+        .list-view-table td {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
     </style>
 </head>
@@ -767,9 +882,23 @@
                     <input type="text" class="form-control" id="locationInput" placeholder="Filter by location (city, region, country)...">
                 </div>
             </div>
-            <div class="row mt-3">
+            <div class="row mt-2">
                 <div class="col-md-6 mb-2">
-                    <button class="btn btn-outline-secondary" type="button" id="clearFilters">Clear Filters</button>
+                    <div class="d-flex flex-wrap">
+                        <div class="form-check form-switch mb-4 me-4">
+                            <input class="form-check-input mobile-toggle" type="checkbox" id="bitcoinOnlyToggle" role="switch">
+                            <label class="form-check-label small mobile-toggle-label" for="bitcoinOnlyToggle" style="min-height: 30px; display: flex; align-items: center; padding: 0;">
+                                <img src="images/icons/btcLogo.svg" alt="Bitcoin" height="20" class="me-1"> Only
+                            </label>
+                        </div>
+                        <div class="form-check form-switch mb-4">
+                            <input class="form-check-input mobile-toggle" type="checkbox" id="nostrToggle" role="switch">
+                            <label class="form-check-label mobile-toggle-label" for="nostrToggle" style="min-height: 30px; display: flex; align-items: center; padding: 0;">
+                                <img src="images/icons/nostr_logo_blk.svg" alt="Nostr" height="20" class="me-1">
+                            </label>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline-secondary btn-sm" type="button" id="clearFilters">Clear Filters</button>
                 </div>
                 <div class="col-md-6 mb-2">
                     <label class="form-label">My Location:</label>
@@ -1053,14 +1182,16 @@
     </div>
 </footer>
 
+    <!-- Load libraries first -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
             integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
             crossorigin=""></script>
 
-    <script src="main.js?v=1208"></script>
+    <!-- Load our app code last -->
+    <script src="main.js?v=20250509"></script>
 
 </body>
 </html>
