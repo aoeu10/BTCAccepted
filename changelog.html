@@ -83,22 +83,94 @@
             background-color: #dc3545;
             color: white;
         }
+        
+        /* Hamburger menu styles */
+        .hamburger-menu {
+            position: relative;
+            margin-left: 15px;
+        }
+        
+        .hamburger-button {
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        .hamburger-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .navigation-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .navigation-menu.active {
+            display: block;
+        }
+        
+        .navigation-menu a {
+            display: block;
+            padding: 10px 15px;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        
+        .navigation-menu a:hover {
+            background-color: #f8f9fa;
+            color: #f7931a;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 576px) {
+            .hamburger-menu {
+                margin-left: auto;
+                margin-right: 0;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="container">
-            <div class="d-flex">
-                <div class="d-flex align-items-center">
-                    <a href="index.html">
-                        <img src="images/icons/btcLogo.svg" alt="Bitcoin Logo" class="bitcoin-icon">
-                    </a>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex">
+                    <div class="d-flex align-items-center">
+                        <a href="index.html">
+                            <img src="images/icons/btcLogo.svg" alt="Bitcoin Logo" class="bitcoin-icon">
+                        </a>
+                    </div>
+                    <div>
+                        <a href="index.html" class="text-white text-decoration-none">
+                            <h1>BTCAccepted</h1>
+                        </a>
+                        <p class="mb-0">Help support the Bitcoin circular economy. Find businesses that accept Bitcoin payments.</p>
+                    </div>
                 </div>
-                <div>
-                    <a href="index.html" class="text-white text-decoration-none">
-                        <h1>BTCAccepted</h1>
-                    </a>
-                    <p class="mb-0">Help support the Bitcoin circular economy. Find businesses that accept Bitcoin payments.</p>
+                <div class="hamburger-menu">
+                    <button class="hamburger-button" id="hamburgerButton">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <div class="navigation-menu" id="navigationMenu">
+                        <a href="about.html">About</a>
+                        <a href="contact_us.html">Contact Us</a>
+                        <a href="links.html">Links</a>
+                        <a href="changelog.html">Changelog/Attributions</a>
+                        <a href="https://btcmap.org" target="_blank">External Link: BTCMap</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -109,7 +181,7 @@
             <h2>Changelog & Attribution</h2>
             <p class="lead">Track the evolution of the Bitcoin-Accepting Businesses Directory with our changelog, documenting all updates, improvements, and bug fixes. Also find information about the open-source components and resources used in this project.</p>
 
-            <!-- Version 0.2 - Future Release Placeholder -->
+            <!-- Version 0.4 - Future Release Placeholder -->
             <div class="changelog-entry">
                 <div class="version-header">
                     <div class="version-number">Coming Soon</div>
@@ -123,7 +195,72 @@
                     <li class="feature-item">Enhanced search with advanced filtering options</li>
                     <li class="feature-item">Implementation of ratings and reviews for businesses</li>
                     <li class="feature-item">Business verification system</li>
-                    <li class="feature-item">Integration with BTCMap</li>
+                    <li class="feature-item">Mobile app development</li>
+                </ul>
+            </div>
+
+            <!-- Version 0.3.1 - CSV Export Enhancement -->
+            <div class="changelog-entry">
+                <div class="version-header">
+                    <div class="version-number">Version 0.3.1 - CSV Export Enhancement</div>
+                    <div class="version-date">June 13, 2025</div>
+                </div>
+                
+                <div class="category-label">
+                    <span class="badge badge-new">New</span> Export Features
+                </div>
+                <ul class="changelog-list">
+                    <li class="feature-item">Added CSV export capability for Business and BTCMap data</li>
+                </ul>
+            </div>
+
+            <!-- Version 0.3 - BTCMap Integration Update -->
+            <div class="changelog-entry">
+                <div class="version-header">
+                    <div class="version-number">Version 0.3 - BTCMap Integration Update</div>
+                    <div class="version-date">May 25, 2025</div>
+                </div>
+                
+                <div class="category-label">
+                    <span class="badge badge-new">New</span> BTCMap Integration
+                </div>
+                <ul class="changelog-list">
+                    <li class="feature-item">Fully integrated BTCMap.org data with live business listings from their global database</li>
+                    <li class="feature-item">Added interactive map view with real-time data from BTCMap's OpenStreetMap-based platform</li>
+                    <li class="feature-item">Implemented region-based filtering (North America, Europe, Asia, etc.) for BTCMap data</li>
+                    <li class="feature-item">Added distance-based sorting and location search for BTCMap businesses</li>
+                    <li class="feature-item">Created dedicated BTCMap tab with beta badge to indicate new functionality</li>
+                    <li class="feature-item">Added informational note linking to BTCMap.org main site for community contributions</li>
+                </ul>
+
+                <div class="category-label mt-4">
+                    <span class="badge badge-new">New</span> Nostr Integration
+                </div>
+                <ul class="changelog-list">
+                    <li class="feature-item">Added Nostr Follow Pack integration with curated list of Bitcoin businesses on Nostr</li>
+                    <li class="feature-item">Implemented dynamic Nostr Follow Pack link that appears when Nostr filter is enabled</li>
+                    <li class="feature-item">Enhanced Nostr filtering to easily discover businesses with Nostr presence</li>
+                    <li class="feature-item">Added proper mobile support and Safari compatibility for Nostr features</li>
+                </ul>
+
+                <div class="category-label mt-4">
+                    <span class="badge badge-improved">Improved</span> User Interface
+                </div>
+                <ul class="changelog-list">
+                    <li class="feature-item">Enhanced Directory/BTCMap toggle with visual beta indicator</li>
+                    <li class="feature-item">Improved filter alignment and spacing for better mobile experience</li>
+                    <li class="feature-item">Added cache busting for better browser compatibility, especially Safari</li>
+                    <li class="feature-item">Optimized font sizes and layout for informational elements</li>
+                </ul>
+
+                <div class="category-label mt-4">
+                    <span class="badge badge-improved">Improved</span> Technical Features
+                </div>
+                <ul class="changelog-list">
+                    <li class="feature-item">Enhanced JavaScript event handling for better mobile toggle functionality</li>
+                    <li class="feature-item">Improved caching strategy with updated version parameters</li>
+                    <li class="feature-item">Better integration between directory and BTCMap data sources</li>
+                    <li class="feature-item">Enhanced error handling and loading states for BTCMap integration</li>
                 </ul>
             </div>
 
@@ -360,12 +497,32 @@
                     <a href="contact_us.html" class="me-3 text-decoration-none">Contact Us</a>
                     <a href="links.html" class="me-3 text-decoration-none">Links</a>
                     <a href="changelog.html" class="me-3 text-decoration-none">Changelog/Attributions</a>
-                    <a href="https://btcmap.org" target="_blank" class="text-decoration-none">BTCMap</a>
+                    <a href="https://btcmap.org" target="_blank" class="text-decoration-none">External Link: BTCMap</a>
                 </div>
             </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Hamburger menu script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburgerButton = document.getElementById('hamburgerButton');
+            const navigationMenu = document.getElementById('navigationMenu');
+            
+            // Toggle menu on hamburger button click
+            hamburgerButton.addEventListener('click', function() {
+                navigationMenu.classList.toggle('active');
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!hamburgerButton.contains(event.target) && !navigationMenu.contains(event.target)) {
+                    navigationMenu.classList.remove('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

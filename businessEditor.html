@@ -315,6 +315,85 @@
             border-radius: 5px;
             margin: 1rem 0;
         }
+        
+        /* Nostr npubs styles */
+        .nostr-npub-item {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f8f9fa;
+            transition: background-color 0.2s ease;
+        }
+        
+        .nostr-npub-item:hover {
+            background-color: #e9ecef;
+        }
+        
+        .nostr-business-name {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .nostr-npub-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: white;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .nostr-npub-text {
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #6c757d;
+            flex: 1;
+            word-break: break-all;
+            margin: 0;
+        }
+        
+        .nostr-copy-btn {
+            background-color: #f7931a;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background-color 0.2s ease;
+            white-space: nowrap;
+        }
+        
+        .nostr-copy-btn:hover {
+            background-color: #e07d16;
+        }
+        
+        .nostr-copy-btn.copied {
+            background-color: #28a745;
+        }
+        
+        .nostr-verified-date {
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        .nostr-copied-indicator {
+            color: #28a745;
+            font-size: 1.2rem;
+            margin-left: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .nostr-copied-indicator.visible {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -406,6 +485,9 @@
                 <div class="col-md-6 mb-2 text-md-end">
                     <button id="addBusinessButton" class="btn btn-success">
                         <i class="bi bi-plus-lg"></i> Add Business
+                    </button>
+                    <button id="nostrNpubsButton" class="btn btn-outline-info" title="View Nostr npubs">
+                        <i class="bi bi-broadcast"></i> Nostr npubs
                     </button>
                     <button id="exportJsonButton" class="btn btn-primary" style="background-color: #f7931a; border-color: #f7931a;">
                         <i class="bi bi-download"></i> Export JSON
@@ -721,7 +803,7 @@
                                             <div class="row">
                                                 <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                                     <div class="form-check">
-                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-books" value="Books" data-parent="Education">
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-books" value="Educational Books" data-parent="Education">
                                                         <label class="form-check-label" for="subcat-books">Educational Books</label>
                                                     </div>
                                                 </div>
@@ -1360,7 +1442,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="businessLogoUrl" class="form-label">Logo URL</label>
-                                <input type="url" class="form-control" id="businessLogoUrl">
+                                <input type="url" class="form-control" id="businessLogoUrl" value="images/logos/" placeholder="images/logos/business-logo.png">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="businessLastVerified" class="form-label">Last Verified</label>
@@ -1549,6 +1631,7 @@
         let businessModal;
         let exportModal;
         let confirmDeleteModal;
+        let nostrNpubsModal;
         let currentSort = { field: null, order: 'asc' };
         let businessToDelete = null;
         
@@ -1562,6 +1645,7 @@
             });
             exportModal = new bootstrap.Modal(document.getElementById('exportModal'));
             confirmDeleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+            nostrNpubsModal = new bootstrap.Modal(document.getElementById('nostrNpubsModal'));
             
             // Welcome screen buttons
             document.getElementById('importButton').addEventListener('click', function() {
@@ -1624,6 +1708,9 @@
                 const localDate = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
                 document.getElementById('businessLastVerified').value = localDate;
                 
+                // Set default logo URL
+                document.getElementById('businessLogoUrl').value = 'images/logos/';
+                
                 // Update modal title
                 document.getElementById('businessModalLabel').textContent = 'Add New Business';
                 
@@ -1633,6 +1720,7 @@
             document.getElementById('deleteSelectedButton').addEventListener('click', confirmDeleteSelected);
             document.getElementById('exportJsonButton').addEventListener('click', showExportModal);
             document.getElementById('saveChangesButton').addEventListener('click', showExportModal);
+            document.getElementById('nostrNpubsButton').addEventListener('click', showNostrNpubsModal);
             document.getElementById('importNewButton').addEventListener('click', function() {
                 if (isModified) {
                     if (confirm('You have unsaved changes. Are you sure you want to import a new file? Any unsaved changes will be lost.')) {
@@ -2685,7 +2773,7 @@
             document.getElementById('businessEmail').value = business.email || '';
             document.getElementById('businessPhone').value = business.phone || '';
             document.getElementById('businessDescription').value = business.description || '';
-            document.getElementById('businessLogoUrl').value = business.logoUrl || '';
+            document.getElementById('businessLogoUrl').value = business.logoUrl || 'images/logos/';
             
             // Set payment methods
             document.getElementById('bitcoinOnlyCheckbox').checked = business.paymentMethods?.bitcoinOnly || false;
@@ -2779,7 +2867,14 @@
                 email: document.getElementById('businessEmail').value,
                 phone: document.getElementById('businessPhone').value,
                 description: description,
-                logoUrl: document.getElementById('businessLogoUrl').value,
+                logoUrl: (() => {
+                    const logoUrl = document.getElementById('businessLogoUrl').value;
+                    // Only include logoUrl if there's content after "images/logos/"
+                    if (logoUrl && logoUrl !== 'images/logos/' && logoUrl.length > 'images/logos/'.length) {
+                        return logoUrl;
+                    }
+                    return '';
+                })(),
                 paymentMethods: {
                     bitcoinOnly: document.getElementById('bitcoinOnlyCheckbox').checked || false,
                     onchain: document.getElementById('onchainCheckbox').checked || false,
@@ -3094,7 +3189,13 @@
                 id: generateUniqueId(), // Use the new function to generate a unique ID
                 name: businessName,
                 slug: generateSlug(businessName),
-                logoUrl: logoUrl || "",
+                logoUrl: (() => {
+                    // Only include logoUrl if there's content after "images/logos/"
+                    if (logoUrl && logoUrl !== 'images/logos/' && logoUrl.length > 'images/logos/'.length) {
+                        return logoUrl;
+                    }
+                    return '';
+                })(),
                 categories: selectedCategories,
                 category: selectedCategories[0], // Keep first category for backward compatibility
                 country: country,
@@ -3236,6 +3337,204 @@
                 }
             });
         });
+
+        // Show the Nostr npubs modal
+        function showNostrNpubsModal() {
+            populateNostrNpubsList();
+            nostrNpubsModal.show();
+        }
+
+        // Track copied npubs
+        let copiedNpubs = new Set();
+
+        // Populate the Nostr npubs list
+        function populateNostrNpubsList() {
+            const nostrNpubsList = document.getElementById('nostrNpubsList');
+            const noNostrNpubsMessage = document.getElementById('noNostrNpubsMessage');
+            
+            // Clear the list
+            nostrNpubsList.innerHTML = '';
+            
+            // Find businesses with Nostr npubs
+            const businessesWithNostr = businesses.filter(business => {
+                return business.socialMedia && 
+                       business.socialMedia.nostr && 
+                       business.socialMedia.nostr.trim() !== '';
+            });
+            
+            // If no businesses with Nostr npubs, show message
+            if (businessesWithNostr.length === 0) {
+                nostrNpubsList.style.display = 'none';
+                noNostrNpubsMessage.style.display = 'block';
+                updateNostrCounts(0, 0);
+                return;
+            }
+            
+            // Sort by lastVerified date (most recent first)
+            businessesWithNostr.sort((a, b) => {
+                const dateA = new Date(a.lastVerified || '1970-01-01');
+                const dateB = new Date(b.lastVerified || '1970-01-01');
+                return dateB - dateA;
+            });
+            
+            // Show the list and hide the no results message
+            nostrNpubsList.style.display = 'block';
+            noNostrNpubsMessage.style.display = 'none';
+            
+            // Update counts
+            updateNostrCounts(businessesWithNostr.length, businessesWithNostr);
+            
+            // Create list items
+            businessesWithNostr.forEach((business, index) => {
+                const item = document.createElement('div');
+                item.className = 'nostr-npub-item';
+                
+                const businessName = document.createElement('div');
+                businessName.className = 'nostr-business-name';
+                businessName.textContent = business.name || 'Unnamed Business';
+                
+                const npubContainer = document.createElement('div');
+                npubContainer.className = 'nostr-npub-container';
+                
+                const npubText = document.createElement('div');
+                npubText.className = 'nostr-npub-text';
+                npubText.textContent = business.socialMedia.nostr;
+                
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'nostr-copy-btn';
+                copyBtn.innerHTML = '<i class="bi bi-clipboard"></i> Copy';
+                copyBtn.onclick = () => copyNostrNpub(business.socialMedia.nostr, copyBtn, copiedIndicator);
+                
+                const copiedIndicator = document.createElement('span');
+                copiedIndicator.className = 'nostr-copied-indicator';
+                copiedIndicator.innerHTML = '<i class="bi bi-check-circle-fill"></i>';
+                
+                // Check if this npub was already copied
+                if (copiedNpubs.has(business.socialMedia.nostr)) {
+                    copiedIndicator.classList.add('visible');
+                }
+                
+                npubContainer.appendChild(npubText);
+                npubContainer.appendChild(copyBtn);
+                npubContainer.appendChild(copiedIndicator);
+                
+                const verifiedDate = document.createElement('div');
+                verifiedDate.className = 'nostr-verified-date';
+                if (business.lastVerified) {
+                    const date = new Date(business.lastVerified);
+                    verifiedDate.textContent = `Last verified: ${date.toLocaleDateString()}`;
+                } else {
+                    verifiedDate.textContent = 'Last verified: Unknown';
+                }
+                
+                item.appendChild(businessName);
+                item.appendChild(npubContainer);
+                item.appendChild(verifiedDate);
+                
+                nostrNpubsList.appendChild(item);
+            });
+        }
+
+        // Update Nostr counts display
+        function updateNostrCounts(totalCount, businessesWithNostr = null) {
+            const countBadge = document.getElementById('nostrCountBadge');
+            const progressText = document.getElementById('nostrProgressText');
+            
+            if (totalCount === 0) {
+                countBadge.textContent = '0 businesses';
+                progressText.textContent = 'No npubs to copy';
+                return;
+            }
+            
+            countBadge.textContent = `${totalCount} business${totalCount === 1 ? '' : 'es'}`;
+            
+            if (businessesWithNostr) {
+                // Count how many npubs from current list have been copied
+                const copiedFromCurrentList = businessesWithNostr.filter(business => 
+                    copiedNpubs.has(business.socialMedia.nostr)
+                ).length;
+                
+                const remaining = totalCount - copiedFromCurrentList;
+                
+                if (remaining === 0) {
+                    progressText.textContent = 'All copied! ✓';
+                    progressText.className = 'badge bg-success';
+                } else {
+                    progressText.textContent = `${copiedFromCurrentList}/${totalCount} copied (${remaining} remaining)`;
+                    progressText.className = 'badge bg-info';
+                }
+            }
+        }
+
+        // Copy Nostr npub to clipboard
+        async function copyNostrNpub(npub, button, copiedIndicator) {
+            try {
+                await navigator.clipboard.writeText(npub);
+                
+                // Add to copied set
+                copiedNpubs.add(npub);
+                
+                // Show the permanent check mark
+                copiedIndicator.classList.add('visible');
+                
+                // Update counts
+                updateNostrCountsAfterCopy();
+                
+                // Update button to show success temporarily
+                const originalContent = button.innerHTML;
+                button.innerHTML = '<i class="bi bi-check"></i> Copied!';
+                button.classList.add('copied');
+                
+                // Reset button after 2 seconds
+                setTimeout(() => {
+                    button.innerHTML = originalContent;
+                    button.classList.remove('copied');
+                }, 2000);
+                
+            } catch (err) {
+                console.error('Failed to copy npub: ', err);
+                
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = npub;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                // Add to copied set
+                copiedNpubs.add(npub);
+                
+                // Show the permanent check mark
+                copiedIndicator.classList.add('visible');
+                
+                // Update counts
+                updateNostrCountsAfterCopy();
+                
+                // Update button to show success temporarily
+                const originalContent = button.innerHTML;
+                button.innerHTML = '<i class="bi bi-check"></i> Copied!';
+                button.classList.add('copied');
+                
+                // Reset button after 2 seconds
+                setTimeout(() => {
+                    button.innerHTML = originalContent;
+                    button.classList.remove('copied');
+                }, 2000);
+            }
+        }
+
+        // Helper function to update counts after copying
+        function updateNostrCountsAfterCopy() {
+            // Get current businesses with Nostr npubs
+            const businessesWithNostr = businesses.filter(business => {
+                return business.socialMedia && 
+                       business.socialMedia.nostr && 
+                       business.socialMedia.nostr.trim() !== '';
+            });
+            
+            updateNostrCounts(businessesWithNostr.length, businessesWithNostr);
+        }
     </script>
 
     <!-- Markdown Help Modal -->
@@ -3275,6 +3574,43 @@
 > It can span multiple lines</pre>
 
                     <p class="mt-3 text-muted small">Use Markdown to make your business description more readable and professional.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nostr npubs Modal -->
+    <div class="modal fade" id="nostrNpubsModal" tabindex="-1" aria-labelledby="nostrNpubsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="nostrNpubsModalLabel">
+                        <i class="bi bi-broadcast"></i> Nostr npubs Directory
+                        <span id="nostrCountBadge" class="badge bg-secondary ms-2"></span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <p class="text-muted">Businesses with Nostr npubs, sorted by most recently verified:</p>
+                        <div id="nostrCopyProgress" class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted small">Copy Progress:</span>
+                            <span id="nostrProgressText" class="badge bg-info"></span>
+                        </div>
+                    </div>
+                    <div id="nostrNpubsList">
+                        <!-- Nostr npubs list will be populated here -->
+                    </div>
+                    <div id="noNostrNpubsMessage" class="text-center py-4" style="display: none;">
+                        <div class="text-muted">
+                            <i class="bi bi-broadcast" style="font-size: 2rem;"></i>
+                            <h5 class="mt-3">No Nostr npubs found</h5>
+                            <p>No businesses in the current dataset have Nostr npubs configured.</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

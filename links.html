@@ -58,22 +58,94 @@
             border-bottom: 2px solid #f7931a;
             padding-bottom: 10px;
         }
+        
+        /* Hamburger menu styles */
+        .hamburger-menu {
+            position: relative;
+            margin-left: 15px;
+        }
+        
+        .hamburger-button {
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        .hamburger-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .navigation-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .navigation-menu.active {
+            display: block;
+        }
+        
+        .navigation-menu a {
+            display: block;
+            padding: 10px 15px;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        
+        .navigation-menu a:hover {
+            background-color: #f8f9fa;
+            color: #f7931a;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 576px) {
+            .hamburger-menu {
+                margin-left: auto;
+                margin-right: 0;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="container">
-            <div class="d-flex">
-                <div class="d-flex align-items-center">
-                    <a href="index.html">
-                        <img src="images/icons/btcLogo.svg" alt="Bitcoin Logo" class="bitcoin-icon">
-                    </a>
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex">
+                    <div class="d-flex align-items-center">
+                        <a href="index.html">
+                            <img src="images/icons/btcLogo.svg" alt="Bitcoin Logo" class="bitcoin-icon">
+                        </a>
+                    </div>
+                    <div>
+                        <a href="index.html" class="text-white text-decoration-none">
+                            <h1>BTCAccepted</h1>
+                        </a>
+                        <p class="mb-0">Help support the Bitcoin circular economy. Find businesses that accept Bitcoin payments.</p>
+                    </div>
                 </div>
-                <div>
-                    <a href="index.html" class="text-white text-decoration-none">
-                        <h1>BTCAccepted</h1>
-                    </a>
-                    <p class="mb-0">Help support the Bitcoin circular economy. Find businesses that accept Bitcoin payments.</p>
+                <div class="hamburger-menu">
+                    <button class="hamburger-button" id="hamburgerButton">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <div class="navigation-menu" id="navigationMenu">
+                        <a href="about.html">About</a>
+                        <a href="contact_us.html">Contact Us</a>
+                        <a href="links.html">Links</a>
+                        <a href="changelog.html">Changelog/Attributions</a>
+                        <a href="https://btcmap.org" target="_blank">External Link: BTCMap</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -227,12 +299,32 @@
                     <a href="contact_us.html" class="me-3 text-decoration-none">Contact Us</a>
                     <a href="links.html" class="me-3 text-decoration-none">Links</a>
                     <a href="changelog.html" class="me-3 text-decoration-none">Changelog/Attributions</a>
-                    <a href="https://btcmap.org" target="_blank" class="text-decoration-none">BTCMap</a>
+                    <a href="https://btcmap.org" target="_blank" class="text-decoration-none">External Link: BTCMap</a>
                 </div>
             </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Hamburger menu script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburgerButton = document.getElementById('hamburgerButton');
+            const navigationMenu = document.getElementById('navigationMenu');
+            
+            // Toggle menu on hamburger button click
+            hamburgerButton.addEventListener('click', function() {
+                navigationMenu.classList.toggle('active');
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!hamburgerButton.contains(event.target) && !navigationMenu.contains(event.target)) {
+                    navigationMenu.classList.remove('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
