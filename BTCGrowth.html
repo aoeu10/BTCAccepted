@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTC Growth Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .btc-header {
+            background: linear-gradient(90deg, #f7931a 0%, #ffb347 100%);
+            color: white;
+            padding: 24px 0 16px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .btc-header h1 {
+            font-family: 'Roboto Condensed', sans-serif;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        .btc-icon {
+            height: 48px;
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+        .btc-theme {
+            color: #f7931a;
+        }
+        .table thead th {
+            background-color: #fff8f0;
+        }
+        .action-btn {
+            color: #f7931a;
+        }
+        .action-btn:hover {
+            color: #e07d16;
+        }
+        .chart-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .btc-btn {
+            background-color: #f7931a;
+            color: white;
+            border: none;
+        }
+        .btc-btn:hover {
+            background-color: #e07d16;
+            color: white;
+        }
+        .btc-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .btc-badge {
+            background: #f7931a;
+            color: white;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            padding: 2px 8px;
+        }
+        .recurring-desc {
+            font-size: 0.95em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="btc-header text-center">
+        <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.svg?v=029" alt="BTC" class="btc-icon">
+        <h1>BTC Growth Calculator</h1>
+        <p class="lead">Model your Bitcoin growth, recurring buys, sales, and more.</p>
+    </div>
+    <div class="container">
+        <!-- Input Section -->
+        <div class="btc-section mb-4">
+            <form id="paramsForm" class="row g-3 align-items-end">
+                <div class="col-md-2">
+                    <label for="startDate" class="form-label">Start Date</label>
+                    <input type="date" class="form-control" id="startDate" required>
+                </div>
+                <div class="col-md-2">
+                    <label for="initialValue" class="form-label">Initial Value (USD)</label>
+                    <input type="number" class="form-control" id="initialValue" min="0" step="0.01" value="1000">
+                </div>
+                <div class="col-md-2">
+                    <label for="initialGrowth" class="form-label">Initial Growth Rate (%/yr)</label>
+                    <input type="number" class="form-control" id="initialGrowth" step="0.01" value="20">
+                </div>
+                <div class="col-md-2">
+                    <label for="years" class="form-label">Years</label>
+                    <input type="number" class="form-control" id="years" min="1" max="50" value="10">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btc-btn w-100">Calculate</button>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-outline-secondary w-100" id="resetBtn"><i class="bi bi-arrow-counterclockwise"></i> Reset</button>
+                </div>
+            </form>
+            <div class="mt-2">
+                <button class="btn btn-outline-secondary btn-sm" id="exportBtn"><i class="bi bi-download"></i> Export Scenario</button>
+                <button class="btn btn-outline-secondary btn-sm" id="importBtn"><i class="bi bi-upload"></i> Import Scenario</button>
+                <button class="btn btn-outline-secondary btn-sm" id="exportGrowthBtn"><i class="bi bi-download"></i> Export Growth Rates</button>
+                <button class="btn btn-outline-secondary btn-sm" id="importGrowthBtn"><i class="bi bi-upload"></i> Import Growth Rates</button>
+                <input type="file" id="importFile" accept=".json" style="display:none;">
+                <input type="file" id="importGrowthFile" accept=".json" style="display:none;">
+            </div>
+        </div>
+
+        <!-- Growth Rate Ramp/Plateau Section -->
+        <div class="btc-section mb-4">
+            <h5>Growth Rate Schedule</h5>
+            <div class="mb-2">
+                <button class="btn btn-outline-warning btn-sm" id="addGrowthRampBtn"><i class="bi bi-graph-down"></i> Add Growth Ramp/Plateau</button>
+            </div>
+            <ul id="growthRampList" class="list-group mb-2"></ul>
+            <div class="recurring-desc">You can set a starting growth rate, a target plateau rate, and the number of years to gradually drop. Multiple ramps can be scheduled.</div>
+        </div>
+
+        <!-- Table Section -->
+        <div class="btc-section mb-4">
+            <h5>Yearly Value Table</h5>
+            <div class="mb-2">
+                <div class="btn-group" role="group" aria-label="Show Mode">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="showAllMonthsBtn">All Months</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="showEndOfYearBtn">End of Year Only</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle" id="growthTable">
+                    <thead>
+                        <tr>
+                            <th>Month/Year</th>
+                            <th>Value (USD)</th>
+                            <th>Growth Rate (%)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="chart-container mb-4">
+            <canvas id="growthChart" height="80"></canvas>
+        </div>
+
+        <!-- All Actions Section -->
+        <div class="btc-section mb-4">
+            <h5>All Actions</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle" id="allActionsTable">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Frequency</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Adding/Editing Actions -->
+    <div class="modal fade" id="actionModal" tabindex="-1" aria-labelledby="actionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="actionModalLabel">Edit Year</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="actionModalContent">
+                        <!-- Dynamic content by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Growth Ramp -->
+    <div class="modal fade" id="growthRampModal" tabindex="-1" aria-labelledby="growthRampModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="growthRampModalLabel">Add/Edit Growth Ramp</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="growthRampForm">
+                        <div class="mb-2">
+                            <label class="form-label">Start Year</label>
+                            <input type="number" class="form-control" id="grStartYear" min="1" value="1">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Start Rate (%/yr)</label>
+                            <input type="number" class="form-control" id="grStartRate" step="0.01" value="20">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">End Rate (%/yr)</label>
+                            <input type="number" class="form-control" id="grEndRate" step="0.01" value="5">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Plateau Year</label>
+                            <input type="number" class="form-control" id="grPlateauYear" min="1" value="10">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Plateau Rate (%/yr)</label>
+                            <input type="number" class="form-control" id="grPlateauRate" step="0.01" value="5">
+                        </div>
+                        <button type="submit" class="btn btc-btn w-100">Save Growth Ramp</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Recurring Action Scheduling -->
+    <div class="modal fade" id="recurringModal" tabindex="-1" aria-labelledby="recurringModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recurringModalLabel">Add/Edit Recurring Action</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="recurringForm">
+                        <div class="mb-2">
+                            <label class="form-label">Type</label>
+                            <select class="form-select" id="recType">
+                                <option value="purchase">Purchase</option>
+                                <option value="sale">Sale</option>
+                                <option value="cost">Cost</option>
+                                <option value="growth">Growth Rate Adjustment</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Amount (USD or % for growth)</label>
+                            <input type="number" class="form-control" id="recAmount" step="0.01" required>
+                        </div>
+                        <div class="mb-2" id="frequencySection">
+                            <label class="form-label">Frequency</label>
+                            <select class="form-select" id="recFreq">
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="biannual">Bi-Annually</option>
+                                <option value="annual">Annually</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Start Date</label>
+                            <input type="date" class="form-control" id="recStartDate" required>
+                            <div class="form-text" id="recDateNote"></div>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Stop Date</label>
+                            <input type="date" class="form-control" id="recStopDate">
+                        </div>
+                        <div class="mb-2" id="recExtraFields"></div>
+                        <button type="submit" class="btn btc-btn w-100">Save Recurring Action</button>
+                    </form>
+                    <div id="yearActionsList" class="mt-4" style="display: none;">
+                        <h6>Actions for Year <span id="modalYear"></span></h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Amount</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="modalYearActions">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // --- Core Data Structures ---
+    let scenario = {
+        initialValue: 1000,
+        initialGrowth: 20,
+        years: 10,
+        startDate: new Date().toISOString().split('T')[0], // Default to today
+        actions: [], // {type, amount, freq, startDate, stopDate, extra}
+        growthRates: [] // {startYear, startRate, endRate, plateauYear, plateauRate}
+    };
+    let results = [];
+    let chart;
+    let showMode = 'all'; // 'all' or 'eoy'
+
+    // --- Utility Functions ---
+    function saveToUrl() {
+        const params = new URLSearchParams();
+        params.set('v', scenario.initialValue);
+        params.set('g', scenario.initialGrowth);
+        params.set('y', scenario.years);
+        if (scenario.actions.length) params.set('a', btoa(encodeURIComponent(JSON.stringify(scenario.actions))));
+        if (scenario.growthRates.length) params.set('gr', btoa(encodeURIComponent(JSON.stringify(scenario.growthRates))));
+        history.replaceState(null, '', '?' + params.toString());
+    }
+    function loadFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('v')) scenario.initialValue = parseFloat(params.get('v'));
+        if (params.has('g')) scenario.initialGrowth = parseFloat(params.get('g'));
+        if (params.has('y')) scenario.years = parseInt(params.get('y'));
+        if (params.has('a')) scenario.actions = JSON.parse(decodeURIComponent(atob(params.get('a'))));
+        if (params.has('gr')) scenario.growthRates = JSON.parse(decodeURIComponent(atob(params.get('gr'))));
+    }
+    function exportScenario() {
+        const blob = new Blob([JSON.stringify(scenario, null, 2)], {type: 'application/json'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'btc_growth_scenario.json';
+        a.click();
+    }
+    function importScenario(file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                scenario = JSON.parse(e.target.result);
+                updateUI();
+            } catch (err) { alert('Invalid file.'); }
+        };
+        reader.readAsText(file);
+    }
+    function exportGrowthRates() {
+        const blob = new Blob([JSON.stringify(scenario.growthRates, null, 2)], {type: 'application/json'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'btc_growth_rates.json';
+        a.click();
+    }
+    function importGrowthRates(file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                scenario.growthRates = JSON.parse(e.target.result);
+                updateUI();
+            } catch (err) { alert('Invalid file.'); }
+        };
+        reader.readAsText(file);
+    }
+
+    // --- Calculation Logic ---
+    function calculateResults() {
+        // Calculate daily values for the entire period
+        results = [];
+        let value = scenario.initialValue;
+        let growthMap = {};
+        let startDate = new Date(scenario.startDate); // Always use Date object
+        // Build growth rate map by day
+        if (scenario.growthRates && scenario.growthRates.length) {
+            for (const gr of scenario.growthRates) {
+                for (let y = gr.startYear; y <= gr.plateauYear; y++) {
+                    let rate = gr.startRate + (gr.endRate - gr.startRate) * ((y - gr.startYear) / (gr.plateauYear - gr.startYear));
+                    if (y > gr.plateauYear) rate = gr.plateauRate;
+                    growthMap[y] = rate;
+                }
+            }
+        }
+
+        // Process growth rate adjustments
+        let growthAdjustments = scenario.actions.filter(a => a.type === 'growth')
+            .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+        
+        // Build a map of effective growth rates by month
+        let effectiveGrowthRatesByMonth = {};
+        let monthsCount = scenario.years * 12;
+        let monthStart = new Date(startDate);
+        for (let m = 0; m < monthsCount; m++) {
+            let year = monthStart.getFullYear() - startDate.getFullYear() + 1;
+            let baseRate = growthMap[year] !== undefined ? growthMap[year] : scenario.initialGrowth;
+            // Find any growth adjustments that start in this month
+            let monthAdjustments = growthAdjustments.filter(a => {
+                let adjDate = new Date(a.startDate);
+                return adjDate.getFullYear() === monthStart.getFullYear() && adjDate.getMonth() === monthStart.getMonth();
+            });
+            if (monthAdjustments.length > 0) {
+                // Use the last adjustment in the month
+                let adj = monthAdjustments[monthAdjustments.length - 1];
+                effectiveGrowthRatesByMonth[m] = parseFloat(adj.amount);
+                value = parseFloat(adj.amount);
+            } else {
+                effectiveGrowthRatesByMonth[m] = baseRate;
+            }
+            monthStart.setMonth(monthStart.getMonth() + 1);
+        }
+
+        // Build a list of all days
+        let days = [];
+        let endDate = new Date(startDate);
+        endDate.setFullYear(endDate.getFullYear() + scenario.years);
+        for (let d = new Date(startDate); d < endDate; d.setDate(d.getDate() + 1)) {
+            days.push(new Date(d));
+        }
+
+        // Build action events by day (excluding growth adjustments as they're handled above)
+        let actionEvents = {};
+        for (const action of scenario.actions.filter(a => a.type !== 'growth')) {
+            let freq = action.freq;
+            let amount = parseFloat(action.amount);
+            let type = action.type;
+            let start = new Date(action.startDate);
+            let stop = action.stopDate ? new Date(action.stopDate) : new Date(endDate);
+            if (freq === 'annual') {
+                for (let d = new Date(start); d <= stop && d < endDate; d.setFullYear(d.getFullYear() + 1)) {
+                    let key = d.toISOString().slice(0,10);
+                    if (!actionEvents[key]) actionEvents[key] = [];
+                    actionEvents[key].push({type, amount});
+                }
+            } else if (freq === 'biannual') {
+                let d1 = new Date(start);
+                let d2 = new Date(start);
+                d2.setMonth(d2.getMonth() + 6);
+                for (let year = d1.getFullYear(); d1 <= stop && d1 < endDate; year++) {
+                    let d1y = new Date(d1); d1y.setFullYear(year);
+                    let d2y = new Date(d2); d2y.setFullYear(year);
+                    [d1y, d2y].forEach(dd => {
+                        if (dd >= start && dd <= stop && dd < endDate) {
+                            let key = dd.toISOString().slice(0,10);
+                            if (!actionEvents[key]) actionEvents[key] = [];
+                            actionEvents[key].push({type, amount});
+                        }
+                    });
+                }
+            } else {
+                for (let d = new Date(start); d <= stop && d < endDate; ) {
+                    let key = d.toISOString().slice(0,10);
+                    if (!actionEvents[key]) actionEvents[key] = [];
+                    actionEvents[key].push({type, amount});
+                    if (freq === 'daily') d.setDate(d.getDate() + 1);
+                    else if (freq === 'weekly') d.setDate(d.getDate() + 7);
+                    else if (freq === 'monthly') d.setMonth(d.getMonth() + 1);
+                    else d.setFullYear(d.getFullYear() + 1);
+                }
+            }
+        }
+
+        // Calculate daily values
+        let monthValueMap = {};
+        // Record the value for the start month as of the start date
+        let startMonthKey = `${startDate.getFullYear()}-${String(startDate.getMonth()+1).padStart(2,'0')}`;
+        monthValueMap[startMonthKey] = value;
+        for (let i = 0; i < days.length; i++) {
+            let d = days[i];
+            let key = d.toISOString().slice(0,10);
+            let year = d.getFullYear();
+            let month = d.getMonth();
+            // Apply actions for this day
+            if (actionEvents[key]) {
+                for (const evt of actionEvents[key]) {
+                    if (evt.type === 'purchase') value += evt.amount;
+                    if (evt.type === 'sale') value -= evt.amount;
+                    if (evt.type === 'cost') value -= evt.amount;
+                }
+            }
+            // Apply daily growth using the effective rate for the month
+            let mIdx = (year - startDate.getFullYear()) * 12 + month - startDate.getMonth();
+            if (mIdx >= 0 && mIdx < monthsCount) {
+                let effectiveRate = effectiveGrowthRatesByMonth[mIdx] !== undefined ? effectiveGrowthRatesByMonth[mIdx] : scenario.initialGrowth;
+                let dailyRate = Math.pow(1 + effectiveRate / 100, 1/365);
+                value *= dailyRate;
+                // Store month-end value, but only if this month/year is on or after the start month/year
+                let nextDay = new Date(d);
+                nextDay.setDate(nextDay.getDate() + 1);
+                if ((nextDay.getMonth() !== month || nextDay.getFullYear() !== year)) {
+                    // Only record if this month is not before the start month/year
+                    if (year > startDate.getFullYear() || (year === startDate.getFullYear() && month >= startDate.getMonth())) {
+                        let ymKey = `${year}-${String(month+1).padStart(2,'0')}`;
+                        monthValueMap[ymKey] = value;
+                    }
+                }
+            }
+        }
+        // Build results for table/chart
+        results = [];
+        let lastValue = value; // fallback in case a month is missing
+        let endDateLimit = new Date(startDate);
+        endDateLimit.setFullYear(endDateLimit.getFullYear() + scenario.years);
+        let iterDate = new Date(startDate);
+        let m = 0;
+        while (iterDate < endDateLimit) {
+            let ymKey = `${iterDate.getFullYear()}-${String(iterDate.getMonth()+1).padStart(2,'0')}`;
+            let v = (typeof monthValueMap[ymKey] !== 'undefined') ? monthValueMap[ymKey] : lastValue;
+            if (typeof monthValueMap[ymKey] !== 'undefined') lastValue = monthValueMap[ymKey];
+            results.push({
+                month: iterDate.getMonth(),
+                year: iterDate.getFullYear(),
+                value: v,
+                growth: effectiveGrowthRatesByMonth[m]
+            });
+            iterDate.setMonth(iterDate.getMonth() + 1);
+            m++;
+        }
+    }
+
+    // --- UI Update Functions ---
+    function updateUI() {
+        console.log('updateUI called');
+        document.getElementById('startDate').value = scenario.startDate;
+        document.getElementById('initialValue').value = scenario.initialValue;
+        document.getElementById('initialGrowth').value = scenario.initialGrowth;
+        document.getElementById('years').value = scenario.years;
+        // Growth ramp list
+        const rampList = document.getElementById('growthRampList');
+        rampList.innerHTML = '';
+        scenario.growthRates.forEach((gr, idx) => {
+            const li = document.createElement('li');
+            li.className = 'list-group-item d-flex justify-content-between align-items-center';
+            li.innerHTML = `Start: Year ${gr.startYear}, Start Rate: ${gr.startRate}%, End Rate: ${gr.endRate}%, Plateau: Year ${gr.plateauYear}, Plateau Rate: ${gr.plateauRate}% <button class='btn btn-sm btn-link text-danger' onclick='window.deleteGrowthRamp(${idx})'>Delete</button>`;
+            rampList.appendChild(li);
+        });
+        calculateResults();
+        console.log('Results after calculateResults:', results);
+        // Table
+        const tbody = document.querySelector('#growthTable tbody');
+        tbody.innerHTML = '';
+        if (results.length === 0) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = '<td colspan="4" class="text-center">No data calculated</td>';
+            tbody.appendChild(tr);
+        } else {
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            let filteredResults = results;
+            if (showMode === 'eoy') {
+                // Only show the last month for each year
+                let lastMonth = results[0].month;
+                let lastYear = results[0].year;
+                filteredResults = results.filter((row, idx, arr) => {
+                    // Find the last month for each year
+                    if (idx === arr.length - 1) return true;
+                    return row.year !== arr[idx + 1].year;
+                });
+            }
+            for (let i = 0; i < filteredResults.length; i++) {
+                const row = filteredResults[i];
+                const label = `${monthNames[row.month]} ${row.year}`;
+                const tr = document.createElement('tr');
+                if (showMode === 'eoy') {
+                    tr.innerHTML = `<td><a href=\"#\" class=\"eoy-link\" data-year=\"${row.year}\">${row.year}</a></td><td>$${Math.round(row.value).toLocaleString()}</td><td>${row.growth.toFixed(2)}%</td><td><button class=\"btn btn-sm btn-outline-secondary action-btn\" data-month=\"${row.month}\" data-year=\"${row.year}\"><i class=\"bi bi-pencil\"></i> Edit</button></td>`;
+                } else {
+                    // Calculate monthly rate from annual rate
+                    let monthlyRate = (Math.pow(1 + row.growth / 100, 1/12) - 1) * 100;
+                    tr.innerHTML = `<td><a href=\"#\" class=\"year-link\" data-month=\"${row.month}\" data-year=\"${row.year}\">${label}</a></td><td>$${Math.round(row.value).toLocaleString()}</td><td>${monthlyRate.toFixed(2)}%</td><td><button class=\"btn btn-sm btn-outline-secondary action-btn\" data-month=\"${row.month}\" data-year=\"${row.year}\"><i class=\"bi bi-pencil\"></i> Edit</button></td>`;
+                }
+                tbody.appendChild(tr);
+            }
+        }
+        // Chart
+        if (chart) chart.destroy();
+        const ctx = document.getElementById('growthChart').getContext('2d');
+        chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: results.map(r => 'Year ' + r.year),
+                datasets: [{
+                    label: 'Value (USD)',
+                    data: results.map(r => r.value),
+                    borderColor: '#f7931a',
+                    backgroundColor: 'rgba(247,147,26,0.1)',
+                    tension: 0.2,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#f7931a',
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {display: false}
+                },
+                scales: {
+                    x: {title: {display: true, text: 'Year'}},
+                    y: {title: {display: true, text: 'Value (USD)'}}
+                }
+            }
+        });
+        
+        // Update all actions table
+        updateAllActionsTable();
+        
+        saveToUrl();
+    }
+
+    function updateAllActionsTable() {
+        const tbody = document.querySelector('#allActionsTable tbody');
+        tbody.innerHTML = '';
+        
+        // Sort actions by start date
+        const sortedActions = [...scenario.actions].sort((a, b) => 
+            new Date(a.startDate) - new Date(b.startDate)
+        );
+        
+        // Add rows for each action
+        sortedActions.forEach((action, idx) => {
+            const tr = document.createElement('tr');
+            const typeLabel = {
+                'purchase': 'Purchase',
+                'sale': 'Sale',
+                'cost': 'Cost',
+                'growth': 'Growth Rate Adjustment'
+            }[action.type];
+            
+            const amountDisplay = action.type === 'growth' ? 
+                `${action.amount}%` : 
+                `$${parseFloat(action.amount).toLocaleString(undefined, {maximumFractionDigits:2})}`;
+            
+            const frequencyDisplay = action.type === 'growth' ? 
+                '' : 
+                action.freq.charAt(0).toUpperCase() + action.freq.slice(1);
+            
+            tr.innerHTML = `
+                <td>${typeLabel}</td>
+                <td>${amountDisplay}</td>
+                <td>${frequencyDisplay}</td>
+                <td>${new Date(action.startDate).toLocaleDateString()}</td>
+                <td>${action.stopDate ? new Date(action.stopDate).toLocaleDateString() : 'Ongoing'}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-secondary action-btn" onclick="editAction(${idx})">
+                        <i class="bi bi-pencil"></i> Edit
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteAction(${idx})">
+                        <i class="bi bi-trash"></i> Delete
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+        
+        // If no actions, show a message
+        if (sortedActions.length === 0) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = '<td colspan="6" class="text-center">No actions defined</td>';
+            tbody.appendChild(tr);
+        }
+    }
+
+    // --- Event Handlers ---
+    document.getElementById('paramsForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        scenario.startDate = document.getElementById('startDate').value;
+        scenario.initialValue = parseFloat(document.getElementById('initialValue').value);
+        scenario.initialGrowth = parseFloat(document.getElementById('initialGrowth').value);
+        scenario.years = parseInt(document.getElementById('years').value);
+        updateUI();
+    });
+    document.getElementById('resetBtn').onclick = function() {
+        scenario = {
+            initialValue: 1000,
+            initialGrowth: 20,
+            years: 10,
+            startDate: new Date().toISOString().split('T')[0],
+            actions: [],
+            growthRates: []
+        };
+        updateUI();
+    };
+    document.getElementById('exportBtn').onclick = exportScenario;
+    document.getElementById('importBtn').onclick = () => document.getElementById('importFile').click();
+    document.getElementById('importFile').onchange = e => importScenario(e.target.files[0]);
+    document.getElementById('exportGrowthBtn').onclick = exportGrowthRates;
+    document.getElementById('importGrowthBtn').onclick = () => document.getElementById('importGrowthFile').click();
+    document.getElementById('importGrowthFile').onchange = e => importGrowthRates(e.target.files[0]);
+    document.getElementById('addGrowthRampBtn').onclick = () => { document.getElementById('growthRampForm').reset(); new bootstrap.Modal(document.getElementById('growthRampModal')).show(); };
+    document.getElementById('growthRampForm').onsubmit = function(e) {
+        e.preventDefault();
+        scenario.growthRates.push({
+            startYear: parseInt(document.getElementById('grStartYear').value),
+            startRate: parseFloat(document.getElementById('grStartRate').value),
+            endRate: parseFloat(document.getElementById('grEndRate').value),
+            plateauYear: parseInt(document.getElementById('grPlateauYear').value),
+            plateauRate: parseFloat(document.getElementById('grPlateauRate').value)
+        });
+        updateUI();
+        bootstrap.Modal.getInstance(document.getElementById('growthRampModal')).hide();
+    };
+    window.deleteGrowthRamp = function(idx) {
+        scenario.growthRates.splice(idx, 1);
+        updateUI();
+    };
+
+    // Table row actions
+    document.querySelector('#growthTable').addEventListener('click', function(e) {
+        if (e.target.closest('.action-btn')) {
+            const year = parseInt(e.target.closest('.action-btn').dataset.year);
+            openRecurringModal(year);
+        }
+        if (e.target.closest('.year-link')) {
+            e.preventDefault();
+            const year = parseInt(e.target.closest('.year-link').dataset.year);
+            openRecurringModal(year);
+        }
+    });
+
+    function openRecurringModal(year) {
+        document.getElementById('recurringForm').reset();
+        document.getElementById('recDateNote').textContent = '';
+        
+        // Show/hide year actions list
+        const yearActionsList = document.getElementById('yearActionsList');
+        const modalYear = document.getElementById('modalYear');
+        const modalYearActions = document.getElementById('modalYearActions');
+        
+        if (year) {
+            yearActionsList.style.display = 'block';
+            modalYear.textContent = year;
+            
+            // Get start and end dates for the year
+            const startDate = new Date(scenario.startDate);
+            startDate.setFullYear(startDate.getFullYear() + year - 1);
+            const endDate = new Date(startDate);
+            endDate.setFullYear(endDate.getFullYear() + 1);
+            
+            // Filter actions for this year
+            const yearActions = scenario.actions.filter(action => {
+                const actionStart = new Date(action.startDate);
+                const actionEnd = action.stopDate ? new Date(action.stopDate) : new Date(9999, 11, 31);
+                return actionStart <= endDate && actionEnd >= startDate;
+            });
+            
+            // Clear and populate the table
+            modalYearActions.innerHTML = '';
+            yearActions.forEach((action, idx) => {
+                const tr = document.createElement('tr');
+                const typeLabel = {
+                    'purchase': 'Purchase',
+                    'sale': 'Sale',
+                    'cost': 'Cost',
+                    'growth': 'Growth Rate Adjustment'
+                }[action.type];
+                
+                const amountDisplay = action.type === 'growth' ? 
+                    `${action.amount}%` : 
+                    `$${parseFloat(action.amount).toLocaleString(undefined, {maximumFractionDigits:2})}`;
+                
+                tr.innerHTML = `
+                    <td>${typeLabel}</td>
+                    <td>${amountDisplay}</td>
+                    <td>${new Date(action.startDate).toLocaleDateString()}</td>
+                    <td>${action.stopDate ? new Date(action.stopDate).toLocaleDateString() : 'Ongoing'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="editAction(${idx})">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteAction(${idx})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                `;
+                modalYearActions.appendChild(tr);
+            });
+            
+            // If no actions, show a message
+            if (yearActions.length === 0) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = '<td colspan="5" class="text-center">No actions for this year</td>';
+                modalYearActions.appendChild(tr);
+            }
+        } else {
+            yearActionsList.style.display = 'none';
+        }
+        
+        new bootstrap.Modal(document.getElementById('recurringModal')).show();
+    }
+    document.getElementById('recType').addEventListener('change', function() {
+        const isGrowth = this.value === 'growth';
+        const freqSection = document.getElementById('frequencySection');
+        if (isGrowth) {
+            freqSection.style.display = 'none';
+            document.getElementById('recFreq').value = 'daily'; // Default to daily for growth
+        } else {
+            freqSection.style.display = 'block';
+        }
+    });
+    document.getElementById('recurringForm').onsubmit = function(e) {
+        e.preventDefault();
+        const type = document.getElementById('recType').value;
+        const amount = parseFloat(document.getElementById('recAmount').value);
+        const freq = type === 'growth' ? 'daily' : document.getElementById('recFreq').value;
+        const startDate = document.getElementById('recStartDate').value;
+        const stopDate = document.getElementById('recStopDate').value;
+        scenario.actions.push({type, amount, freq, startDate, stopDate});
+        updateUI();
+        bootstrap.Modal.getInstance(document.getElementById('recurringModal')).hide();
+    };
+
+    function editAction(idx) {
+        const action = scenario.actions[idx];
+        document.getElementById('recType').value = action.type;
+        document.getElementById('recAmount').value = action.amount;
+        document.getElementById('recFreq').value = action.freq;
+        document.getElementById('recStartDate').value = action.startDate;
+        document.getElementById('recStopDate').value = action.stopDate || '';
+        
+        // Trigger type change to handle frequency visibility
+        document.getElementById('recType').dispatchEvent(new Event('change'));
+        
+        // Update form submission to handle edit
+        const form = document.getElementById('recurringForm');
+        const originalSubmit = form.onsubmit;
+        form.onsubmit = function(e) {
+            e.preventDefault();
+            const type = document.getElementById('recType').value;
+            const amount = parseFloat(document.getElementById('recAmount').value);
+            const freq = type === 'growth' ? 'daily' : document.getElementById('recFreq').value;
+            const startDate = document.getElementById('recStartDate').value;
+            const stopDate = document.getElementById('recStopDate').value;
+            
+            scenario.actions[idx] = {type, amount, freq, startDate, stopDate};
+            updateUI();
+            bootstrap.Modal.getInstance(document.getElementById('recurringModal')).hide();
+            
+            // Restore original submit handler
+            form.onsubmit = originalSubmit;
+        };
+    }
+
+    function deleteAction(idx) {
+        if (confirm('Are you sure you want to delete this action?')) {
+            scenario.actions.splice(idx, 1);
+            updateUI();
+            // Refresh the modal's year actions list
+            const modalYear = document.getElementById('modalYear');
+            if (modalYear.textContent) {
+                openRecurringModal(parseInt(modalYear.textContent));
+            }
+        }
+    }
+
+    // --- On Load ---
+    loadFromUrl();
+    updateUI();
+
+    // Event handlers for show mode
+    document.getElementById('showAllMonthsBtn').onclick = function() {
+        showMode = 'all';
+        this.classList.add('active');
+        document.getElementById('showEndOfYearBtn').classList.remove('active');
+        updateUI();
+    };
+    document.getElementById('showEndOfYearBtn').onclick = function() {
+        showMode = 'eoy';
+        this.classList.add('active');
+        document.getElementById('showAllMonthsBtn').classList.remove('active');
+        updateUI();
+    };
+
+    // Table row actions for end-of-year mode
+    document.querySelector('#growthTable').addEventListener('click', function(e) {
+        if (showMode === 'eoy' && e.target.closest('.eoy-link')) {
+            e.preventDefault();
+            const year = parseInt(e.target.closest('.eoy-link').dataset.year);
+            showYearModal(year);
+        }
+    });
+
+    // Modal for showing monthly breakdown (to be implemented)
+    function showYearModal(year) {
+        // Placeholder: alert with months for now
+        const months = results.filter(r => r.year === year);
+        let msg = `Monthly results for ${year}:\n`;
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        months.forEach(r => {
+            msg += `${monthNames[r.month]}: $${Math.round(r.value).toLocaleString()}\n`;
+        });
+        alert(msg);
+    }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

@@ -2,12 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bitcoin-Accepting Businesses Directory</title>
-    <!-- Roboto Condensed font -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" 
           integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" 
@@ -69,21 +68,21 @@
         }
         .detail-header {
             border-bottom: 2px solid #f7931a;
-            padding-bottom: 20px;
+            padding-bottom: 20px; /* Increase bottom padding to create more space before the border */
             margin-bottom: 20px;
             position: relative;
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
             align-items: flex-start;
-            padding-top: 35px;
-            padding-right: 160px;
+            padding-top: 35px; /* Increase top padding to make room for larger logo */
+            padding-right: 160px; /* Increase padding to make room for larger logo */
         }
         .business-logo {
             position: absolute;
-            top: 30px;
+            top: 30px; /* Match the padding-top of detail-header */
             right: 0;
-            width: 150px;
+            width: 150px; /* Increase default logo size */
             height: 150px;
             border-radius: 8px;
             display: flex;
@@ -92,8 +91,8 @@
             overflow: hidden;
             background-color: white;
             padding: 5px;
-            border: 1px solid #e9ecef;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e9ecef; /* Add subtle border */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Add subtle shadow */
         }
         .business-logo img {
             max-width: 100%;
@@ -106,11 +105,11 @@
             margin: 0;
             flex: 1;
             min-width: 200px;
-            padding-right: 160px;
+            padding-right: 160px; /* Increase to match .detail-header padding-right */
             word-wrap: break-word;
             overflow-wrap: break-word;
             word-break: normal;
-            hyphens: none;
+            hyphens: auto;
             line-height: 1.3;
         }
         .back-button {
@@ -119,7 +118,7 @@
             position: absolute;
             top: 0;
             left: 0;
-            padding: 5px 0;
+            padding: 5px 0; /* Add some padding for better clickable area */
         }
         .back-button:hover {
             text-decoration: underline;
@@ -127,64 +126,17 @@
         #detailCategories {
             width: 100%;
             margin-top: 10px;
-            padding-right: 160px;
+            padding-right: 160px; /* Increase to match .detail-header padding-right */
             display: flex;
             flex-wrap: wrap;
             gap: 5px;
         }
-
-        /* Add responsive adjustments for mobile */
-        @media (max-width: 768px) {
-            .detail-header {
-                padding-right: 20px;
-                padding-top: 45px;
-            }
-            
-            .detail-header h2 {
-                padding-right: 0;
-                font-size: 1.5rem;
-                width: 100%;
-            }
-            
-            .business-logo {
-                position: relative;
-                top: 0;
-                right: auto;
-                width: 100px;
-                height: 100px;
-                margin-bottom: 15px;
-            }
-            
-            #detailCategories {
-                padding-right: 0;
-                margin-top: 5px;
-                gap: 8px;
-            }
-            
-            .category-badge {
-                margin: 0;
-                white-space: nowrap;
-                font-size: 0.85rem;
-                padding: 4px 8px;
-            }
-        }
-
         .detail-section {
-            margin-bottom: 1.5rem;
+            margin-bottom: 15px;
         }
         .detail-label {
-            font-family: 'Roboto Condensed', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.01em;
-        }
-        .detail-section > div:not(.detail-label) {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #4a5568;
+            font-weight: bold;
+            color: #495057;
         }
         .no-results {
             text-align: center;
@@ -769,216 +721,6 @@
             height: auto;
             margin: 1rem 0;
         }
-
-        /* Mobile-friendly toggle fixes */
-        .mobile-toggle {
-            /* Removed size overrides to keep original toggle size */
-            cursor: pointer !important;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        .mobile-toggle-label {
-            cursor: pointer !important;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-        
-        /* Add tap highlight fixes for iOS */
-        input[type="checkbox"].mobile-toggle + label {
-            pointer-events: auto !important;
-        }
-        
-        @media (max-width: 768px) {
-            .form-check-input.mobile-toggle:before {
-                content: '';
-                position: absolute;
-                top: -10px;
-                right: -10px;
-                bottom: -10px;
-                left: -10px;
-                z-index: -1;
-            }
-        }
-
-        /* Fix for table columns to maintain consistent width */
-        .list-view-table {
-            table-layout: fixed;
-            width: 100%;
-        }
-        
-        .list-view-table th:nth-child(1) {
-            width: 25%;
-        }
-        
-        .list-view-table th:nth-child(2) {
-            width: 25%;
-        }
-        
-        .list-view-table th:nth-child(3) {
-            width: 25%;
-        }
-        
-        .list-view-table th.distance-column {
-            width: 10%;
-        }
-        
-        .list-view-table th:last-child {
-            width: 15%;
-        }
-        
-        /* Ensure content doesn't overflow and break layout */
-        .list-view-table td {
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-        
-        /* Style for social links in table to prevent overflow */
-        td .social-link {
-            display: inline-flex;
-            width: 26px;
-            height: 26px;
-            font-size: 0.85rem;
-            margin-right: 4px;
-            margin-bottom: 4px;
-            align-items: center;
-            justify-content: center;
-            vertical-align: middle;
-        }
-        
-        /* Make social links wrap in table cells */
-        td .social-link-container {
-            display: flex;
-            flex-wrap: wrap;
-            max-width: 100%;
-            width: 100%;
-            align-items: center;
-            padding-right: 5px;
-        }
-        
-        /* Specific styling for social media cell */
-        .social-media-cell {
-            max-width: 150px;
-            width: 150px;
-            white-space: normal !important;
-        }
-        
-        /* Ensure images inside social links are properly sized and aligned */
-        td .social-link img {
-            width: 16px;
-            height: 16px;
-            vertical-align: middle;
-            object-fit: contain;
-        }
-        
-        /* Ensure icons are aligned properly */
-        td .social-link i {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-        }
-        
-        /* Make table stretch full width */
-        #listView .table-responsive {
-            width: 100%;
-            margin: 0;
-            padding: 0;
-        }
-        
-        /* Mobile-specific adjustments for the table */
-        @media (max-width: 767px) {
-            /* Make table scroll horizontally on small screens */
-            .table-responsive {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-            
-            /* Adjust column widths for mobile */
-            .list-view-table th:nth-child(1) {
-                width: 140px; /* Fixed width for business name */
-            }
-            
-            .list-view-table th:nth-child(2) {
-                width: 150px; /* Fixed width for categories */
-            }
-            
-            .list-view-table th:nth-child(3) {
-                width: 120px; /* Fixed width for location */
-            }
-            
-            .list-view-table th.distance-column {
-                width: 90px;
-            }
-            
-            .list-view-table th:last-child {
-                width: 110px;
-            }
-            
-            /* Ensure minimum width for the whole table */
-            .list-view-table {
-                min-width: 600px;
-            }
-            
-            /* Make social icons even smaller on mobile */
-            td .social-link {
-                width: 28px;
-                height: 28px;
-                font-size: 0.85rem;
-                margin-right: 3px;
-                margin-bottom: 3px;
-            }
-            
-            /* Improve icon wrapping on mobile */
-            td .social-link-container {
-                display: flex;
-                flex-wrap: wrap !important;
-                flex-direction: row;
-                width: 100%;
-                max-width: 90px;
-                padding-right: 0;
-            }
-            
-            /* Force table cells to accommodate wrapping */
-            .list-view-table td:last-child {
-                white-space: normal !important;
-                overflow: visible;
-                min-width: 110px;
-                max-width: 110px;
-            }
-        }
-
-        /* Map disclaimer styling */
-        .map-disclaimer {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            right: 10px;
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            color: #666;
-            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
-            z-index: 1000;
-            text-align: center;
-        }
-        
-        .map-disclaimer i {
-            color: #f7931a;
-            margin-right: 5px;
-        }
-        
-        @media (max-width: 767px) {
-            .map-disclaimer {
-                font-size: 0.75rem;
-                padding: 6px 8px;
-                bottom: 5px;
-                left: 5px;
-                right: 5px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -1029,23 +771,9 @@
                     <input type="text" class="form-control" id="locationInput" placeholder="Filter by location (city, region, country)...">
                 </div>
             </div>
-            <div class="row mt-2">
+            <div class="row mt-3">
                 <div class="col-md-6 mb-2">
-                    <div class="d-flex flex-wrap">
-                        <div class="form-check form-switch mb-4 me-4">
-                            <input class="form-check-input mobile-toggle" type="checkbox" id="bitcoinOnlyToggle" role="switch">
-                            <label class="form-check-label small mobile-toggle-label" for="bitcoinOnlyToggle" style="min-height: 30px; display: flex; align-items: center; padding: 0;">
-                                <img src="images/icons/btcLogo.svg" alt="Bitcoin" height="20" class="me-1"> Only
-                            </label>
-                        </div>
-                        <div class="form-check form-switch mb-4">
-                            <input class="form-check-input mobile-toggle" type="checkbox" id="nostrToggle" role="switch">
-                            <label class="form-check-label mobile-toggle-label" for="nostrToggle" style="min-height: 30px; display: flex; align-items: center; padding: 0;">
-                                <img src="images/icons/nostr_logo_blk.svg" alt="Nostr" height="20" class="me-1">
-                            </label>
-                        </div>
-                    </div>
-                    <button class="btn btn-outline-secondary btn-sm" type="button" id="clearFilters">Clear Filters</button>
+                    <button class="btn btn-outline-secondary" type="button" id="clearFilters">Clear Filters</button>
                 </div>
                 <div class="col-md-6 mb-2">
                     <label class="form-label">My Location:</label>
@@ -1188,9 +916,6 @@
                     <div id="mapView" style="display: none;">
                         <div class="map-container mb-4">
                             <div id="directoryMap"></div>
-                            <div class="map-disclaimer">
-                                <i class="bi bi-info-circle"></i> Note: Location pins are approximate as most businesses don't provide exact addresses.
-                            </div>
                         </div>
                         
                         <!-- Map Business Detail Panel -->
@@ -1332,16 +1057,14 @@
     </div>
 </footer>
 
-    <!-- Load libraries first -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
             integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
             crossorigin=""></script>
 
-    <!-- Load our app code last -->
-    <script src="main.js?v=20250509"></script>
+    <script src="main.js?v=1208"></script>
 
 </body>
 </html>

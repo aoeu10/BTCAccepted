@@ -252,6 +252,69 @@
             margin-top: 15px;
             display: none;
         }
+        /* Add these styles for the preview */
+        #markdownPreview {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+        }
+        
+        #markdownPreview h1,
+        #markdownPreview h2,
+        #markdownPreview h3,
+        #markdownPreview h4,
+        #markdownPreview h5,
+        #markdownPreview h6 {
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        #markdownPreview p {
+            margin-bottom: 1rem;
+        }
+        
+        #markdownPreview ul,
+        #markdownPreview ol {
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        #markdownPreview blockquote {
+            border-left: 3px solid #f7931a;
+            padding-left: 1rem;
+            margin-left: 0;
+            color: #666;
+        }
+        
+        #markdownPreview code {
+            background-color: #f8f9fa;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-size: 85%;
+        }
+        
+        #markdownPreview pre {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        #markdownPreview a {
+            color: #f7931a;
+            text-decoration: none;
+        }
+        
+        #markdownPreview a:hover {
+            text-decoration: underline;
+        }
+        
+        #markdownPreview img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
     </style>
 </head>
 <body>
@@ -766,8 +829,8 @@
                                             <div class="row">
                                                 <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
                                                     <div class="form-check">
-                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-apiculture" value="Apiculture" data-parent="Food & Drink">
-                                                        <label class="form-check-label" for="subcat-apiculture">Apiculture</label>
+                                                        <input class="form-check-input subcategory" type="checkbox" id="subcat-apiculture" value="Apiculture/Honey" data-parent="Food & Drink">
+                                                        <label class="form-check-label" for="subcat-apiculture">Apiculture/Honey</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3 col-md-4 col-sm-6 mb-1">
@@ -1282,10 +1345,17 @@
                             </div>
                             <div class="col-md-12 mb-3">
                                 <label for="businessDescription" class="form-label">Description</label>
+                                <div class="d-flex gap-2 mb-2">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" id="previewMarkdownBtn">
+                                        <i class="bi bi-eye"></i> Preview Markdown
+                                    </button>
+                                    <a href="https://www.markdownguide.org/basic-syntax/" target="_blank" rel="noopener noreferrer" class="btn btn-outline-secondary btn-sm">
+                                        <i class="bi bi-markdown"></i> Formatting Guide
+                                    </a>
+                                </div>
                                 <textarea class="form-control" id="businessDescription" rows="5" placeholder="Describe the business. Markdown formatting is supported:&#10;&#10;**bold text**&#10;*italic text*&#10;- bullet points&#10;[link text](https://example.com)&#10;&#10;Use Markdown to make your description more readable!"></textarea>
                                 <div class="form-text">
-                                    <i class="bi bi-markdown"></i> Markdown formatting is supported. 
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#markdownHelpModal">View formatting guide</a>
+                                    <i class="bi bi-markdown"></i> Markdown formatting is supported.
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
@@ -1300,6 +1370,17 @@
                         
                         <div class="row">
                             <div class="col-md-6 mb-3">
+                                <div class="border-bottom pb-3 mb-3">
+                                    <label class="form-label">Business Type</label>
+                                    <div>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" id="bitcoinOnlyCheckbox">
+                                            <label class="form-check-label" for="bitcoinOnlyCheckbox">Bitcoin Only Business</label>
+                                        </div>
+                                        <div class="form-text text-muted">Check this if the business exclusively accepts Bitcoin and no other payment methods</div>
+                                    </div>
+                                </div>
+                                
                                 <label class="form-label">Payment Methods *</label>
                                 <div>
                                     <div class="form-check">
@@ -1437,6 +1518,25 @@
         </div>
     </div>
 
+    <!-- Markdown Preview Modal -->
+    <div class="modal fade" id="markdownPreviewModal" tabindex="-1" aria-labelledby="markdownPreviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="markdownPreviewModalLabel">Description Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="markdownPreview" class="p-3 border rounded bg-light" style="min-height: 200px;">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
@@ -1521,8 +1621,8 @@
                 
                 // Set current date for lastVerified
                 const now = new Date();
-                const isoDate = now.toISOString().split('T')[0];
-                document.getElementById('businessLastVerified').value = isoDate;
+                const localDate = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+                document.getElementById('businessLastVerified').value = localDate;
                 
                 // Update modal title
                 document.getElementById('businessModalLabel').textContent = 'Add New Business';
@@ -1787,6 +1887,7 @@
             // Ensure payment methods structure
             if (!normalized.paymentMethods) {
                 normalized.paymentMethods = {
+                    bitcoinOnly: false,
                     onchain: false,
                     lightning: false,
                     ecash: false,
@@ -1795,6 +1896,7 @@
                 };
             } else if (typeof normalized.paymentMethods !== 'object') {
                 normalized.paymentMethods = {
+                    bitcoinOnly: false,
                     onchain: false,
                     lightning: false,
                     ecash: false,
@@ -1904,6 +2006,12 @@
                 // Create cell for payment methods
                 const paymentCell = document.createElement('td');
                 if (business.paymentMethods) {
+                    if (business.paymentMethods.bitcoinOnly) {
+                        const badge = document.createElement('span');
+                        badge.className = 'badge bg-dark me-1';
+                        badge.textContent = 'Bitcoin Only';
+                        paymentCell.appendChild(badge);
+                    }
                     if (business.paymentMethods.onchain) {
                         const badge = document.createElement('span');
                         badge.className = 'badge bg-warning me-1';
@@ -1942,8 +2050,10 @@
                 // Create cell for last verified
                 const verifiedCell = document.createElement('td');
                 if (business.lastVerified) {
+                    // Adjust the date to local timezone before displaying
                     const date = new Date(business.lastVerified);
-                    verifiedCell.textContent = date.toLocaleDateString();
+                    const localDate = new Date(date.getTime() + (date.getTimezoneOffset() * 60000));
+                    verifiedCell.textContent = localDate.toLocaleDateString();
                 } else {
                     verifiedCell.textContent = 'Not verified';
                 }
@@ -2157,6 +2267,12 @@
                     const paymentCell = document.createElement('td');
                     const paymentMethods = [];
                     if (business.paymentMethods) {
+                        if (business.paymentMethods.bitcoinOnly) {
+                            const badge = document.createElement('span');
+                            badge.className = 'badge bg-dark me-1';
+                            badge.textContent = 'Bitcoin Only';
+                            paymentCell.appendChild(badge);
+                        }
                         if (business.paymentMethods.onchain) {
                             const badge = document.createElement('span');
                             badge.className = 'badge bg-warning me-1';
@@ -2529,8 +2645,8 @@
             
             // Set current date for lastVerified
             const now = new Date();
-            const isoDate = now.toISOString().split('T')[0];
-            document.getElementById('businessLastVerified').value = isoDate;
+            const localDate = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+            document.getElementById('businessLastVerified').value = localDate;
             
             // Update modal title
             document.getElementById('businessModalLabel').textContent = 'Add New Business';
@@ -2572,6 +2688,7 @@
             document.getElementById('businessLogoUrl').value = business.logoUrl || '';
             
             // Set payment methods
+            document.getElementById('bitcoinOnlyCheckbox').checked = business.paymentMethods?.bitcoinOnly || false;
             document.getElementById('onchainCheckbox').checked = business.paymentMethods?.onchain || false;
             document.getElementById('lightningCheckbox').checked = business.paymentMethods?.lightning || false;
             document.getElementById('ecashCheckbox').checked = business.paymentMethods?.ecash || false;
@@ -2604,12 +2721,14 @@
             // Set last verified date
             if (business.lastVerified) {
                 const date = new Date(business.lastVerified);
-                const isoDate = date.toISOString().split('T')[0]; // Get just the date part YYYY-MM-DD
-                document.getElementById('businessLastVerified').value = isoDate;
+                // Use local date formatting instead of UTC
+                const localDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+                document.getElementById('businessLastVerified').value = localDate;
             } else {
                 const now = new Date();
-                const isoDate = now.toISOString().split('T')[0];
-                document.getElementById('businessLastVerified').value = isoDate;
+                // Use local date formatting instead of UTC
+                const localDate = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
+                document.getElementById('businessLastVerified').value = localDate;
             }
             
             // Update modal title
@@ -2642,6 +2761,9 @@
             // Get categories
             const categories = getSelectedCategories();
             
+            // Clean up description text
+            const description = document.getElementById('businessDescription').value.trim();
+            
             // Create business object
             const business = {
                 name: name,
@@ -2656,9 +2778,10 @@
                 submittedBy: document.querySelector('input[name="submittedBy"]:checked')?.value || 'User',
                 email: document.getElementById('businessEmail').value,
                 phone: document.getElementById('businessPhone').value,
-                description: document.getElementById('businessDescription').value,
+                description: description,
                 logoUrl: document.getElementById('businessLogoUrl').value,
                 paymentMethods: {
+                    bitcoinOnly: document.getElementById('bitcoinOnlyCheckbox').checked || false,
                     onchain: document.getElementById('onchainCheckbox').checked || false,
                     lightning: document.getElementById('lightningCheckbox').checked || false,
                     ecash: document.getElementById('ecashCheckbox').checked || false,
@@ -2678,7 +2801,8 @@
                     keet: document.getElementById('keetInput').value || null,
                     simplex: document.getElementById('simplexInput').value || null
                 },
-                lastVerified: document.getElementById('businessLastVerified').value || new Date().toISOString().split('T')[0]
+                // Always set lastVerified to the current date when saving
+                lastVerified: new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().split('T')[0]
             };
             
             // Clean up empty social media values
@@ -2740,12 +2864,13 @@
             }
             
             // Check payment methods
+            const bitcoinOnly = document.getElementById('bitcoinOnlyCheckbox').checked;
             const onchain = document.getElementById('onchainCheckbox').checked;
             const lightning = document.getElementById('lightningCheckbox').checked;
             const ecash = document.getElementById('ecashCheckbox').checked;
             const fedi = document.getElementById('fediCheckbox').checked;
             const liquid = document.getElementById('liquidCheckbox').checked;
-            if (!onchain && !lightning && !ecash && !fedi && !liquid) {
+            if (!bitcoinOnly && !onchain && !lightning && !ecash && !fedi && !liquid) {
                 document.getElementById('paymentMethodError').textContent = 'At least one payment method is required';
                 missingFields.push('Payment Methods');
                 isValid = false;
@@ -2849,7 +2974,17 @@
             fileName = fileName + '.json'; // Add .json extension
             
             // Sort businesses by ID for consistency
-            const sortedBusinesses = [...businesses].sort((a, b) => a.id - b.id);
+            const sortedBusinesses = [...businesses].map(business => {
+                // Create a copy of the business object
+                const cleanedBusiness = {...business};
+                
+                // Clean up the description field by removing extra newlines
+                if (cleanedBusiness.description) {
+                    cleanedBusiness.description = cleanedBusiness.description.trim();
+                }
+                
+                return cleanedBusiness;
+            }).sort((a, b) => a.id - b.id);
             
             // Convert to JSON string with pretty formatting
             const jsonString = JSON.stringify(sortedBusinesses, null, 2);
@@ -2947,6 +3082,7 @@
             });
             
             // Get payment methods
+            const bitcoinOnly = document.getElementById('bitcoinOnlyCheckbox').checked;
             const onchain = document.getElementById('onchain').checked;
             const lightning = document.getElementById('lightning').checked;
             const ecash = document.getElementById('ecash').checked;
@@ -2983,6 +3119,7 @@
                     simplex: document.getElementById('simplexInput').value || null
                 },
                 paymentMethods: {
+                    bitcoinOnly: bitcoinOnly,
                     onchain: onchain,
                     lightning: lightning,
                     ecash: ecash,
@@ -3068,6 +3205,37 @@
             logoWrapper.appendChild(logoImg);
             return logoWrapper;
         }
+
+        // Add this to your existing JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Markdown preview functionality
+            const previewBtn = document.getElementById('previewMarkdownBtn');
+            const descriptionTextarea = document.getElementById('businessDescription');
+            const previewModal = new bootstrap.Modal(document.getElementById('markdownPreviewModal'));
+            const previewContainer = document.getElementById('markdownPreview');
+
+            previewBtn.addEventListener('click', function() {
+                const markdownText = descriptionTextarea.value;
+                if (markdownText.trim()) {
+                    previewContainer.innerHTML = marked.parse(markdownText);
+                } else {
+                    previewContainer.innerHTML = '<em>No content to preview</em>';
+                }
+                previewModal.show();
+            });
+
+            // Add live preview on typing (optional, will update preview if it's open)
+            descriptionTextarea.addEventListener('input', function() {
+                if (document.getElementById('markdownPreviewModal').classList.contains('show')) {
+                    const markdownText = this.value;
+                    if (markdownText.trim()) {
+                        previewContainer.innerHTML = marked.parse(markdownText);
+                    } else {
+                        previewContainer.innerHTML = '<em>No content to preview</em>';
+                    }
+                }
+            });
+        });
     </script>
 
     <!-- Markdown Help Modal -->

@@ -58,7 +58,8 @@
       "facebook": "ethicaltreecare"
     },
     "lastVerified": "2025-03-22",
-    "id": 2
+    "id": 2,
+    "category": "Landscaping"
   },
   {
     "name": "Soap Miner",
@@ -302,6 +303,39 @@
     "category": "Food & Drink"
   },
   {
+    "name": "The Bitcoin Bookshop",
+    "slug": "the-bitcoin-bookshop",
+    "categories": [
+      "Books/Magazines",
+      "Books",
+      "Economics"
+    ],
+    "website": "https://bitcoinbook.shop",
+    "country": "",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "The best place to buy bitcoin books in your own language.\n-\nKonsensus Network was founded in 2019 to publish the Finnish translation of The Bitcoin Standard. Niko Laamanen gathered a group of freedom-loving volunteers who rose to the occasion and delivered the first of many books to come. The effort was quickly replicated to translate the Portuguese and Dutch versions of Saifedean Ammous' best-selling book.\n\nOur Growth:\nFive years later, the network has published over 80 books, but this is only the beginning. Konsensus Network is a privately owned company that operates as a hub between authors, license holders, translators, distribution, and production channels.\n\nOur Mission:\nThe original focus of the team has been to raise awareness about Bitcoin and making information accessible through books. As the process of normalization unfolds, the focus is shifting towards broader topics, such as economics and liberty. Our history and expertise, combined with our passion for books, put us in a great position.",
+    "logoUrl": "images/logos/bitcoinbookshopLogo.svg",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "@KonsensusN"
+    },
+    "lastVerified": "2025-04-18",
+    "id": 41,
+    "category": "Books/Magazines"
+  },
+  {
     "name": "Start9",
     "slug": "start9",
     "categories": [
@@ -410,6 +444,114 @@
     "category": "Books/Magazines"
   },
   {
+    "name": "Compass Coffee",
+    "slug": "compass-coffee",
+    "categories": [
+      "Food & Drink",
+      "Coffee"
+    ],
+    "website": "https://www.compasscoffee.com",
+    "country": "US",
+    "isGlobalOrOnline": true,
+    "region": "DC",
+    "city": "Washington",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "That great coffee doesn't have to be complicated, fancy or hard to pronounce.\n-\nWe believe that the best cup of coffee is the one that points you in the right direction at the start of your day, every day: just like a Compass.\n\nWhy coffee and bitcoin?\n🫱🏻‍🫲🏽 Direct Trade: Cutting out the middlemen to bring more value to farmers like Jorge.\n🇸🇻 Empowering Communities: Direct on-chain payments bring value to where it is needed most.\n☕ Innovative Coffee: Combining our passion for coffee, people, and of course: bitcoin.\n-\nWe’re a passionate community of coffee lovers and bitcoiners, united by a love of freedom, innovation, and the best money in the world.",
+    "logoUrl": "images/logos/compassCoffeeLogo.avif",
+    "paymentMethods": {
+      "onchain": false,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "@compasscoffeedc",
+      "facebook": "https://www.facebook.com/compasscoffeedc/",
+      "instagram": "@compasscoffeedc"
+    },
+    "lastVerified": "2025-04-17",
+    "id": 160,
+    "category": "Food & Drink"
+  },
+  {
+    "name": "TraderJ",
+    "slug": "traderj",
+    "categories": [
+      "Eggs",
+      "Farm",
+      "Pet Food",
+      "Duck Eggs"
+    ],
+    "website": "",
+    "country": "US",
+    "isGlobalOrOnline": false,
+    "region": "Ohio",
+    "city": "Milan Township",
+    "owner": "Joshua Farr",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "419-285-6096",
+    "description": "I live in Northern Ohio with my family. We raise ducks for eggs to sell & eat. $7/dozen. My interests include raising ducks, gardening, cryptocurrency, and precious metals. We make and sell fresh-made meat-based dog- and cat-food. I accept Strike, CashApp, Bitcoin, or USD.",
+    "logoUrl": "images/logos/TraderJLogo.jpg",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "nostr": "npub1tn45t05zlvssh7xz3ftfu6d2hszg0kpmdagy9engj4wykwpgm56s0kx968"
+    },
+    "lastVerified": "2025-05-09",
+    "id": 221,
+    "category": "Eggs"
+  },
+  {
+    "name": "The Bitcoin Diaries",
+    "slug": "the-bitcoin-diaries",
+    "categories": [
+      "Merchandise",
+      "Apparel and Accessories",
+      "Clothing",
+      "Fashion accessories",
+      "Headwear",
+      "Footwear",
+      "Homeware",
+      "Swimwear"
+    ],
+    "website": "https://thebitcoindiaries.com",
+    "country": "Australia",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "Jennifer Barton",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "EXCLUSIVE MADE-TO-ORDER BITCOIN APPAREL & HOMEWARE\n\nFashion for the Financial Revolution\nWe sell Bitcoin merch that converts. Not only does our edgy fashion fuel your passion, but it’s also the best way to spark conversations and inspire others to join the community. Ready to wear the movement?",
+    "logoUrl": "images/logos/theBitcoinDiariesLogo.png",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "@btcdiaries21",
+      "instagram": "@btcdiaries21",
+      "nostr": "npub1vm4u34qpv5kxnqv0nca47p4syq7as7pj38uaz20l92krkp6y6dlq5kksg7"
+    },
+    "lastVerified": "2025-04-26",
+    "id": 225,
+    "category": "Merchandise"
+  },
+  {
     "name": "BTC Financial Advisors Network",
     "slug": "btc-financial-advisors-network",
     "categories": [
@@ -441,6 +583,42 @@
     "lastVerified": "2025-04-07",
     "id": 250,
     "category": "Finance"
+  },
+  {
+    "name": "Jennifer Barton",
+    "slug": "jennifer-barton",
+    "categories": [
+      "Creative",
+      "Advertising & Marketing",
+      "Graphic Design",
+      "Media Production",
+      "Web Developer"
+    ],
+    "website": "https://jenniferbarton.com",
+    "country": "Australia",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "Jennifer Barton",
+    "submittedBy": "User",
+    "email": "hello@jenniferbarton.com",
+    "phone": "0415 330 611",
+    "description": "With over a decade of diverse design experience, I’ve built a career that spans two great cities, Sydney and London. My\njourney has taken me through a variety of roles in both agency and client-side environments. For seven years, I’ve been\nimmersed in the dynamic landscape of the financial sector, while earlier in my career, I was fueling creativity in agencies\nserving a wide range of industries, from music and entertainment to tech, retail, health, and travel.\nMy passion lies in staying productive and creative, and I’ve learned that in business and design, there’s an art to balancing\nthe two. I’m not just about generating fresh and engaging ideas; I’m also enthusiastic about streamlining processes and\nsystematising my work for maximum efficiency without compromising on quality. This experience in both the artistic and\nstrategic sides of design positions me well for future endeavours in the field.",
+    "logoUrl": "images/logos/jenniferBartonLogo.png",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "@jenbartondesign",
+      "instagram": "@hipsicana"
+    },
+    "lastVerified": "2025-04-26",
+    "id": 266,
+    "category": "Creative"
   },
   {
     "name": "BTC Aloha",
@@ -497,7 +675,7 @@
     "email": "help@fomo21.com",
     "phone": "",
     "description": "At FOMO21, we believe Bitcoin is more than just a technology—it’s a movement reshaping the way we think about freedom, innovation, and the future. Its revolutionary, non-violent principles inspire hope for a better world. Our mission is to create fun, high-quality merchandise that not only promotes Bitcoin adoption but also celebrates the values of decentralization, independence, and financial empowerment. Whether you're a die-hard Bitcoiner or exploring the ethos of this transformative lifestyle, FOMO21 is here to help you wear your passion and spark conversations about a brighter, freer future.",
-    "logoUrl": "",
+    "logoUrl": "images/logos/fomo21Logo.png",
     "paymentMethods": {
       "onchain": true,
       "lightning": true,
@@ -564,7 +742,7 @@
     "email": "info@saifedean.com",
     "phone": "",
     "description": "THE BITCOINERS' BOOKSHOP\nThe best bitcoin books delivered worldwide in all formats, at the best prices, with the best bitcoin & fiat checkout experience.\n\nFounded by best-selling author Saifedean Ammous, The Saif House makes the best Bitcoin books available worldwide, in physical, digital, and audio formats, while allowing you to pay in bitcoin (lightning or on-chain), or with fiat.",
-    "logoUrl": "images/logos/thesaifhouse.png",
+    "logoUrl": "images/logos/thesaifhouseLogo.png",
     "paymentMethods": {
       "onchain": true,
       "lightning": true,
@@ -630,7 +808,7 @@
     "submittedBy": "User",
     "email": "",
     "phone": "",
-    "description": "SweetSats is itcoin only. Prices are listed in Sats, and payment is accepted only in Bitcoin. This site is self-hosted and payments are processed via BTCPay server direct to our node or Zaps sent to our self-custodial Lightning address. Meaning: there are no third parties involved. No tracking, no credit card processors, no sales tax, no bullshit. Simply trading pure honey, maple syrup and other homemade & homegrown products for Bitcoin!",
+    "description": "SweetSats is Bitcoin only. Prices are listed in Sats, and payment is accepted only in Bitcoin. This site is self-hosted and payments are processed via BTCPay server direct to our node or Zaps sent to our self-custodial Lightning address. Meaning: there are no third parties involved. No tracking, no credit card processors, no sales tax, no bullshit. Simply trading pure honey, maple syrup and other homemade & homegrown products for Bitcoin!",
     "logoUrl": "images/logos/SweetSatsLogo.png",
     "paymentMethods": {
       "onchain": true,
@@ -680,9 +858,114 @@
     "category": "Internet Services"
   },
   {
+    "name": "Good Beans El Salvador Specialty Coffee Shop",
+    "slug": "good-beans-el-salvador-specialty-coffee-shop",
+    "categories": [
+      "Food & Drink",
+      "Coffee"
+    ],
+    "website": "https://thegoodbeans.com",
+    "country": "El Salvador",
+    "isGlobalOrOnline": true,
+    "region": "San Salvador",
+    "city": "Colonia San Benito",
+    "owner": "Gabe & Dave",
+    "submittedBy": "User",
+    "email": "goodbeans.sv@gmail.com",
+    "phone": "",
+    "description": "Hello from El Salvador! \n\nWelcome to GoodBeans! We're a small, passionate team of two people based in San Salvador, El Salvador, dedicated to bringing you the finest 100% Salvadoran coffees. We personally know every coffee grower we work with and practice direct trade without asking for discounts, ensuring fair prices for our farmers. By sourcing, processing, and roasting our strictly high-grown, specialty-grade beans locally, we guarantee the freshest coffee for you and the profits from the entire value chain staying at origin. We're 100% Salvadoran owned and operated. \n\nWe strive to provide you with the best quality coffee beans, we roast every single week in order to have the freshest roasts available. \n\nOur commitment to quality goes beyond the beans. We take pride in experimenting with various processing methods to create unique and flavorful blends. Our signature blends and limited editions reflect the rich diversity of Salvadoran coffee. We love sharing our passion for coffee and invite you to join us on this journey, whether you’re a seasoned coffee aficionado or just starting to explore the world of specialty coffee.\n\nWe ship worldwide directly from El Salvador, so you can enjoy our exceptional coffee no matter where you are. Visit us online or drop by our shop for the perfect cup. We look forward to serving you!",
+    "logoUrl": "images/logos/goodbeansLogo.webp",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {},
+    "lastVerified": "2025-04-12",
+    "id": 495,
+    "category": "Food & Drink"
+  },
+  {
+    "name": "Sown & Grown",
+    "slug": "sown-grown",
+    "categories": [
+      "Food & Drink",
+      "Apiculture",
+      "Coffee",
+      "Eggs",
+      "Farm",
+      "Meat",
+      "Bread",
+      "Chocolate",
+      "Fudge",
+      "Organic Produce"
+    ],
+    "website": "https://sowngrownfoods.com",
+    "country": "El Salvador",
+    "isGlobalOrOnline": false,
+    "region": "",
+    "city": "",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "At Sown & Grown, our philosophy is empowering you, the consumer, to understand where your produce is coming from and how it was cultivated. Every purchase made from Sown & Grown helps us to help you gain this important insight. Use this page to gain an understanding of how we work to empower you to make better-informed choices.\n\nTrust\n\nThe closer you are to the source of the produce, the greater the trust.  From our own farms, we guarantee every statement made about how our produce was cultivated. When sourcing from other farms, we gather as much information as possible from the farmers and pass their statements on to you. \n\nOur Mission\n\nAt Sown & Grown, our mission is to incentivize better, more wholesome farming practices in Central America. We aim to do that by empowering you, the consumer, to make better-informed choices about your food, and to hold food producers to higher standards of accountability. It is our hope that by enabling you to vote with your wallet, we can elevate farming practices in Central America to the benefit of everyone.",
+    "logoUrl": "images/logos/sowngrownLogo.avif",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "SownGrownSV",
+      "facebook": "https://www.facebook.com/people/Sown-Grown-Produce/61573743961534/"
+    },
+    "lastVerified": "2025-04-12",
+    "id": 497,
+    "category": "Food & Drink"
+  },
+  {
+    "name": "Adaptogenic Bliss",
+    "slug": "adaptogenic-bliss",
+    "categories": [
+      "Supplements",
+      "Tea",
+      "Adaptogen Capsules"
+    ],
+    "website": "https://adaptogenicbliss.com",
+    "country": "US",
+    "isGlobalOrOnline": false,
+    "region": "",
+    "city": "",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "adaptogenicbliss@protonmail.com",
+    "phone": "",
+    "description": "Empowering Balance Through Nature.\n\nPotent herbal teas & adaptogen capsules for body, mind & soul. Harnessing Natures Magic.\n\nAt Adaptogenic Bliss, we harness the natural power of plants to create herbal teas and adaptogen capsules that nurture your physical, emotional, and mental well-being in today’s busy world.\na close up of a plant with green leaves\n\nOur products blend ancient wisdom with modern wellness, helping you stay calm, grounded, and energized through life’s ups and downs. Discover the balance that nature can bring to your life.",
+    "logoUrl": "images/logos/adaptogenicBlissLogo.png",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "nostr": "npub1n3rmk5g03eej40rg2x83azxnml879lxxynxegfawl36e6qqrs8gqllmkh7"
+    },
+    "lastVerified": "2025-04-17",
+    "id": 530,
+    "category": "Supplements"
+  },
+  {
     "name": "Satoshi Coffee Co.",
     "slug": "satoshi-coffee-co",
     "categories": [
+      "Food & Drink",
       "Coffee"
     ],
     "website": "https://sats.coffee",
@@ -710,7 +993,38 @@
     },
     "lastVerified": "2025-04-06",
     "id": 621,
-    "category": "Coffee"
+    "category": "Food & Drink"
+  },
+  {
+    "name": "Mapletrade",
+    "slug": "mapletrade",
+    "categories": [
+      "Maple Syrup"
+    ],
+    "website": "",
+    "country": "US",
+    "isGlobalOrOnline": true,
+    "region": "Ohio",
+    "city": "",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "SATS FOR SYRUP IS BACK. Selling maple syrup for sats, stacking some, and entering bitcoin circular economy with some. Pricing includes shipping. Message me if interested.\nConvert to sats when ordering.",
+    "logoUrl": "images/logos/mapletradeLogo.jpg",
+    "paymentMethods": {
+      "onchain": false,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "nostr": "npub172mu27r5yny0nnmvgjqwhx055dmsesrrx7j0p5d3pxagfx6xgxfsv75p3q"
+    },
+    "lastVerified": "2025-04-14",
+    "id": 643,
+    "category": "Maple Syrup"
   },
   {
     "name": "Rizful",
@@ -744,9 +1058,46 @@
     "category": "Lightning Node"
   },
   {
+    "name": "Hodlers Official",
+    "slug": "hodlers-official",
+    "categories": [
+      "Apparel and Accessories",
+      "Clothing",
+      "Headwear",
+      "Jerseys"
+    ],
+    "website": "https://hodlersofficial.com",
+    "country": "Canada",
+    "isGlobalOrOnline": true,
+    "region": "Ontario",
+    "city": "",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "TEAM BITCOIN MERCHANDISE⚡️ FOR BITCOIN'S BIGGEST FANS!\n\nTHIS IS BIGGER THAN MERCH!✨\nHodlers Official Team Bitcoin jerseys serve as mementos for this special era of Bitcoin history!\n⚡️\nHodlers Official is a Canadian Team Bitcoin merchandise company, and the creators of the Team Bitcoin baseball, basketball, and hockey jerseys!\n⚡️\nReal Proof-of-Work Bitcoin Merch. Hodlers Official Team Bitcoin jerseys are the ultimate merchandise item for Bitcoin's biggest fans!",
+    "logoUrl": "images/logos/hodlersOfficialLogo.png",
+    "paymentMethods": {
+      "onchain": false,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "@hodlersofficial",
+      "facebook": "https://www.facebook.com/hodlersofficial",
+      "instagram": "@hodlersofficialmerch"
+    },
+    "lastVerified": "2025-04-15",
+    "id": 690,
+    "category": "Apparel and Accessories"
+  },
+  {
     "name": "Proof of Ink",
     "slug": "proof-of-ink",
     "categories": [
+      "Books/Magazines",
       "Merchandise",
       "Apparel and Accessories",
       "Creative",
@@ -781,7 +1132,110 @@
     },
     "lastVerified": "2025-04-07",
     "id": 691,
-    "category": "Merchandise"
+    "category": "Books/Magazines"
+  },
+  {
+    "name": "Obscura",
+    "slug": "obscura",
+    "categories": [
+      "Online Services",
+      "VPN"
+    ],
+    "website": "https://obscura.net",
+    "country": "",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "Carl Dong",
+    "submittedBy": "User",
+    "email": "carl@obscura.net",
+    "phone": "",
+    "description": "What makes Obscura different from existing VPNs?\nUnlike VPNs with a “no-logs” policy, Obscura is provably private by design.\n\nEven “no-logs” VPNs see both your identity and your internet activity, meaning you have to blindly trust their pinky-promise for privacy. This is exactly why some privacy-conscious folks will tell you not to use a VPN at all.\n\nObscura is different – we never see your decrypted internet packets. It’s simply impossible for us to log your internet activity, even if we were compelled to, or if our servers were compromised. ",
+    "logoUrl": "images/logos/obscuraLogo.png",
+    "paymentMethods": {
+      "onchain": false,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "@obscuravpn",
+      "nostr": "npub1dd9znw7585wsam4d8p84ztdmtywwjsrayld6fzk4fvqdn5hpju4st5xe7p",
+      "mastodon": "https://mastodon.social.obscuravpn.io/@obscura",
+      "matrix": "https://matrix.to/#/!CznDYbvmUUGxsJaWuW:matrix.social.obscuravpn.io?via=matrix.social.obscuravpn.io&via=matrix.org",
+      "discord": "https://discord.gg/xsP2Fp7s6r"
+    },
+    "lastVerified": "2025-04-14",
+    "id": 716,
+    "category": "Online Services"
+  },
+  {
+    "name": "Airbtc",
+    "slug": "airbtc",
+    "categories": [
+      "Travel",
+      "Hotels/Accommodations"
+    ],
+    "website": "https://airbtc.online/",
+    "country": "",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "Jake and Handre",
+    "submittedBy": "User",
+    "email": "jake@airbtc.online",
+    "phone": "",
+    "description": "Welcome to Airbtc!\nThis project was born out of the dream to build a bitcoin only project. Something that operates completely out of the scope of the fiat world, with zero ties back to the legacy economy or banking system.\n\nAirbtc is a property listing website similar to Airbnb, with the exception that we deal and operate ONLY in Bitcoin. This is a project for Bitcoiners, by Bitcoiners. We will never accept fiat currency or any other forms of crypto.\n\nIt is important to distinguish our project from platforms that enable bitcoin or “crypto” payment to a user, sell it, and pay the supplier in fiat. Although we do appreciate the importance of such platforms and projects as part of Bitcoin adoption, such projects are essentially fiat on and off-ramps and ultimately contribute very little to the circular Bitcoin economy.\n\nThe basic outline of our business is for hosts to upload their properties to our site and guests to book their accommodation through us. We will keep our guests’ funds safe until after their stay is completed and then pay the host.",
+    "logoUrl": "images/logos/airbtcLogo.svg",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "@airbtconline",
+      "nostr": "npub1md98528ql9nrdwf8n7tfpxgk4t6qvglmzfhj0nw2n3vkq4cwwdpsq09533"
+    },
+    "lastVerified": "2025-04-16",
+    "id": 785,
+    "category": "Travel"
+  },
+  {
+    "name": "Tierra Bendita",
+    "slug": "tierra-bendita",
+    "categories": [
+      "Food & Drink",
+      "Coffee",
+      "Tea"
+    ],
+    "website": "https://www.tierrabendita.net/en/",
+    "country": "El Salvador",
+    "isGlobalOrOnline": true,
+    "region": "Ahuachapán",
+    "city": "Guaymango",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "info@tierrabendita.net",
+    "phone": "(503) 2508-8101",
+    "description": "Practices that guarantee quality\n\nOur agricultural best practices allow us to improve the ground’s fertility and to conserve water. As a result, taking the average elevation as below the 1000s MASL, we are able to keep a perferct balance in the specialty coffee production profile.\n\nThe best grains for the best cup of joe\n\nOur planations harvest two different types of Arabica coffee, both of them tolerant as well as resistant to Coffee Rust, which has affected severely the economy of all the coffee producing latin-american countries.\n\nFrom seed to cup\n\nWe provide a strict quality control, from drying to roasting, which allow us to provide quality grains from the seed to the cup.\n\nCherito Cafe Coffee",
+    "logoUrl": "images/logos/tierrabenditaLogo.png",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "facebook": "https://www.facebook.com/tierrabenditasv/",
+      "instagram": "@tierrabendita.sv"
+    },
+    "lastVerified": "2025-04-12",
+    "id": 807,
+    "category": "Food & Drink"
   },
   {
     "name": "Sovran Systems",
@@ -819,6 +1273,7 @@
     "name": "Lighting Koffee",
     "slug": "lighting-koffee",
     "categories": [
+      "Food & Drink",
       "Coffee"
     ],
     "website": "https://lightningkoffee.com",
@@ -846,7 +1301,7 @@
     },
     "lastVerified": "2025-04-08",
     "id": 838,
-    "category": "Coffee"
+    "category": "Food & Drink"
   },
   {
     "name": "CryptoCloaks",
@@ -889,6 +1344,141 @@
     "lastVerified": "2025-04-07",
     "id": 840,
     "category": "Bitcoin Hardware"
+  },
+  {
+    "name": "Peony Lane Wine",
+    "slug": "peony-lane-wine",
+    "categories": [
+      "Food & Drink",
+      "Wine/Vineyard"
+    ],
+    "website": "https://www.peonylanewine.com",
+    "country": "US",
+    "isGlobalOrOnline": true,
+    "region": "CO",
+    "city": "Paonia",
+    "owner": "Ben Justman",
+    "submittedBy": "User",
+    "email": "benjustman@peonylanewine.com",
+    "phone": "",
+    "description": "Naked Wine, Elevated\nPeony Lane wine has just one ingredient: grapes. Unlike most wines, ours are free from nasty chemicals. Located in the highest AVA in North America, we produce the continent's highest elevation natural wine.\n\nHIGH ALTITUDE\nAt 5680' our vineyard produces the Highest Elevation natural wine in North America\n\nNATURAL WINE\nNatural wine emphasizes minimal intervention, sustainable practices, and organic farming, resulting in unique flavors and a healthier, more authentic product.\n\nFAMILY OWNED\nAs a second-generation family-owned vineyard, we care as deeply about keeping nasty chemicals out of our vineyard as you do about keeping them out of your wine.\n\nWILD FERMENTATION\nHealthy soil, ample biodiversity, and minimal chemicals are required to promote quality natural yeasts. These yeasts ensure our wine has the complex flavors that truly reflect our unique terroir.\n\nMINIMAL SULFITES\nWe use meticulous grape sourcing, gentle handling, and careful cellar practices. While all wines naturally contain sulfites, we add only a minimal amount at bottling for aging stability.\n\nNO TOXIC ADDITIVES\nWines can contain up to 73 hidden chemical additives. At Peony Lane, we use only a touch of sulfites for aging stability, keeping our wine pure and natural.",
+    "logoUrl": "images/logos/peonylaneLogo.svg",
+    "paymentMethods": {
+      "onchain": false,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "twitter": "@peonylanewine",
+      "nostr": "npub153xmex42x4chdf757hp3q6zxagykkek7pdgwuwd074964dkyha9s82ryu8"
+    },
+    "lastVerified": "2025-04-12",
+    "id": 841,
+    "category": "Food & Drink"
+  },
+  {
+    "name": "oshi",
+    "slug": "oshi",
+    "categories": [
+      "Food & Drink",
+      "Chocolate",
+      "Date Bars",
+      "Pecan Butter"
+    ],
+    "website": "https://www.oshigood.us",
+    "country": "US",
+    "isGlobalOrOnline": true,
+    "region": "Southeast",
+    "city": "",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "oshigood@proton.me",
+    "phone": "",
+    "description": "Artisan pecan butter, date bars and chocolates. Made in the Southeast USA. #hodlbar #hodlbutter\n\n#### The Heart of Oshi\nOshi is my small-batch passion project - pecan butter, date bars, and chocolates - crafted right here in the Southeast USA. It began with curiosity and grew into something I love sharing. The pecans are local and top-notch, paired with certified organic, clean ingredients. No shortcuts - just honest flavor.\nIt starts with smooth, rich pecan butter. Then the dates with its rich texture and caramel flavor. The chocolates? Date bar filling in a chocolate shell bars, discs, or balls. Each batch is unique, sometimes a limited run, always made with care.\n\n **The Problem & Solution**\nPecan butter is like looking for a unicorn in stores, and what's there often hides sugars that dull its flavor. Most snacks and bars are loaded with grains, fillers, or artificial stuff, frustrating clean eaters. Grain-free folks struggle to find protein-rich snacks that taste amazing. Buying quality food means clunky payment systems too.\nOshi's got you covered. My Hodl Butter, crafted with local, organic Southeast USA pecans, boasts antioxidants - 400% more than almonds, 566% more than peanuts - low carbs (~4g per 2 tbsp), and heart-healthy fats (~12g monounsaturated). My Hodl Bars pair it with dates, packed with fiber (~2g per date) and potassium (~167mg), for a grain-free, protein-rich snack. The nutty, rich pecans and sweet, caramel-like dates create a flavor combo that's pure magic. Hodl Butter shines in recipes from smoothies to sauces, and you can buy it all with Bitcoin for a seamless, value-driven exchange.\n\n#### Why Bitcoin?\nWe accept Bitcoin because it's more than payment - it's a mindset. I love skipping the middleman, trading directly with you. It's perfect for small makers like me and folks like you who value the real stuff. It's a circular economy: I craft, you enjoy, we trade value - no gatekeepers.\nBitcoin means freedom to me - building outside old systems, connecting with kindred spirits. Paying with it? You're not just buying - you're betting on a future we shape together.",
+    "logoUrl": "images/logos/oshiLogo.png",
+    "paymentMethods": {
+      "onchain": false,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "nostr": "npub1uzt238htjzpq39dxmltlx60vxym9fetk9czz6kddq6fhvkf4z3usy9qtrh",
+      "simplex": "https://simplex.chat/contact#/?v=2-7&smp=smp%3A%2F%2FN_McQS3F9TGoh4ER0QstUf55kGnNSd-wXfNPZ7HukcM%3D%40smp19.simplex.im%2FtlRWlpfOdCCA8aED2NaEzpPxqGxZ-e_V%23%2F%3Fv%3D1-3%26dh%3DMCowBQYDK2VuAyEAHlx4cHdOECGXKuZwPvs-WeeM1qNxO8_WNDtPhc9DdSg%253D%26srv%3Di53bbtoqhlc365k6kxzwdp5w3cdt433s7bwh3y32rcbml2vztiyyz5id.onion&data=%7B%22groupLinkId%22%3A%223UCynkCzAR7M5oZyLo5Tnw%3D%3D%22%7D"
+    },
+    "lastVerified": "2025-05-09",
+    "id": 868
+  },
+  {
+    "name": "Apotheca Viva",
+    "slug": "apotheca-viva",
+    "categories": [
+      "Farm",
+      "Tea",
+      "Extractions"
+    ],
+    "website": "https://apothecaviva.love/",
+    "country": "Puerto Rico",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "Old San Juan",
+    "owner": "",
+    "submittedBy": "User",
+    "email": "",
+    "phone": "",
+    "description": "Sovereignty⚡️☀️ Agroecology•Agroforestry•Silvopasture\nvia our apothecary, health, education, Bitcoin + Nostr",
+    "logoUrl": "",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "nostr": "npub167jrghp745020g6t664wg0rre0vpjswehgqel6tjssl9eeuwxxrswgww05"
+    },
+    "lastVerified": "2025-04-13",
+    "id": 931,
+    "category": "Farm"
+  },
+  {
+    "name": "Isolabellart",
+    "slug": "isolabellart",
+    "categories": [
+      "Creative",
+      "Art",
+      "Oil Painting"
+    ],
+    "website": "https://isolabell.art",
+    "country": "Italy",
+    "isGlobalOrOnline": true,
+    "region": "",
+    "city": "",
+    "owner": "Carlo Isolabella",
+    "submittedBy": "User",
+    "email": "isolabellart@proton.me",
+    "phone": "",
+    "description": "Original oil paintings\nHi, I'm Carlo, an Italian painter.\nI was born in Genoa (1970) and I studied art at the Liceo Artistico Nicolò Barabino.\nI never thought I would become a painter, in fact I worked and still work as a graphic designer for the press, first for publishing and currently for papermaking.\nI abandoned art the way one lets things one cares about die, that is, without reason.\nBut the artistic passion, that never left me. In fact, I resumed painting after almost thirty years, out of love.\nIn April 2022, I decided to give my wife an oil portrait as a present and I thought, \" ...if this painting comes out well and gives me satisfaction, I will start drawing and painting again, otherwise I will give up and abandon the idea forever\".\nReturning to painting after so long was not easy.\nThe portrait came out discreetly, but the satisfaction of executing it was enormous.\nSo I started displaying my paintings, first on Twitter, then on Instagram, and finally made this website.\nMost of my paintings often depict places I have visited that particularly moved me, in a style inspired by impressionist masters, past and contemporary.\nThank you to everyone who has read this far and to those who will support my art.",
+    "logoUrl": "images/logos/isolabellartLogo.jpeg",
+    "paymentMethods": {
+      "onchain": true,
+      "lightning": true,
+      "ecash": false,
+      "fedi": false,
+      "liquid": false
+    },
+    "socialMedia": {
+      "instagram": "@isolabellart",
+      "telegram": "https://t.me/isolabellart",
+      "nostr": "npub17nd4yu9anyd3004pumgrtazaacujjxwzj36thtqsxskjy0r5urgqf6950x"
+    },
+    "lastVerified": "2025-04-17",
+    "id": 979,
+    "category": "Creative"
   },
   {
     "name": "Solo Satoshi",
